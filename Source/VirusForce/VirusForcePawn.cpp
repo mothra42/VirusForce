@@ -82,6 +82,11 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 		FHitResult Hit(1.f);
 		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
 		
+		if (Hit.Actor == this)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("hitting ourselves"));
+		}
+		//This is here so that the ship can move even if it is hitting a wall or other object
 		if (Hit.IsValidBlockingHit())
 		{
 			const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
@@ -112,10 +117,10 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			const FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
 
 			UWorld* const World = GetWorld();
-			if (World != NULL)
+			if (World != NULL && ProjectileClass != nullptr)
 			{
 				// spawn the projectile
-				World->SpawnActor<AVirusForceProjectile>(SpawnLocation, FireRotation);
+				World->SpawnActor<AVirusForceProjectile>(ProjectileClass, SpawnLocation, FireRotation);
 			}
 
 			bCanFire = false;

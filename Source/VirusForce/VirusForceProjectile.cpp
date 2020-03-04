@@ -6,6 +6,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine/StaticMesh.h"
+#include "PhysicsEngine/PhysicsConstraintComponent.h"
 
 AVirusForceProjectile::AVirusForceProjectile() 
 {
@@ -20,6 +21,9 @@ AVirusForceProjectile::AVirusForceProjectile()
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AVirusForceProjectile::OnHit);		// set up a notification for when this component hits something
 	RootComponent = ProjectileMesh;
 
+	PhysicsConstraintComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
+	PhysicsConstraintComponent->SetupAttachment(ProjectileMesh);
+
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement0"));
 	ProjectileMovement->UpdatedComponent = ProjectileMesh;
@@ -29,17 +33,33 @@ AVirusForceProjectile::AVirusForceProjectile()
 	ProjectileMovement->bShouldBounce = false;
 	ProjectileMovement->ProjectileGravityScale = 0.f; // No gravity
 
-	// Die after 3 seconds by default
-	InitialLifeSpan = 3.0f;
+	InitialLifeSpan = 0.0f;
 }
 
 void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
 	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL) && OtherComp->IsSimulatingPhysics())
+	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
-		OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
+		if (Cast<AVirusForceProjectile>(OtherActor) == nullptr)
+		{
+			IsAttached = true;
+		}
+		
+		//OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
+		//PhysicsConstraintComponent->SetConstrainedComponents()
 	}
 
-	Destroy();
+	if (Cast<AVirusForceProjectile>(OtherActor) != nullptr)
+	{
+		DestroyProjectile();
+	}
+}
+
+void AVirusForceProjectile::DestroyProjectile()
+{
+	if (!IsAttached)
+	{
+		Destroy();
+	}
 }

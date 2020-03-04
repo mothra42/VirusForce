@@ -42,6 +42,9 @@ public:
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 	class USoundBase* FireSound;
 
+	UPROPERTY(Category = Projectile, EditDefaultsOnly)
+	TSubclassOf<class AVirusForceProjectile> ProjectileClass;
+
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;

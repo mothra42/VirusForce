@@ -33,5 +33,13 @@ public:
 	FORCEINLINE UStaticMeshComponent* GetProjectileMesh() const { return ProjectileMesh; }
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
+
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Physics)
+	class UPhysicsConstraintComponent* PhysicsConstraintComponent;
+
+	bool IsAttached = false;
+
+private:
+	void DestroyProjectile();
 };
 
