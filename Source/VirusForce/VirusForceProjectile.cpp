@@ -22,7 +22,7 @@ AVirusForceProjectile::AVirusForceProjectile()
 	RootComponent = ProjectileMesh;
 
 	PhysicsConstraintComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
-	PhysicsConstraintComponent->SetupAttachment(ProjectileMesh);
+	PhysicsConstraintComponent->SetupAttachment(RootComponent);
 
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement0"));
@@ -33,6 +33,7 @@ AVirusForceProjectile::AVirusForceProjectile()
 	ProjectileMovement->bShouldBounce = false;
 	ProjectileMovement->ProjectileGravityScale = 0.f; // No gravity
 
+	//projectiles don't need to expire based on time
 	InitialLifeSpan = 0.0f;
 }
 

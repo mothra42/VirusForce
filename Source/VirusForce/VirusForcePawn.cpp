@@ -12,6 +12,7 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
+#include "GameFramework/FloatingPawnMovement.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
@@ -43,6 +44,8 @@ AVirusForcePawn::AVirusForcePawn()
 	CameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("TopDownCamera"));
 	CameraComponent->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
+
+	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
 	// Movement
 	MoveSpeed = 1000.0f;
@@ -81,11 +84,8 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 		const FRotator NewRotation = Movement.Rotation();
 		FHitResult Hit(1.f);
 		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
+		//AddMovementInput(MoveDirection, MoveSpeed);
 		
-		if (Hit.Actor == this)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("hitting ourselves"));
-		}
 		//This is here so that the ship can move even if it is hitting a wall or other object
 		if (Hit.IsValidBlockingHit())
 		{

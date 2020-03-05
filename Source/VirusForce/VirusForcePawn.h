@@ -23,6 +23,9 @@ class AVirusForcePawn : public APawn
 	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class USpringArmComponent* CameraBoom;
 
+	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UFloatingPawnMovement* MovementComponent;
+	
 public:
 	AVirusForcePawn();
 
