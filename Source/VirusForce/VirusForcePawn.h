@@ -75,6 +75,7 @@ private:
 
 public:
 	/** Returns ShipMeshComponent subobject **/
+	UFUNCTION()
 	FORCEINLINE class UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }

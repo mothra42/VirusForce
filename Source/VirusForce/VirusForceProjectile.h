@@ -34,8 +34,8 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	UPROPERTY(Category = Attachment, EditDefaultsOnly, BlueprintReadWrite)
-	class UPhysicsConstraintComponent* PhysicsConstraintComponent;
+	//UPROPERTY(Category = Attachment, EditDefaultsOnly, BlueprintReadWrite)
+	//class UPhysicsConstraintComponent* PhysicsConstraintComponent;
 
 	bool IsAttached = false;
 

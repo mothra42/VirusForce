@@ -7,6 +7,7 @@
 #include "GameFramework/ProjectileMovementComponent.h"
 #include "Engine/StaticMesh.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
+#include "VirusForcePawn.h"
 
 AVirusForceProjectile::AVirusForceProjectile() 
 {
@@ -21,8 +22,8 @@ AVirusForceProjectile::AVirusForceProjectile()
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AVirusForceProjectile::OnHit);		// set up a notification for when this component hits something
 	RootComponent = ProjectileMesh;
 
-	PhysicsConstraintComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
-	PhysicsConstraintComponent->SetupAttachment(RootComponent);
+	//PhysicsConstraintComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
+	//PhysicsConstraintComponent->SetupAttachment(RootComponent);
 
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement0"));
@@ -42,18 +43,16 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	// Only add impulse and destroy projectile if we hit a physics
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
-		if (Cast<AVirusForceProjectile>(OtherActor) == nullptr)
+		//if the hit actor is a virus attach and set is attached true.
+		if (Cast<AVirusForcePawn>(OtherActor) != nullptr)
 		{
+			UE_LOG(LogTemp, Warning, TEXT("Attaching to virus"));
 			IsAttached = true;
 		}
-		
-		//OtherComp->AddImpulseAtLocation(GetVelocity() * 20.0f, GetActorLocation());
-		//PhysicsConstraintComponent->SetConstrainedComponents()
-	}
-
-	if (Cast<AVirusForceProjectile>(OtherActor) != nullptr)
-	{
-		DestroyProjectile();
+		else
+		{
+			DestroyProjectile();
+		}
 	}
 }
 
@@ -61,6 +60,7 @@ void AVirusForceProjectile::DestroyProjectile()
 {
 	if (!IsAttached)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("I'm getting destroyed"));
 		Destroy();
 	}
 }
