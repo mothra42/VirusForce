@@ -44,10 +44,24 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
 		//if the hit actor is a virus attach and set is attached true.
-		if (Cast<AVirusForcePawn>(OtherActor) != nullptr)
+		AVirusForcePawn* HitVirus = Cast<AVirusForcePawn>(OtherActor);
+		if (HitVirus != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("Attaching to virus"));
-			IsAttached = true;
+			FName NearestSocketName = FindNearestSocketName(HitVirus, Hit);
+
+			if (NearestSocketName != FName("None"))
+			{
+				ProjectileMovement->StopMovementImmediately();
+				ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+				ProjectileMesh->AttachToComponent(HitVirus->GetShipMeshComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, NearestSocketName);
+				
+				//remove the used socket from available names
+				HitVirus->AvailableSocketNames.Remove(NearestSocketName);
+				//set is attached to true
+				IsAttached = true;
+				return;
+			}
+			DestroyProjectile();
 		}
 		else
 		{
@@ -56,11 +70,40 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	}
 }
 
+FName AVirusForceProjectile::FindNearestSocketName(AVirusForcePawn* HitVirus, FHitResult Hit)
+{
+	//attach projectile to available socket
+	UStaticMeshComponent* VirusStaticMesh = HitVirus->GetShipMeshComponent();
+	//if there are no available slots destroy the projectile
+	if (HitVirus->AvailableSocketNames.Num() <= 0)
+	{
+		DestroyProjectile();
+		return FName("None");
+	}
+
+	//initialized to an outrageously large number to ensure the logic works
+	float SmallestDistanceToSocket = 10000.f;
+	FName ClosestSocketName;
+
+	for (int32 i = 0; i < HitVirus->AvailableSocketNames.Num(); i++)
+	{
+		FVector SocketLocation = VirusStaticMesh->GetSocketLocation(HitVirus->AvailableSocketNames[i]);
+		float DistanceToSocket = FMath::Abs(FVector::Distance(SocketLocation, Hit.Location));
+
+		if (DistanceToSocket <= SmallestDistanceToSocket)
+		{
+			SmallestDistanceToSocket = DistanceToSocket;
+			ClosestSocketName = HitVirus->AvailableSocketNames[i];
+		}
+	}
+
+	return ClosestSocketName;
+}
+
 void AVirusForceProjectile::DestroyProjectile()
 {
 	if (!IsAttached)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("I'm getting destroyed"));
 		Destroy();
 	}
 }

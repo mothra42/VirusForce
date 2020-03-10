@@ -48,6 +48,8 @@ public:
 	UPROPERTY(Category = Projectile, EditDefaultsOnly)
 	TSubclassOf<class AVirusForceProjectile> ProjectileClass;
 
+	TArray<FName> AvailableSocketNames;
+
 	// Begin Actor Interface
 	virtual void Tick(float DeltaSeconds) override;
 	virtual void SetupPlayerInputComponent(class UInputComponent* InputComponent) override;
@@ -64,6 +66,9 @@ public:
 	static const FName MoveRightBinding;
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 

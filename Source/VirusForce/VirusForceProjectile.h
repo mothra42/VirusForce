@@ -41,5 +41,7 @@ public:
 
 private:
 	void DestroyProjectile();
+
+	FName FindNearestSocketName(class AVirusForcePawn* HitVirus, FHitResult Hit);
 };
 

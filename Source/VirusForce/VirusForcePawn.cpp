@@ -104,6 +104,13 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 	FireShot(FireDirection);
 }
 
+void AVirusForcePawn::BeginPlay()
+{
+	Super::BeginPlay();
+
+	AvailableSocketNames = ShipMeshComponent->GetAllSocketNames();
+}
+
 void AVirusForcePawn::FireShot(FVector FireDirection)
 {
 	// If it's ok to fire again
