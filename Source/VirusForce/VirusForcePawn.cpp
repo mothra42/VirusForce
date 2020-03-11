@@ -84,7 +84,6 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 		const FRotator NewRotation = Movement.Rotation();
 		FHitResult Hit(1.f);
 		RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
-		//AddMovementInput(MoveDirection, MoveSpeed);
 		
 		//This is here so that the ship can move even if it is hitting a wall or other object
 		if (Hit.IsValidBlockingHit())

@@ -13,6 +13,12 @@ class AVirusForceGameMode : public AGameModeBase
 
 public:
 	AVirusForceGameMode();
+
+	class UMarkedVirusComponent* GetMarkedVirusComponent();
+
+protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = VirusTracking)
+	UMarkedVirusComponent* MarkedVirusComponent;
 };
 
 

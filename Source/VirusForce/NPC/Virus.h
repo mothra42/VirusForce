@@ -3,14 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "../VirusForcePawn.h"
 #include "GameFramework/Pawn.h"
 #include "Virus.generated.h"
 
 UCLASS()
-class VIRUSFORCE_API AVirus : public APawn
+class VIRUSFORCE_API AVirus : public AVirusForcePawn
 {
 	GENERATED_BODY()
-
+private:
+	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UMarkedVirusComponent* MarkedVirusComponent;
 public:
 	// Sets default values for this pawn's properties
 	AVirus();
@@ -25,5 +28,7 @@ public:
 
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+	//UMarkedVirusComponent* GetMarkedVirusComponent;
 
 };
