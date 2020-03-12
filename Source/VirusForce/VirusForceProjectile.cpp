@@ -8,6 +8,7 @@
 #include "Engine/StaticMesh.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "VirusForcePawn.h"
+#include "NPC/Virus.h"
 
 AVirusForceProjectile::AVirusForceProjectile() 
 {
@@ -44,7 +45,7 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
 	{
 		//if the hit actor is a virus attach and set is attached true.
-		AVirusForcePawn* HitVirus = Cast<AVirusForcePawn>(OtherActor);
+		AVirus* HitVirus = Cast<AVirus>(OtherActor);
 		if (HitVirus != nullptr)
 		{
 			FName NearestSocketName = FindNearestSocketName(HitVirus, Hit);
@@ -70,7 +71,7 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	}
 }
 
-FName AVirusForceProjectile::FindNearestSocketName(AVirusForcePawn* HitVirus, FHitResult Hit)
+FName AVirusForceProjectile::FindNearestSocketName(AVirus* HitVirus, FHitResult Hit)
 {
 	//attach projectile to available socket
 	UStaticMeshComponent* VirusStaticMesh = HitVirus->GetShipMeshComponent();
@@ -105,5 +106,13 @@ void AVirusForceProjectile::DestroyProjectile()
 	if (!IsAttached)
 	{
 		Destroy();
+	}
+}
+
+void AVirusForceProjectile::AddVirusToMarkedViruses(AVirus* Virus)
+{
+	if (Virus != nullptr)
+	{
+		Virus->AddToMarkedViruses();
 	}
 }

@@ -14,6 +14,9 @@ class VIRUSFORCE_API AVirus : public AVirusForcePawn
 private:
 	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMarkedVirusComponent* MarkedVirusComponent;
+
+	//flag to check if virus has already been added to marked viruses
+	bool IsMarked = false;
 public:
 	// Sets default values for this pawn's properties
 	AVirus();
@@ -29,6 +32,6 @@ public:
 	// Called to bind functionality to input
 	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
-	//UMarkedVirusComponent* GetMarkedVirusComponent;
-
+	//called to add self to list of marked viruses, returns true if successful
+	bool AddToMarkedViruses();
 };

@@ -34,14 +34,13 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
-	//UPROPERTY(Category = Attachment, EditDefaultsOnly, BlueprintReadWrite)
-	//class UPhysicsConstraintComponent* PhysicsConstraintComponent;
-
 	bool IsAttached = false;
 
 private:
 	void DestroyProjectile();
 
-	FName FindNearestSocketName(class AVirusForcePawn* HitVirus, FHitResult Hit);
+	void AddVirusToMarkedViruses(class AVirus* Virus);
+
+	FName FindNearestSocketName(AVirus* HitVirus, FHitResult Hit);
 };
 

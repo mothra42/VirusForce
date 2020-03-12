@@ -17,6 +17,7 @@ void AVirus::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	//get marked virus component from game mode
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
 	{
@@ -36,5 +37,17 @@ void AVirus::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+}
+
+bool AVirus::AddToMarkedViruses()
+{
+	if (!IsMarked && MarkedVirusComponent != nullptr)
+	{
+		MarkedVirusComponent->AddToMarkedViruses(this);
+		IsMarked = true;
+		return true;
+	}
+
+	return false;
 }
 
