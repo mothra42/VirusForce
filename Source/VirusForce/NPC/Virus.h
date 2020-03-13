@@ -8,10 +8,17 @@
 #include "Virus.generated.h"
 
 UCLASS()
-class VIRUSFORCE_API AVirus : public AVirusForcePawn
+class VIRUSFORCE_API AVirus : public APawn
 {
 	GENERATED_BODY()
 private:
+	/* The mesh component */
+	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* ShipMeshComponent;
+
+	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UFloatingPawnMovement* MovementComponent;
+
 	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMarkedVirusComponent* MarkedVirusComponent;
 
@@ -26,6 +33,22 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+	/* The speed our ship moves around the level */
+	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
+	float MoveSpeed;
+
+	TArray<FName> AvailableSocketNames;
+
+	// Static names for axis bindings
+	static const FName MoveForwardBinding;
+	static const FName MoveRightBinding;
+	static const FName FireForwardBinding;
+	static const FName FireRightBinding;
+
+	/** Returns ShipMeshComponent subobject **/
+	UFUNCTION()
+	FORCEINLINE UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
