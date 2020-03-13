@@ -39,21 +39,12 @@ public:
 
 	TArray<FName> AvailableSocketNames;
 
-	// Static names for axis bindings
-	static const FName MoveForwardBinding;
-	static const FName MoveRightBinding;
-	static const FName FireForwardBinding;
-	static const FName FireRightBinding;
-
 	/** Returns ShipMeshComponent subobject **/
 	UFUNCTION()
 	FORCEINLINE UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 	//called to add self to list of marked viruses, returns true if successful
 	bool AddToMarkedViruses();
