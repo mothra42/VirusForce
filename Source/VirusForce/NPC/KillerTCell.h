@@ -24,6 +24,9 @@ public:
 	// Sets default values for this pawn's properties
 	AKillerTCell();
 
+private:
+	void ConsumeVirus(class AVirus* Virus);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

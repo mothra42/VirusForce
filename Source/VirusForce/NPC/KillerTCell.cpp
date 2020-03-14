@@ -10,6 +10,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "MarkedVirusComponent.h"
 #include "../VirusForceGameMode.h"
+#include "Virus.h"
 
 // Sets default values
 AKillerTCell::AKillerTCell()
@@ -47,3 +48,10 @@ void AKillerTCell::Tick(float DeltaSeconds)
 
 }
 
+//TODO Create overlap function that will consume marked viruses only
+//TODO destroy self one marked viruses has length of 0.
+
+void AKillerTCell::ConsumeVirus(AVirus* Virus)
+{
+	MarkedVirusComponent->RemoveFromMarkedViruses(Virus);
+}
