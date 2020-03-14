@@ -147,3 +147,4 @@ void AVirusForcePawn::ShotTimerExpired()
 	bCanFire = true;
 }
 
+//TODO when input is pressed spawn killer T Cell, where is to be decided whether its a fixed position or if it should spawn in a random position.
