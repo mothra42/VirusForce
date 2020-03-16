@@ -25,6 +25,7 @@ public:
 	AKillerTCell();
 
 private:
+	UFUNCTION(BlueprintCallable)
 	void ConsumeVirus(class AVirus* Virus);
 
 protected:

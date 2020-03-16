@@ -49,9 +49,19 @@ void AKillerTCell::Tick(float DeltaSeconds)
 }
 
 //TODO Create overlap function that will consume marked viruses only
-//TODO destroy self one marked viruses has length of 0.
 
 void AKillerTCell::ConsumeVirus(AVirus* Virus)
 {
-	MarkedVirusComponent->RemoveFromMarkedViruses(Virus);
+	//TODO check if to make sure virus is actually marked
+	//it could accidentally run into unmarked viruses and we don't want those to be consumed
+	auto AIController = Virus->GetController();
+	AIController->PawnPendingDestroy(Virus);
+	AIController->Destroy();
+	TArray<AVirus*>MarkedViruses = MarkedVirusComponent->RemoveFromMarkedViruses(Virus);
+	Virus->Destroy();
+
+	if (MarkedViruses.Num() <= 0)
+	{
+		Destroy();
+	}
 }
