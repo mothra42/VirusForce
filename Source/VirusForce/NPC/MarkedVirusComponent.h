@@ -33,5 +33,5 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<AVirus*> GetMarkedViruses();
 
-		
+	int32 GetNumMarkedViruses();
 };

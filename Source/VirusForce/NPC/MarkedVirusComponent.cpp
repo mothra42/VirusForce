@@ -60,3 +60,8 @@ TArray<AVirus*> UMarkedVirusComponent::GetMarkedViruses()
 {
 	return MarkedViruses;
 }
+
+int32 UMarkedVirusComponent::GetNumMarkedViruses()
+{
+	return MarkedViruses.Num();
+}
