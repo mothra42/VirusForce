@@ -13,11 +13,13 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "NPC/KillerTCell.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
 const FName AVirusForcePawn::FireForwardBinding("FireForward");
 const FName AVirusForcePawn::FireRightBinding("FireRight");
+const FName AVirusForcePawn::SpawnKillerTCell("SpawnKillerTCell");
 
 AVirusForcePawn::AVirusForcePawn()
 {	
@@ -64,6 +66,7 @@ void AVirusForcePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAxis(FireForwardBinding);
 	PlayerInputComponent->BindAxis(FireRightBinding);
+	PlayerInputComponent->BindAction("SpawnKillerTCell", IE_Pressed, this, &AVirusForcePawn::SpawnKillerTCellInWorld);
 }
 
 void AVirusForcePawn::Tick(float DeltaSeconds)
@@ -148,3 +151,15 @@ void AVirusForcePawn::ShotTimerExpired()
 }
 
 //TODO when input is pressed spawn killer T Cell, where is to be decided whether its a fixed position or if it should spawn in a random position.
+void AVirusForcePawn::SpawnKillerTCellInWorld()
+{
+	//TODO find random location on plane
+	FVector SpawnLocation = FVector(70.f, 1780.f, 250.f);
+	FRotator SpawnRotation = FRotator(0.f, 0.f, 0.f);
+	UWorld* const World = GetWorld();
+	if (World != NULL && KillerTCellClass != nullptr)
+	{
+		// spawn the killer t cell
+		World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation);
+	}
+}

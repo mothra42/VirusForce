@@ -48,6 +48,9 @@ public:
 	UPROPERTY(Category = Projectile, EditDefaultsOnly)
 	TSubclassOf<class AVirusForceProjectile> ProjectileClass;
 
+	UPROPERTY(Category = SpawnedKillerTCell, EditDefaultsOnly)
+	TSubclassOf<class AKillerTCell> KillerTCellClass;
+
 	TArray<FName> AvailableSocketNames;
 
 	// Begin Actor Interface
@@ -66,6 +69,7 @@ public:
 	static const FName MoveRightBinding;
 	static const FName FireForwardBinding;
 	static const FName FireRightBinding;
+	static const FName SpawnKillerTCell;
 
 protected:
 	virtual void BeginPlay() override;
@@ -77,6 +81,8 @@ private:
 
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
+
+	void SpawnKillerTCellInWorld();
 
 public:
 	/** Returns ShipMeshComponent subobject **/
