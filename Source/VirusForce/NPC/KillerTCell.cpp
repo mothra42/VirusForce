@@ -52,15 +52,22 @@ void AKillerTCell::Tick(float DeltaSeconds)
 
 void AKillerTCell::ConsumeVirus(AVirus* Virus)
 {
-	//TODO check if to make sure virus is actually marked
-	//it could accidentally run into unmarked viruses and we don't want those to be consumed
-	auto AIController = Virus->GetController();
-	AIController->PawnPendingDestroy(Virus);
-	AIController->Destroy();
-	TArray<AVirus*>MarkedViruses = MarkedVirusComponent->RemoveFromMarkedViruses(Virus);
-	Virus->Destroy();
-
-	if (MarkedViruses.Num() <= 0)
+	TArray<AActor*> OutAttachedActors;
+	if (MarkedVirusComponent->GetMarkedViruses().Find(Virus) >= 0)
+	{
+		auto AIController = Virus->GetController();
+		AIController->PawnPendingDestroy(Virus);
+		AIController->Destroy();
+		TArray<AVirus*>MarkedViruses = MarkedVirusComponent->RemoveFromMarkedViruses(Virus);
+		Virus->GetAttachedActors(OutAttachedActors);
+		for (int32 i = 0; i < OutAttachedActors.Num(); i++)
+		{
+			OutAttachedActors[i]->Destroy();
+		}
+		Virus->Destroy();
+	}
+	
+	if (MarkedVirusComponent->GetMarkedViruses().Num() <= 0)
 	{
 		Destroy();
 	}
