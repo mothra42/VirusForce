@@ -14,6 +14,7 @@ class AVirusForceGameMode : public AGameModeBase
 public:
 	AVirusForceGameMode();
 
+	UFUNCTION(BlueprintCallable)
 	class UMarkedVirusComponent* GetMarkedVirusComponent();
 
 protected:
