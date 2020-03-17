@@ -60,6 +60,7 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 				HitVirus->AvailableSocketNames.Remove(NearestSocketName);
 				//set is attached to true
 				IsAttached = true;
+				AddVirusToMarkedViruses(HitVirus);
 				return;
 			}
 			DestroyProjectile();
