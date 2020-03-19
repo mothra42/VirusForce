@@ -3,7 +3,7 @@
 
 #include "Virus.h"
 #include "MarkedVirusComponent.h"
-#include "../VirusForceGameMode.h"
+#include "../GameMode/VirusForceGameMode.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
@@ -15,9 +15,6 @@
 // Sets default values
 AVirus::AVirus()
 {
- 	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	//PrimaryActorTick.bCanEverTick = true;
-
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
 	// Create the mesh component
 	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
@@ -67,4 +64,3 @@ bool AVirus::AddToMarkedViruses()
 
 	return false;
 }
-

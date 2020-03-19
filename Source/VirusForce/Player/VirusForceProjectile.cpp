@@ -8,7 +8,7 @@
 #include "Engine/StaticMesh.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "VirusForcePawn.h"
-#include "NPC/Virus.h"
+#include "../NPC/Virus.h"
 
 AVirusForceProjectile::AVirusForceProjectile() 
 {

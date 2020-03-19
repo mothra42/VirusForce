@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../VirusForcePawn.h"
+#include "../Player/VirusForcePawn.h"
 #include "GameFramework/Pawn.h"
 #include "Virus.generated.h"
 
@@ -24,6 +24,7 @@ private:
 
 	//flag to check if virus has already been added to marked viruses
 	bool IsMarked = false;
+
 public:
 	// Sets default values for this pawn's properties
 	AVirus();
@@ -40,7 +41,7 @@ public:
 	TArray<FName> AvailableSocketNames;
 
 	/** Returns ShipMeshComponent subobject **/
-	UFUNCTION()
+	UFUNCTION(BlueprintCallable)
 	FORCEINLINE UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
 
 	// Called every frame

@@ -1,8 +1,8 @@
 // Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #include "VirusForceGameMode.h"
-#include "VirusForcePawn.h"
-#include "NPC/MarkedVirusComponent.h"
+#include "../Player/VirusForcePawn.h"
+#include "../NPC/MarkedVirusComponent.h"
 
 AVirusForceGameMode::AVirusForceGameMode()
 {

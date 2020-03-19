@@ -13,7 +13,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundBase.h"
 #include "GameFramework/FloatingPawnMovement.h"
-#include "NPC/KillerTCell.h"
+#include "../NPC/KillerTCell.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");

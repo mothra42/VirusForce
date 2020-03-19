@@ -9,7 +9,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "MarkedVirusComponent.h"
-#include "../VirusForceGameMode.h"
+#include "../GameMode/VirusForceGameMode.h"
 #include "Virus.h"
 
 // Sets default values
