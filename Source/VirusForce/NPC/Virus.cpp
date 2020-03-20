@@ -26,6 +26,9 @@ AVirus::AVirus()
 
 	// Movement
 	MoveSpeed = 1000.0f;
+
+	// Mesh Radius used for actor placement
+	MeshRadius = 65.0f;
 }
 
 // Called when the game starts or when spawned

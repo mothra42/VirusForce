@@ -38,6 +38,9 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 	float MoveSpeed;
 
+	UPROPERTY(Category = MeshSize, EditDefaultsOnly)
+	float MeshRadius;
+
 	TArray<FName> AvailableSocketNames;
 
 	/** Returns ShipMeshComponent subobject **/
