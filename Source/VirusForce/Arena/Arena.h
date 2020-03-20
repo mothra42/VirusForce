@@ -19,12 +19,15 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UPROPERTY(Category = WaveManagement, EditDefaultsOnly)
+	class UWaveManager* WaveManager;
+
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
 	FVector MinExtent;
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
 	FVector MaxExtent;
 
-public:	
+public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
@@ -32,8 +35,11 @@ public:
 
 private:
 
+	TSubclassOf<class AVirus> VirusClassToSpawn;
+
 	bool bCanSpawnAtLocation(FVector Location, float Radius);
 
 	bool FindEmptyLocation(FVector& OutLocation, float Radius);
 
+	void PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass);
 };
