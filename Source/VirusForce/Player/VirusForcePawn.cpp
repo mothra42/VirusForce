@@ -154,7 +154,7 @@ void AVirusForcePawn::ShotTimerExpired()
 void AVirusForcePawn::SpawnKillerTCellInWorld()
 {
 	//TODO find random location on plane
-	FVector SpawnLocation = FVector(70.f, 1780.f, 250.f);
+	FVector SpawnLocation = FVector(70.f, 1780.f, 0.f);
 	FRotator SpawnRotation = FRotator(0.f, 0.f, 0.f);
 	UWorld* const World = GetWorld();
 	if (World != NULL && KillerTCellClass != nullptr)
