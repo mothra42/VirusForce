@@ -19,8 +19,10 @@ void UWaveManager::BeginPlay()
 	Super::BeginPlay();
 
 	bNextWaveCanSpawn = true;
-
-	CurrentlySpawningVirusType = Virus;
+	if (Virus != nullptr)
+	{
+		CurrentlySpawningVirusType = Virus;
+	}
 }
 
 
@@ -54,6 +56,9 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 	//TODO as more virus types are added we need to be able to change what is currently being spawned dynamically
 	//can use a round counter to determine what is being randomly spawned
 	//THOUGHT have a separate type of wave counter that will spawn mobs of enemies like in geometry wars
-
-	return Virus;
+	if (Virus != nullptr)
+	{
+		return Virus;
+	}
+	return nullptr;
 }
