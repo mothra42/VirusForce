@@ -40,10 +40,9 @@ void AArena::Tick(float DeltaTime)
 
 void AArena::SpawnVirus()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Hey a new virus would be spawning"));
 	FVector SpawnLocation;
-
-	if (FindEmptyLocation(SpawnLocation, 65.f))
+	float VirusMeshRadius = WaveManager->CurrentlySpawningVirusType->GetDefaultObject<AVirus>()->MeshRadius;
+	if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
 	{
 		PlaceVirus(SpawnLocation, WaveManager->CurrentlySpawningVirusType);
 	}
@@ -63,7 +62,7 @@ bool AArena::bCanSpawnAtLocation(FVector Location, float Radius)
 		FCollisionShape::MakeSphere(50.f)
 		);
 
-	return false;
+	return !HasHit;
 }
 
 bool AArena::FindEmptyLocation(FVector& OutLocation, float Radius)
@@ -86,7 +85,7 @@ bool AArena::FindEmptyLocation(FVector& OutLocation, float Radius)
 void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 {
 	UWorld* World = GetWorld();
-	if (World != NULL)
+	if (World != NULL && VirusClass != nullptr)
 	{
 		AVirus* SpawnedVirus = World->SpawnActor<AVirus>(VirusClass, SpawnPoint, FRotator());
 	}
