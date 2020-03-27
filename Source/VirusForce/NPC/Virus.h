@@ -12,16 +12,6 @@ class VIRUSFORCE_API AVirus : public APawn
 {
 	GENERATED_BODY()
 private:
-	/* The mesh component */
-	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ShipMeshComponent;
-
-	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UFloatingPawnMovement* MovementComponent;
-
-	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UMarkedVirusComponent* MarkedVirusComponent;
-
 	//flag to check if virus has already been added to marked viruses
 	bool IsMarked = false;
 
@@ -30,6 +20,16 @@ public:
 	AVirus();
 
 protected:
+	/* The mesh component */
+	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UStaticMeshComponent* ShipMeshComponent;
+
+	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UFloatingPawnMovement* MovementComponent;
+
+	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+		class UMarkedVirusComponent* MarkedVirusComponent;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
