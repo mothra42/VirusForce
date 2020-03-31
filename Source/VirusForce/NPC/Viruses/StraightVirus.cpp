@@ -9,8 +9,6 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/FloatingPawnMovement.h"
 
-#include "DrawDebugHelpers.h"
-
 AStraightVirus::AStraightVirus()
 {		
 

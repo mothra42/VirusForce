@@ -36,11 +36,12 @@ void UWaveManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 	{
 		bNextWaveCanSpawn = false;
 		//will be used to determine what wave player is on and what should be spawned
-		WaveCycle++;
 
 		//set a new virus type to be spawned
 		CurrentlySpawningVirusType = CycleSpawnedVirusType();
 		World->GetTimerManager().SetTimer(TimerHandle_WaveTimerExpired, this, &UWaveManager::SetWaveCanSpawn, EnemyWaveRate);
+
+		WaveCycle++;
 	}
 }
 
@@ -56,9 +57,15 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 	//TODO as more virus types are added we need to be able to change what is currently being spawned dynamically
 	//can use a round counter to determine what is being randomly spawned
 	//THOUGHT have a separate type of wave counter that will spawn mobs of enemies like in geometry wars
-	if (Virus != nullptr)
+	if (Virus != nullptr && StraightVirus != nullptr)
 	{
-		return Virus;
+		UE_LOG(LogTemp, Warning, TEXT("My Wave Cycle is %i"), WaveCycle);
+		if (WaveCycle % 2 == 0)
+		{
+			return StraightVirus;
+		}
+
+		else return Virus;
 	}
 	return nullptr;
 }

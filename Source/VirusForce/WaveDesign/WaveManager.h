@@ -29,6 +29,9 @@ public:
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
 	TSubclassOf<class AVirus> Virus;
 
+	UPROPERTY(Category = Viruses, EditDefaultsOnly)
+	TSubclassOf<class AVirus> StraightVirus;
+
 	TSubclassOf<AVirus> CurrentlySpawningVirusType;
 
 	// Called every frame
@@ -37,7 +40,7 @@ public:
 private:
 	FTimerHandle TimerHandle_WaveTimerExpired;
 
-	int32 WaveCycle = 1;
+	int32 WaveCycle = 0;
 	
 	void SetWaveCanSpawn();
 

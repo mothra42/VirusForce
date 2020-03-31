@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "../NPC/Virus.h"
 #include "../WaveDesign/WaveManager.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "Engine/Public/EngineUtils.h"
 
 
@@ -15,7 +16,7 @@ AArena::AArena()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//handles timing and what class of virus to spawn
-	WaveManager = CreateDefaultSubobject<UWaveManager>(TEXT("WaveManager"));
+	WaveManager = CreateDefaultSubobject<UWaveManager>(TEXT("WaveManagerComponent"));
 
 	MinExtent = FVector(-6000, -6000, 0);
 	MaxExtent = FVector(6000, 6000, 0);
@@ -87,6 +88,7 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 	UWorld* World = GetWorld();
 	if (World != NULL && VirusClass != nullptr)
 	{
-		AVirus* SpawnedVirus = World->SpawnActor<AVirus>(VirusClass, SpawnPoint, FRotator());
+		FRotator RandRotator = UKismetMathLibrary::RandomRotator();
+		AVirus* SpawnedVirus = World->SpawnActor<AVirus>(VirusClass, SpawnPoint, FRotator(0, RandRotator.Yaw, 0));
 	}
 }
