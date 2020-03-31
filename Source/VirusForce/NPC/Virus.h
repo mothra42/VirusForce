@@ -22,13 +22,16 @@ public:
 protected:
 	/* The mesh component */
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UStaticMeshComponent* ShipMeshComponent;
+	class UStaticMeshComponent* ShipMeshComponent;
 
 	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UFloatingPawnMovement* MovementComponent;
+	class UFloatingPawnMovement* MovementComponent;
 
 	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-		class UMarkedVirusComponent* MarkedVirusComponent;
+	class UMarkedVirusComponent* MarkedVirusComponent;
+
+	UPROPERTY(Category = VirusProperties, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	float VirusSpeed = 1000.f;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -46,6 +49,9 @@ public:
 	/** Returns ShipMeshComponent subobject **/
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
+
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE float GetVirusSpeed() const { return VirusSpeed; }
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

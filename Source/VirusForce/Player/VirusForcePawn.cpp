@@ -15,6 +15,8 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "../NPC/KillerTCell.h"
 
+#include "DrawDebugHelpers.h"
+
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
 const FName AVirusForcePawn::FireForwardBinding("FireForward");

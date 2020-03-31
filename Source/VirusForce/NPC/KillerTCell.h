@@ -26,7 +26,9 @@ public:
 
 private:
 	UFUNCTION(BlueprintCallable)
-	void ConsumeVirus(class AVirus* Virus);
+	void ConsumeVirus(AActor* ActorToConsume);
+
+	void DestroyVirus(class AVirus* VirusToDestroy);
 
 protected:
 	// Called when the game starts or when spawned

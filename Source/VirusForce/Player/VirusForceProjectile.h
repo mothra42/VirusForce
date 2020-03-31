@@ -22,6 +22,8 @@ class AVirusForceProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
+	class AVirus* AttachedVirus;
+
 public:
 	AVirusForceProjectile();
 
@@ -34,12 +36,14 @@ public:
 	/** Returns ProjectileMovement subobject **/
 	FORCEINLINE UProjectileMovementComponent* GetProjectileMovement() const { return ProjectileMovement; }
 
+	FORCEINLINE AVirus* GetAttachedVirus() const { return AttachedVirus; }
+
 	bool IsAttached = false;
 
 private:
 	void DestroyProjectile();
 
-	void AddVirusToMarkedViruses(class AVirus* Virus);
+	void AddVirusToMarkedViruses(AVirus* Virus);
 
 	FName FindNearestSocketName(AVirus* HitVirus, FHitResult Hit);
 };

@@ -11,6 +11,7 @@
 #include "MarkedVirusComponent.h"
 #include "../GameMode/VirusForceGameMode.h"
 #include "Virus.h"
+#include "../Player/VirusForceProjectile.h"
 
 // Sets default values
 AKillerTCell::AKillerTCell()
@@ -50,25 +51,50 @@ void AKillerTCell::Tick(float DeltaSeconds)
 
 //TODO Create overlap function that will consume marked viruses only
 
-void AKillerTCell::ConsumeVirus(AVirus* Virus)
+void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 {
+	//TODO killer t cell is having trouble consuming virus need to check when the on hit is failing.
 	TArray<AActor*> OutAttachedActors;
-	if (MarkedVirusComponent->GetMarkedViruses().Find(Virus) >= 0)
+	AVirus* Virus = Cast<AVirus>(ActorToConsume);
+	if (Virus != nullptr)
 	{
-		auto AIController = Virus->GetController();
-		AIController->PawnPendingDestroy(Virus);
-		AIController->Destroy();
-		TArray<AVirus*>MarkedViruses = MarkedVirusComponent->RemoveFromMarkedViruses(Virus);
-		Virus->GetAttachedActors(OutAttachedActors);
-		for (int32 i = 0; i < OutAttachedActors.Num(); i++)
+		if (MarkedVirusComponent->GetMarkedViruses().Find(Virus) >= 0)
 		{
-			OutAttachedActors[i]->Destroy();
+			DestroyVirus(Virus);
 		}
-		Virus->Destroy();
+	}
+
+	//if the hit actor is not a virus check if it is a projectile attached to a virus
+	else
+	{
+		AVirusForceProjectile* HitProjectile = Cast<AVirusForceProjectile>(ActorToConsume);
+		if (HitProjectile != nullptr)
+		{
+			if (HitProjectile->IsAttached)
+			{
+				DestroyVirus(HitProjectile->GetAttachedVirus());
+			}
+		}
 	}
 	
 	if (MarkedVirusComponent->GetMarkedViruses().Num() <= 0)
 	{
 		Destroy();
 	}
+}
+
+void AKillerTCell::DestroyVirus(AVirus* VirusToDestroy)
+{
+	TArray<AActor*> OutAttachedActors;
+
+	auto AIController = VirusToDestroy->GetController();
+	AIController->PawnPendingDestroy(VirusToDestroy);
+	AIController->Destroy();
+	TArray<AVirus*>MarkedViruses = MarkedVirusComponent->RemoveFromMarkedViruses(VirusToDestroy);
+	VirusToDestroy->GetAttachedActors(OutAttachedActors);
+	for (int32 i = 0; i < OutAttachedActors.Num(); i++)
+	{
+		OutAttachedActors[i]->Destroy();
+	}
+	VirusToDestroy->Destroy();
 }
