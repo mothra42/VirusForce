@@ -20,20 +20,11 @@ protected:
 	virtual void BeginPlay() override;
 
 private:
-	FVector SetBeginDrawVector(FVector BeginLocation);
-
-	FVector SetEndDrawVector(FVector EndLocation);
-
-	FPlane FindReflectionPlane(FVector Location, FVector Normal);
 
 public:
-	FVector BeginDrawVector;
-	FVector EndDrawVector;
-
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
-	FVector GetVectorToMirror();
 };
