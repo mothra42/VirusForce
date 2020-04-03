@@ -28,9 +28,10 @@ public:
 
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
 	TSubclassOf<class AVirus> Virus;
-
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
-	TSubclassOf<class AVirus> StraightVirus;
+	TSubclassOf<AVirus> StraightVirus;
+	UPROPERTY(Category = Viruses, EditDefaultsOnly)
+	TSubclassOf<AVirus> TrackingVirus;
 
 	TSubclassOf<AVirus> CurrentlySpawningVirusType;
 
