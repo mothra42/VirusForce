@@ -45,7 +45,7 @@ void AArena::SpawnVirus()
 	float VirusMeshRadius = WaveManager->CurrentlySpawningVirusType->GetDefaultObject<AVirus>()->MeshRadius;
 	if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
 	{
-		PlaceVirus(SpawnLocation, WaveManager->CurrentlySpawningVirusType);
+		PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), WaveManager->CurrentlySpawningVirusType);
 	}
 }
 
