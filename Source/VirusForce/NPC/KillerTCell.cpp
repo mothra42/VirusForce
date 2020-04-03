@@ -34,11 +34,14 @@ AKillerTCell::AKillerTCell()
 void AKillerTCell::BeginPlay()
 {
 	Super::BeginPlay();
-
+	ShipMeshComponent->OnComponentHit.AddDynamic(this, &AKillerTCell::OnHit);
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
 	{
 		MarkedVirusComponent = GameMode->GetMarkedVirusComponent();
+
+		//in case the player calls a Killer T Cell before any virus are marked destroy self immediately
+		DestroySelfWhenFinishedConsuming();
 	}
 }
 
@@ -49,37 +52,41 @@ void AKillerTCell::Tick(float DeltaSeconds)
 
 }
 
-//TODO Create overlap function that will consume marked viruses only
+void AKillerTCell::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	ConsumeVirus(OtherActor);
+}
 
 void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 {
-	//TODO killer t cell is having trouble consuming virus need to check when the on hit is failing.
-	TArray<AActor*> OutAttachedActors;
-	AVirus* Virus = Cast<AVirus>(ActorToConsume);
-	if (Virus != nullptr)
+	if (MarkedVirusComponent != nullptr)
 	{
-		if (MarkedVirusComponent->GetMarkedViruses().Find(Virus) >= 0)
+		TArray<AActor*> OutAttachedActors;
+		AVirus* Virus = Cast<AVirus>(ActorToConsume);
+		if (Virus != nullptr)
 		{
-			DestroyVirus(Virus);
-		}
-	}
-
-	//if the hit actor is not a virus check if it is a projectile attached to a virus
-	else
-	{
-		AVirusForceProjectile* HitProjectile = Cast<AVirusForceProjectile>(ActorToConsume);
-		if (HitProjectile != nullptr)
-		{
-			if (HitProjectile->IsAttached)
+			UE_LOG(LogTemp, Warning, TEXT("I Hit A Virus"));
+			if (MarkedVirusComponent->GetMarkedViruses().Find(Virus) >= 0)
 			{
-				DestroyVirus(HitProjectile->GetAttachedVirus());
+				DestroyVirus(Virus);
 			}
 		}
-	}
-	
-	if (MarkedVirusComponent->GetMarkedViruses().Num() <= 0)
-	{
-		Destroy();
+
+		//if the hit actor is not a virus check if it is a projectile attached to a virus
+		else
+		{
+			AVirusForceProjectile* HitProjectile = Cast<AVirusForceProjectile>(ActorToConsume);
+			if (HitProjectile != nullptr)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("I Hit A Projectile"));
+				if (HitProjectile->IsAttached)
+				{
+					DestroyVirus(HitProjectile->GetAttachedVirus());
+				}
+			}
+		}
+
+		DestroySelfWhenFinishedConsuming();
 	}
 }
 
@@ -97,4 +104,15 @@ void AKillerTCell::DestroyVirus(AVirus* VirusToDestroy)
 		OutAttachedActors[i]->Destroy();
 	}
 	VirusToDestroy->Destroy();
+}
+
+void AKillerTCell::DestroySelfWhenFinishedConsuming()
+{
+	if (MarkedVirusComponent->GetMarkedViruses().Num() <= 0)
+	{
+		auto MyAIController = GetController();
+		MyAIController->PawnPendingDestroy(this);
+		MyAIController->Destroy();
+		Destroy();
+	}
 }

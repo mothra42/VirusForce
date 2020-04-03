@@ -30,6 +30,8 @@ private:
 
 	void DestroyVirus(class AVirus* VirusToDestroy);
 
+	void DestroySelfWhenFinishedConsuming();
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -44,4 +46,7 @@ public:
 
 	UFUNCTION()
 	FORCEINLINE class UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
+
+	UFUNCTION()
+	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
