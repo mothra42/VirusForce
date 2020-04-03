@@ -23,9 +23,6 @@ AVirusForceProjectile::AVirusForceProjectile()
 	ProjectileMesh->OnComponentHit.AddDynamic(this, &AVirusForceProjectile::OnHit);		// set up a notification for when this component hits something
 	RootComponent = ProjectileMesh;
 
-	//PhysicsConstraintComponent = CreateDefaultSubobject<UPhysicsConstraintComponent>(TEXT("PhysicsConstraint"));
-	//PhysicsConstraintComponent->SetupAttachment(RootComponent);
-
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement0"));
 	ProjectileMovement->UpdatedComponent = ProjectileMesh;

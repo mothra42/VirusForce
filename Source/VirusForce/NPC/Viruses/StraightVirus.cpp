@@ -27,7 +27,6 @@ void AStraightVirus::Tick(float DeltaTime)
 
 void AStraightVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	UE_LOG(LogTemp, Warning, TEXT("I'm hitting when spawning?"));
 	AArena* Arena = Cast<AArena>(OtherActor);
 	if (Arena != nullptr)
 	{
