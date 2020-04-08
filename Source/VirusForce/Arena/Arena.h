@@ -11,6 +11,9 @@ class VIRUSFORCE_API AArena : public AActor
 {
 	GENERATED_BODY()
 	
+	UPROPERTY(Category = WaveManagement, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UWaveManager* WaveManager;
+
 public:	
 	// Sets default values for this actor's properties
 	AArena();
@@ -18,9 +21,6 @@ public:
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
-
-	UPROPERTY(Category = WaveManagement, EditDefaultsOnly)
-	class UWaveManager* WaveManager;
 
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
 	FVector MinExtent;

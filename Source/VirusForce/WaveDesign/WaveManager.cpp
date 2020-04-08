@@ -60,6 +60,10 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 	if (Virus != nullptr && StraightVirus != nullptr)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("My Wave Cycle is %i"), WaveCycle);
+		if (WaveCycle % 5 == 0)
+		{
+			return TrackingVirus;
+		}
 		if (WaveCycle % 2 == 0)
 		{
 			return StraightVirus;

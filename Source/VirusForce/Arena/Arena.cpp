@@ -16,7 +16,7 @@ AArena::AArena()
 	PrimaryActorTick.bCanEverTick = true;
 
 	//handles timing and what class of virus to spawn
-	WaveManager = CreateDefaultSubobject<UWaveManager>(TEXT("WaveManagerComponent"));
+	//WaveManager = CreateDefaultSubobject<UWaveManager>(TEXT("WaveManager"));
 
 	MinExtent = FVector(-6000, -6000, 0);
 	MaxExtent = FVector(6000, 6000, 0);
@@ -26,6 +26,9 @@ AArena::AArena()
 void AArena::BeginPlay()
 {
 	Super::BeginPlay();
+
+	//Wave Manger must be set in blueprint
+	WaveManager = FindComponentByClass<UWaveManager>();
 }
 
 // Called every frame
@@ -33,7 +36,7 @@ void AArena::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (WaveManager->bNextWaveCanSpawn == true)
+	if (WaveManager != nullptr && WaveManager->bNextWaveCanSpawn == true)
 	{
 		SpawnVirus();
 	}
@@ -42,10 +45,14 @@ void AArena::Tick(float DeltaTime)
 void AArena::SpawnVirus()
 {
 	FVector SpawnLocation;
-	float VirusMeshRadius = WaveManager->CurrentlySpawningVirusType->GetDefaultObject<AVirus>()->MeshRadius;
-	if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
+
+	if (WaveManager != nullptr)
 	{
-		PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), WaveManager->CurrentlySpawningVirusType);
+		float VirusMeshRadius = WaveManager->CurrentlySpawningVirusType->GetDefaultObject<AVirus>()->MeshRadius;
+		if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
+		{
+			PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), WaveManager->CurrentlySpawningVirusType);
+		}
 	}
 }
 
