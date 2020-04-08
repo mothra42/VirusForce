@@ -7,6 +7,14 @@
 #include "GameFramework/Pawn.h"
 #include "Virus.generated.h"
 
+UENUM()
+enum class EVirusType : uint8
+{
+	BaseVirus,
+	StraightVirus,
+	TrackingVirus
+};
+
 UCLASS()
 class VIRUSFORCE_API AVirus : public APawn
 {
@@ -43,6 +51,8 @@ public:
 
 	UPROPERTY(Category = MeshSize, EditDefaultsOnly)
 	float MeshRadius;
+
+	EVirusType VirusType = EVirusType::BaseVirus;
 
 	TArray<FName> AvailableSocketNames;
 

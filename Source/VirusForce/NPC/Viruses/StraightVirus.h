@@ -22,6 +22,8 @@ protected:
 private:
 
 public:
+	EVirusType VirusType = EVirusType::StraightVirus;
+
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
