@@ -12,6 +12,7 @@
 #include "../GameMode/VirusForceGameMode.h"
 #include "Virus.h"
 #include "../Player/VirusForceProjectile.h"
+#include "../Score/ScoreManager.h"
 
 // Sets default values
 AKillerTCell::AKillerTCell()
@@ -39,6 +40,8 @@ void AKillerTCell::BeginPlay()
 	if (GameMode != nullptr)
 	{
 		MarkedVirusComponent = GameMode->GetMarkedVirusComponent();
+
+		ScoreManager = GameMode->GetScoreManagerComponent();
 
 		//in case the player calls a Killer T Cell before any virus are marked destroy self immediately
 		DestroySelfWhenFinishedConsuming();

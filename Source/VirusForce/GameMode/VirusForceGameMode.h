@@ -17,9 +17,14 @@ public:
 	UFUNCTION(BlueprintCallable)
 	class UMarkedVirusComponent* GetMarkedVirusComponent();
 
+	class UScoreManager* GetScoreManagerComponent();
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = VirusTracking)
 	UMarkedVirusComponent* MarkedVirusComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = ScoreSystem)
+	UScoreManager* ScoreManagerComponent;
 };
 
 

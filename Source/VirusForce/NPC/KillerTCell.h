@@ -20,6 +20,8 @@ class VIRUSFORCE_API AKillerTCell : public APawn
 	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMarkedVirusComponent* MarkedVirusComponent;
 
+	class UScoreManager* ScoreManager;
+
 public:
 	// Sets default values for this pawn's properties
 	AKillerTCell();
@@ -39,7 +41,6 @@ protected:
 public:	
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 	float MoveSpeed;
-
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
