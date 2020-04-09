@@ -27,12 +27,17 @@ public:
 	AKillerTCell();
 
 private:
+
+	int32 NumberOfVirusesToConsume;
+
 	UFUNCTION(BlueprintCallable)
 	void ConsumeVirus(AActor* ActorToConsume);
 
 	void DestroyVirus(class AVirus* VirusToDestroy);
 
 	void DestroySelfWhenFinishedConsuming();
+
+	void IncreaseScoreForConsumingVirus(AVirus* VirusToDestroy);
 
 protected:
 	// Called when the game starts or when spawned

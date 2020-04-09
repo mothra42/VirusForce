@@ -40,6 +40,7 @@ void AKillerTCell::BeginPlay()
 	if (GameMode != nullptr)
 	{
 		MarkedVirusComponent = GameMode->GetMarkedVirusComponent();
+		NumberOfVirusesToConsume = MarkedVirusComponent->GetNumMarkedViruses();
 
 		ScoreManager = GameMode->GetScoreManagerComponent();
 
@@ -68,9 +69,9 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 		AVirus* Virus = Cast<AVirus>(ActorToConsume);
 		if (Virus != nullptr)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("I Hit A Virus"));
 			if (MarkedVirusComponent->GetMarkedViruses().Find(Virus) >= 0)
 			{
+				IncreaseScoreForConsumingVirus(Virus);
 				DestroyVirus(Virus);
 			}
 		}
@@ -84,6 +85,7 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 				UE_LOG(LogTemp, Warning, TEXT("I Hit A Projectile"));
 				if (HitProjectile->IsAttached)
 				{
+					IncreaseScoreForConsumingVirus(HitProjectile->GetAttachedVirus());
 					DestroyVirus(HitProjectile->GetAttachedVirus());
 				}
 			}
@@ -117,5 +119,13 @@ void AKillerTCell::DestroySelfWhenFinishedConsuming()
 		MyAIController->PawnPendingDestroy(this);
 		MyAIController->Destroy();
 		Destroy();
+	}
+}
+
+void AKillerTCell::IncreaseScoreForConsumingVirus(AVirus* Virus)
+{
+	if (ScoreManager != nullptr)
+	{
+		ScoreManager->IncreaseScore(Virus, NumberOfVirusesToConsume);
 	}
 }
