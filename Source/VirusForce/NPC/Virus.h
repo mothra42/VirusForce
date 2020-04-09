@@ -23,6 +23,8 @@ private:
 	//flag to check if virus has already been added to marked viruses
 	bool IsMarked = false;
 
+	int32 MaxNumOfSockets;
+
 public:
 	// Sets default values for this pawn's properties
 	AVirus();
@@ -68,4 +70,7 @@ public:
 
 	//called to add self to list of marked viruses, returns true if successful
 	bool AddToMarkedViruses();
+
+	//used to determine number of attached antibodies on a virus
+	int32 NumOfAttachedAntibodies();
 };

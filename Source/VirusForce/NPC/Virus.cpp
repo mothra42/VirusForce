@@ -37,6 +37,7 @@ void AVirus::BeginPlay()
 	Super::BeginPlay();
 
 	AvailableSocketNames = ShipMeshComponent->GetAllSocketNames();
+	MaxNumOfSockets = AvailableSocketNames.Num();
 
 	//get marked virus component from game mode
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
@@ -66,4 +67,9 @@ bool AVirus::AddToMarkedViruses()
 	}
 
 	return false;
+}
+
+int32 AVirus::NumOfAttachedAntibodies()
+{
+	return MaxNumOfSockets - AvailableSocketNames.Num();
 }
