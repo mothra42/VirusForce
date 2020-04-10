@@ -13,7 +13,6 @@ class VIRUSFORCE_API UScoreManager : public UActorComponent
 {
 	GENERATED_BODY()
 	
-	int32 Score = 0;
 	int32 Multiplier = 1;
 	int32 NumberOfVirusConsumed = 0;
 
@@ -55,6 +54,9 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
+
+	UPROPERTY(Category = Score, BlueprintReadOnly)
+	int32 Score = 0;
 
 	//increases the score
 	int32 IncreaseScore(class AVirus* Virus, int32 MarkedVirusMultiplier);
