@@ -14,8 +14,7 @@
 #include "Sound/SoundBase.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "../NPC/KillerTCell.h"
-
-#include "DrawDebugHelpers.h"
+#include "../GameMode/VirusForceGameMode.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
@@ -163,5 +162,19 @@ void AVirusForcePawn::SpawnKillerTCellInWorld()
 	{
 		// spawn the killer t cell
 		World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation);
+	}
+}
+
+//Lives are stored in the game mode, calls game mode to run lost life function
+void AVirusForcePawn::LoseLife()
+{
+	UWorld* World = GetWorld();
+	if (World != NULL)
+	{
+		AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(World->GetAuthGameMode());
+		if (GameMode != nullptr)
+		{
+			GameMode->ResetGameOnLifeLost(World);
+		}
 	}
 }
