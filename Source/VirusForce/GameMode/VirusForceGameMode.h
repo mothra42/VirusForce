@@ -14,10 +14,18 @@ class AVirusForceGameMode : public AGameModeBase
 public:
 	AVirusForceGameMode();
 
+	UPROPERTY(Category = Lives, EditDefaultsOnly, BlueprintReadOnly)
+	int32 Lives = 3;
+
 	UFUNCTION(BlueprintCallable)
 	class UMarkedVirusComponent* GetMarkedVirusComponent();
 
+	UFUNCTION(BlueprintCallable)
 	class UScoreManager* GetScoreManagerComponent();
+
+	class AVirusForceHUD* GetHUDComponent();
+
+	void ResetGameOnLifeLost(UWorld* World);
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = VirusTracking)
@@ -25,6 +33,12 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = ScoreSystem)
 	UScoreManager* ScoreManagerComponent;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUD)
+	AVirusForceHUD* HUD;
+
+private:
+	void DestroyPawn(APawn* Pawn);
 };
 
 
