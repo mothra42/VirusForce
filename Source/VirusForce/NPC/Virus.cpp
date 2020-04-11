@@ -4,6 +4,7 @@
 #include "Virus.h"
 #include "MarkedVirusComponent.h"
 #include "../GameMode/VirusForceGameMode.h"
+#include "../Player/VirusForcePawn.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Components/StaticMeshComponent.h"
 #include "Components/InputComponent.h"
@@ -37,6 +38,8 @@ void AVirus::BeginPlay()
 	Super::BeginPlay();
 	AvailableSocketNames = ShipMeshComponent->GetAllSocketNames();
 
+	ShipMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);
+
 	//get marked virus component from game mode
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
@@ -50,6 +53,15 @@ void AVirus::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+}
+
+void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+{
+	AVirusForcePawn* Player = Cast<AVirusForcePawn>(OtherActor);
+	if (Player)
+	{
+		Player->LoseLife();
+	}
 }
 
 

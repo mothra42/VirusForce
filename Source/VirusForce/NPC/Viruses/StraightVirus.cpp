@@ -17,6 +17,7 @@ AStraightVirus::AStraightVirus()
 void AStraightVirus::BeginPlay()
 {
 	Super::BeginPlay();
+	Super::ShipMeshComponent->OnComponentHit.RemoveDynamic(this, &Super::OnHit);
 	Super::ShipMeshComponent->OnComponentHit.AddDynamic(this, &AStraightVirus::OnHit);
 }
 
@@ -27,6 +28,8 @@ void AStraightVirus::Tick(float DeltaTime)
 
 void AStraightVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
+	Super::OnHit(HitComp, OtherActor, OtherComp, NormalImpulse, Hit);
+
 	AArena* Arena = Cast<AArena>(OtherActor);
 	if (Arena != nullptr)
 	{

@@ -21,7 +21,4 @@ public:
 	
 	EVirusType VirusType = EVirusType::TrackingVirus;
 
-	UFUNCTION()
-	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
 };

@@ -71,4 +71,7 @@ public:
 
 	//used to determine number of attached antibodies on a virus
 	int32 NumOfAttachedAntibodies();
+
+	UFUNCTION()
+	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 };
