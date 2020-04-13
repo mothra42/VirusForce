@@ -86,3 +86,13 @@ int32 AVirus::NumOfAttachedAntibodies()
 
 	return AttachedAntibodies.Num();
 }
+
+void AVirus::DestroyAttachedAntibodies()
+{
+	TArray<AActor*> OutAttachedActors;
+	GetAttachedActors(OutAttachedActors);
+	for (int32 i = 0; i < OutAttachedActors.Num(); i++)
+	{
+		OutAttachedActors[i]->Destroy();
+	}
+}

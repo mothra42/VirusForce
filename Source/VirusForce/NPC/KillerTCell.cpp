@@ -97,17 +97,13 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 
 void AKillerTCell::DestroyVirus(AVirus* VirusToDestroy)
 {
-	TArray<AActor*> OutAttachedActors;
+	//TArray<AActor*> OutAttachedActors;
 
 	auto AIController = VirusToDestroy->GetController();
 	AIController->PawnPendingDestroy(VirusToDestroy);
 	AIController->Destroy();
+	VirusToDestroy->DestroyAttachedAntibodies();
 	TArray<AVirus*>MarkedViruses = MarkedVirusComponent->RemoveFromMarkedViruses(VirusToDestroy);
-	VirusToDestroy->GetAttachedActors(OutAttachedActors);
-	for (int32 i = 0; i < OutAttachedActors.Num(); i++)
-	{
-		OutAttachedActors[i]->Destroy();
-	}
 	VirusToDestroy->Destroy();
 }
 

@@ -60,6 +60,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
 
+	//UFUNCTION(BlueprintCallable)
+	//FORCEINLINE UFloatingPawnMovement* GetMovementComponent() const { return MovementComponent; }
+
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetVirusSpeed() const { return VirusSpeed; }
 
@@ -74,4 +77,6 @@ public:
 
 	UFUNCTION()
 	virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
+
+	void DestroyAttachedAntibodies();
 };

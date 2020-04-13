@@ -6,6 +6,7 @@
 #include "../NPC/MarkedVirusComponent.h"
 #include "../Score/ScoreManager.h"
 #include "../HUD/VirusForceHUD.h"
+#include "../NPC/Virus.h"
 
 AVirusForceGameMode::AVirusForceGameMode()
 {
@@ -60,6 +61,10 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 	auto Controller = Pawn->GetController();
 	Controller->PawnPendingDestroy(Pawn);
 	Controller->Destroy();
-	//TODO make sure that any virus has any antibodies removed and is removed 
+	AVirus* Virus = Cast<AVirus>(Pawn);
+	if (Virus != nullptr)
+	{
+		Virus->DestroyAttachedAntibodies();
+	}
 	//from marked viruses if it is one.
 }
