@@ -14,7 +14,7 @@ UMarkedVirusComponent::UMarkedVirusComponent()
 {
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+	PrimaryComponentTick.bCanEverTick = false;
 
 	// ...
 }
@@ -27,15 +27,6 @@ void UMarkedVirusComponent::BeginPlay()
 
 	// ...
 	
-}
-
-
-// Called every frame
-void UMarkedVirusComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
 }
 
 TArray<AVirus*> UMarkedVirusComponent::AddToMarkedViruses(AVirus* VirusToAdd)
@@ -64,4 +55,9 @@ TArray<AVirus*> UMarkedVirusComponent::GetMarkedViruses()
 int32 UMarkedVirusComponent::GetNumMarkedViruses()
 {
 	return MarkedViruses.Num();
+}
+
+void UMarkedVirusComponent::PurgeMarkedViruses()
+{
+	MarkedViruses.Empty();
 }

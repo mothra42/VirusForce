@@ -24,14 +24,16 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 	UFUNCTION(BlueprintCallable)
 	TArray<AVirus*> AddToMarkedViruses(AVirus* VirusToAdd);
+
 	UFUNCTION(BlueprintCallable)
 	TArray<AVirus*> RemoveFromMarkedViruses(AVirus* VirusToRemove);
+
 	UFUNCTION(BlueprintCallable)
 	TArray<AVirus*> GetMarkedViruses();
 
 	int32 GetNumMarkedViruses();
+
+	void PurgeMarkedViruses();
 };

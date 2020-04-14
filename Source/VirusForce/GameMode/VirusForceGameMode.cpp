@@ -2,6 +2,8 @@
 
 #include "VirusForceGameMode.h"
 #include "Kismet/GameplayStatics.h"
+#include "Engine/World.h"
+#include "GameFramework/PlayerController.h"
 #include "../Player/VirusForcePawn.h"
 #include "../NPC/MarkedVirusComponent.h"
 #include "../Score/ScoreManager.h"
@@ -37,9 +39,12 @@ AVirusForceHUD* AVirusForceGameMode::GetHUDComponent()
 
 void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Life lost"))
 	//decrement lives
 	Lives--;
+
+	//Reset MarkedVirusesArray
+	MarkedVirusComponent->PurgeMarkedViruses();
+
 	//destroy all pawns
 	TArray<AActor*> VirusArray;
 	UGameplayStatics::GetAllActorsOfClass(World, APawn::StaticClass(), VirusArray);
@@ -51,20 +56,32 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 			DestroyPawn(PawnToDestroy);
 		}
 	}
-	//TODOS
-	//reset spawn counter
 	//respawn player
+	AVirusForcePawn* Player = World->SpawnActor<AVirusForcePawn>(DefaultPawnClass, FVector(0, 0, 0), FRotator(0, 0, 0));
+	//Player->AutoPossessPlayer()
+	if (PlayerController != nullptr)
+	{
+		PlayerController->Possess(Player);
+	}
+	//TODO test game with resetting spawn counter
 }
 
 void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 {
-	auto Controller = Pawn->GetController();
-	Controller->PawnPendingDestroy(Pawn);
-	Controller->Destroy();
+	if (Cast<AVirusForcePawn>(Pawn) == nullptr)
+	{
+		auto Controller = Pawn->GetController();
+		Controller->PawnPendingDestroy(Pawn);
+		Controller->Destroy();
+	}
+	else
+	{
+		PlayerController = Cast<APlayerController>(Pawn->GetController());
+	}
 	AVirus* Virus = Cast<AVirus>(Pawn);
 	if (Virus != nullptr)
 	{
 		Virus->DestroyAttachedAntibodies();
 	}
-	//from marked viruses if it is one.
+	Pawn->Destroy();
 }

@@ -96,6 +96,6 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 	if (World != NULL && VirusClass != nullptr)
 	{
 		FRotator RandRotator = UKismetMathLibrary::RandomRotator();
-		AVirus* SpawnedVirus = World->SpawnActor<AVirus>(VirusClass, SpawnPoint, FRotator(0, RandRotator.Yaw, 0));
+		AVirus* SpawnedVirus = World->SpawnActor<AVirus>(VirusClass, FVector(SpawnPoint.X, SpawnPoint.Y, 0.f), FRotator(0.f, RandRotator.Yaw, 0.f));
 	}
 }

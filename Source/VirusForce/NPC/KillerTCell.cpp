@@ -97,8 +97,6 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 
 void AKillerTCell::DestroyVirus(AVirus* VirusToDestroy)
 {
-	//TArray<AActor*> OutAttachedActors;
-
 	auto AIController = VirusToDestroy->GetController();
 	AIController->PawnPendingDestroy(VirusToDestroy);
 	AIController->Destroy();

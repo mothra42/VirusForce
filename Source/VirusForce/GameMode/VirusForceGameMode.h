@@ -37,8 +37,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUD)
 	AVirusForceHUD* HUD;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerRespawn)
+	TSubclassOf<class AVirusForcePawn> VirusForcePawn_BP;
+
 private:
 	void DestroyPawn(APawn* Pawn);
+
+	class APlayerController* PlayerController;
 };
 
 
