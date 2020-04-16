@@ -8,6 +8,7 @@
 #include "Math/Plane.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Kismet/GameplayStatics.h"
 
 AStraightVirus::AStraightVirus()
 {		
@@ -19,6 +20,10 @@ void AStraightVirus::BeginPlay()
 	Super::BeginPlay();
 	Super::ShipMeshComponent->OnComponentHit.RemoveDynamic(this, &Super::OnHit);
 	Super::ShipMeshComponent->OnComponentHit.AddDynamic(this, &AStraightVirus::OnHit);
+
+	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	FRotator RotationToFacePlayer = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), PlayerPawn->GetActorLocation());
+	SetActorRotation(RotationToFacePlayer);
 }
 
 void AStraightVirus::Tick(float DeltaTime)
