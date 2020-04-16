@@ -41,9 +41,17 @@ protected:
 	TSubclassOf<class AVirusForcePawn> VirusForcePawn_BP;
 
 private:
-	void DestroyPawn(APawn* Pawn);
+	class AVirusForcePawn* PlayerPawn;
 
 	class APlayerController* PlayerController;
+	
+	FTransform PlayerDeathTransform;
+
+	FTimerHandle TimerHandle_RespawnPlayer;
+
+	void DestroyPawn(APawn* Pawn);
+
+	void RespawnPlayer();
 };
 
 

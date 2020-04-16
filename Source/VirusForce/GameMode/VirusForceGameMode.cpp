@@ -4,7 +4,9 @@
 #include "Kismet/GameplayStatics.h"
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
+#include "Components/StaticMeshComponent.h"
 #include "../Player/VirusForcePawn.h"
+#include "../Player/VirusForceProjectile.h"
 #include "../NPC/MarkedVirusComponent.h"
 #include "../Score/ScoreManager.h"
 #include "../HUD/VirusForceHUD.h"
@@ -46,24 +48,23 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	MarkedVirusComponent->PurgeMarkedViruses();
 
 	//destroy all pawns
-	TArray<AActor*> VirusArray;
-	UGameplayStatics::GetAllActorsOfClass(World, APawn::StaticClass(), VirusArray);
-	for (int32 i = 0; i < VirusArray.Num(); i++)
+	TArray<AActor*> ActorArray;
+	UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), ActorArray);
+	for (int32 i = 0; i < ActorArray.Num(); i++)
 	{
-		APawn* PawnToDestroy = Cast<APawn>(VirusArray[i]);
+		APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
+		AVirusForceProjectile* ProjectileToDestroy = Cast<AVirusForceProjectile>(ActorArray[i]);
 		if (PawnToDestroy != nullptr)
 		{
 			DestroyPawn(PawnToDestroy);
 		}
+		else if (ProjectileToDestroy != nullptr)
+		{
+			ProjectileToDestroy->Destroy();
+		}
 	}
-	//respawn player
-	AVirusForcePawn* Player = World->SpawnActor<AVirusForcePawn>(DefaultPawnClass, FVector(0, 0, 0), FRotator(0, 0, 0));
-	//Player->AutoPossessPlayer()
-	if (PlayerController != nullptr)
-	{
-		PlayerController->Possess(Player);
-	}
-	//TODO test game with resetting spawn counter
+	
+	World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 2.f);
 }
 
 void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
@@ -76,12 +77,28 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 	}
 	else
 	{
-		PlayerController = Cast<APlayerController>(Pawn->GetController());
+		PlayerPawn = Cast<AVirusForcePawn>(Pawn);
+		PlayerPawn->DisableMovement();
+		PlayerController = Cast<APlayerController>(PlayerPawn->GetController());
+		PlayerDeathTransform = PlayerPawn->GetActorTransform();
+		PlayerPawn->GetShipMeshComponent()->SetVisibility(false);
+		return;
 	}
+
 	AVirus* Virus = Cast<AVirus>(Pawn);
 	if (Virus != nullptr)
 	{
 		Virus->DestroyAttachedAntibodies();
 	}
+
 	Pawn->Destroy();
+}
+
+void AVirusForceGameMode::RespawnPlayer()
+{
+	if (PlayerController != nullptr && PlayerPawn != nullptr)
+	{
+		PlayerPawn->Destroy();
+		RestartPlayerAtTransform(PlayerController, PlayerDeathTransform);
+	}
 }
