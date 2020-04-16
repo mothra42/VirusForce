@@ -81,6 +81,8 @@ private:
 	/* Flag to control firing  */
 	uint32 bCanFire : 1;
 
+	bool bCanMove = true;
+
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
 
@@ -94,5 +96,7 @@ public:
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
+
+	FORCEINLINE void DisableMovement() { bCanMove = false; }
 };
 
