@@ -82,7 +82,6 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 			AVirusForceProjectile* HitProjectile = Cast<AVirusForceProjectile>(ActorToConsume);
 			if (HitProjectile != nullptr)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("I Hit A Projectile"));
 				if (HitProjectile->IsAttached)
 				{
 					IncreaseScoreForConsumingVirus(HitProjectile->GetAttachedVirus());

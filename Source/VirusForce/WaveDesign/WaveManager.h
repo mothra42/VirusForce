@@ -6,6 +6,7 @@
 #include "Components/ActorComponent.h"
 #include "WaveManager.generated.h"
 
+//enum class EVirusType : uint8;
 
 UCLASS( ClassGroup=(Custom), Blueprintable,  meta=(BlueprintSpawnableComponent) )
 class VIRUSFORCE_API UWaveManager : public UActorComponent
@@ -38,10 +39,18 @@ public:
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+	//Called at begin play from arena blueprint
+	UFUNCTION(Category = SpawnLocations, BlueprintCallable)
+	void SetMassWaveSpawnPoints(TArray<FVector> SpawnPoints);
+
 private:
 	FTimerHandle TimerHandle_WaveTimerExpired;
 
 	int32 WaveCycle = 0;
+
+	TArray<FVector> MassWaveSpawnPoints;
+
+	FVector CenterPoint = FVector(0, 0, 0);
 	
 	void SetWaveCanSpawn();
 

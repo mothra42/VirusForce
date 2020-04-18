@@ -14,6 +14,10 @@ class VIRUSFORCE_API AArena : public AActor
 	UPROPERTY(Category = WaveManagement, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UWaveManager* WaveManager;
 
+	//set at beginplay in arena blueprint
+	UPROPERTY(Category = SpawnLocations, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TArray<FVector> SpawnPointLocations;
+
 public:	
 	// Sets default values for this actor's properties
 	AArena();
@@ -32,10 +36,12 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SpawnVirus();
+	
+	void SpawnMassWave(TArray<TSubclassOf<class AVirus>> VirusTypesToSpawn);
 
 private:
 
-	TSubclassOf<class AVirus> VirusClassToSpawn;
+	TSubclassOf<AVirus> VirusClassToSpawn;
 
 	bool bCanSpawnAtLocation(FVector Location, float Radius);
 

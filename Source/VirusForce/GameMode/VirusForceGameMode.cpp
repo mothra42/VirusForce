@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/StaticMeshComponent.h"
+#include "Kismet/KismetSystemLibrary.h"
 #include "../Player/VirusForcePawn.h"
 #include "../Player/VirusForceProjectile.h"
 #include "../NPC/MarkedVirusComponent.h"
@@ -44,6 +45,11 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	//decrement lives
 	Lives--;
 
+	if (Lives < 0)
+	{
+	    //TODO quit to start screen
+		//TODO make start screen
+	}
 	//Reset MarkedVirusesArray
 	MarkedVirusComponent->PurgeMarkedViruses();
 

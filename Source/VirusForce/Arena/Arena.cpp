@@ -2,7 +2,7 @@
 
 
 #include "Arena.h"
-#include "DrawDebugHelpers.h"
+#include "Components/SceneComponent.h"
 #include "../NPC/Virus.h"
 #include "../WaveDesign/WaveManager.h"
 #include "Kismet/KismetMathLibrary.h"
@@ -15,11 +15,8 @@ AArena::AArena()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	//handles timing and what class of virus to spawn
-	//WaveManager = CreateDefaultSubobject<UWaveManager>(TEXT("WaveManager"));
-
-	MinExtent = FVector(-6000, -6000, 0);
-	MaxExtent = FVector(6000, 6000, 0);
+	MinExtent = FVector(-3000, -3000, 0);
+	MaxExtent = FVector(3000, 3000, 0);
 }
 
 // Called when the game starts or when spawned
@@ -98,4 +95,9 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 		FRotator RandRotator = UKismetMathLibrary::RandomRotator();
 		AVirus* SpawnedVirus = World->SpawnActor<AVirus>(VirusClass, FVector(SpawnPoint.X, SpawnPoint.Y, 0.f), FRotator(0.f, RandRotator.Yaw, 0.f));
 	}
+}
+
+void AArena::SpawnMassWave(TArray<TSubclassOf<AVirus>> VirusTypesToSpawn)
+{
+
 }

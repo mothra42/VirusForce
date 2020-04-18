@@ -4,6 +4,11 @@
 #include "WaveManager.h"
 #include "../NPC/Virus.h"
 
+
+//Two big TODOS one refactor to use the virustype enumeration instead of passing the class along
+//the bigger one is to move all the spawning logic from the arena into the wave manager.
+//for now the mass wave spawn will be handled in this class; 
+
 // Sets default values for this component's properties
 UWaveManager::UWaveManager()
 {
@@ -42,6 +47,8 @@ void UWaveManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 		World->GetTimerManager().SetTimer(TimerHandle_WaveTimerExpired, this, &UWaveManager::SetWaveCanSpawn, EnemyWaveRate);
 
 		WaveCycle++;
+
+
 	}
 }
 
@@ -72,4 +79,9 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 		else return Virus;
 	}
 	return nullptr;
+}
+
+void UWaveManager::SetMassWaveSpawnPoints(TArray<FVector> SpawnPoints)
+{
+	MassWaveSpawnPoints = SpawnPoints;
 }
