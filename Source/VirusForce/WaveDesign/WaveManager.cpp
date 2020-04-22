@@ -3,11 +3,8 @@
 
 #include "WaveManager.h"
 #include "../NPC/Virus.h"
-
-
-//Two big TODOS one refactor to use the virustype enumeration instead of passing the class along
-//the bigger one is to move all the spawning logic from the arena into the wave manager.
-//for now the mass wave spawn will be handled in this class; 
+#include "../GameMode/VirusForceGameMode.h"
+#include "../Score/ScoreManager.h"
 
 // Sets default values for this component's properties
 UWaveManager::UWaveManager()
@@ -45,10 +42,7 @@ void UWaveManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 		//set a new virus type to be spawned
 		CurrentlySpawningVirusType = CycleSpawnedVirusType();
 		World->GetTimerManager().SetTimer(TimerHandle_WaveTimerExpired, this, &UWaveManager::SetWaveCanSpawn, EnemyWaveRate);
-
 		WaveCycle++;
-
-
 	}
 }
 
@@ -66,12 +60,11 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 	//THOUGHT have a separate type of wave counter that will spawn mobs of enemies like in geometry wars
 	if (Virus != nullptr && StraightVirus != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("My Wave Cycle is %i"), WaveCycle);
-		if (WaveCycle % 5 == 0)
+		if (WaveCycle % 2 == 0)
 		{
 			return TrackingVirus;
 		}
-		if (WaveCycle % 2 == 0)
+		if (WaveCycle % 5 == 0)
 		{
 			return StraightVirus;
 		}
@@ -81,7 +74,27 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 	return nullptr;
 }
 
-void UWaveManager::SetMassWaveSpawnPoints(TArray<FVector> SpawnPoints)
+EWaveType UWaveManager::DetermineMassWaveSpawnType()
 {
-	MassWaveSpawnPoints = SpawnPoints;
+	int32 RandInt = FMath::RandRange(0, 6);
+
+	switch(RandInt)
+	{
+		case 0:
+			return EWaveType::BaseVirusWave;
+		case 1:
+			return EWaveType::StraightVirusWave;
+		case 2:
+			return EWaveType::FollowVirusWave;
+		case 3:
+			return EWaveType::BaseAndStraightMixWave;
+		case 4:
+			return EWaveType::BaseAndFollowMixWave;
+		case 5:
+			return EWaveType::StraightAndFollowMixWave;
+		case 6:
+			return EWaveType::TripleVirusWave;
+		default:
+			return EWaveType::BaseVirusWave;
+	}
 }
