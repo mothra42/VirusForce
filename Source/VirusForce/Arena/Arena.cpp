@@ -4,9 +4,13 @@
 #include "Arena.h"
 #include "Components/SceneComponent.h"
 #include "../NPC/Virus.h"
+#include "../NPC/Viruses/StraightVirus.h"
+#include "../NPC/Viruses/TrackingVirus.h"
 #include "../WaveDesign/WaveManager.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/Public/EngineUtils.h"
+#include "TimerManager.h"
+#include "Containers/Queue.h"
 
 
 // Sets default values
@@ -26,6 +30,8 @@ void AArena::BeginPlay()
 
 	//Wave Manger must be set in blueprint
 	WaveManager = FindComponentByClass<UWaveManager>();
+
+	GetWorldTimerManager().SetTimer(TimerHandle_MassSpawnTimer, this, &AArena::PopulateSpawnQueue, 30.f, true, 5.f);
 }
 
 // Called every frame
@@ -37,6 +43,8 @@ void AArena::Tick(float DeltaTime)
 	{
 		SpawnVirus();
 	}
+
+	ConsumeSpawnQueue();
 }
 
 void AArena::SpawnVirus()
@@ -97,7 +105,38 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 	}
 }
 
-void AArena::SpawnMassWave(TArray<TSubclassOf<AVirus>> VirusTypesToSpawn)
+void AArena::PopulateSpawnQueue()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Populating queue"));
+	for (int32 i = 0; i < MassSpawnIterations; i++)
+	{
+		for (int32 j = 0; j < SpawnPointLocations.Num(); j++)
+		{
+			FRotator RandRotator = UKismetMathLibrary::RandomRotator();
+			FSpawnInstructions SpawnInstructions(SpawnPointLocations[j], WaveManager->Virus, FRotator(0.f, RandRotator.Yaw, 0.f));
+			SpawnQueue.Enqueue(SpawnInstructions);
+		}
+	}
+}
 
+void AArena::ConsumeSpawnQueue()
+{
+	if (!SpawnQueue.IsEmpty() && GetWorldTimerManager().GetTimerRemaining(TimerHandle_SpawnDelayTimer) <= 0)
+	{
+		FSpawnInstructions SpawnInstructions;
+		SpawnQueue.Dequeue(SpawnInstructions);
+
+		SpawnMassWaveDel.BindUFunction(this, FName("SpawnVirusForMassWave"), SpawnInstructions);
+		GetWorldTimerManager().SetTimer(TimerHandle_SpawnDelayTimer, SpawnMassWaveDel, SpawnDelayTime, false);
+	}
+}
+
+void AArena::SpawnVirusForMassWave(FSpawnInstructions SpawnInstructions)
+{
+	UE_LOG(LogTemp, Warning, TEXT("Spawn Locations would be %s"), *SpawnInstructions.Location.ToString());
+	UWorld* World = GetWorld();
+	if (World != NULL)
+	{
+		World->SpawnActor<AVirus>(SpawnInstructions.VirusClassToSpawn, SpawnInstructions.Location, SpawnInstructions.Rotation);
+	}
 }
