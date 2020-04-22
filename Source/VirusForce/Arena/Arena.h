@@ -6,6 +6,26 @@
 #include "GameFramework/Actor.h"
 #include "Arena.generated.h"
 
+enum class EWaveType : uint8;
+
+
+USTRUCT()
+struct FSpawnInstructions
+{
+	GENERATED_USTRUCT_BODY()
+
+	FVector Location;
+	TSubclassOf<class AVirus> VirusClassToSpawn;
+	FRotator Rotation;
+
+	//This might be bad
+	FSpawnInstructions() 
+		: Location(FVector()), VirusClassToSpawn(nullptr), Rotation(FRotator()) {}
+
+	FSpawnInstructions(const FVector InLocation, const TSubclassOf<AVirus>& InVirusClassToSpawn, const FRotator InRotator)
+		: Location(InLocation), VirusClassToSpawn(InVirusClassToSpawn), Rotation(InRotator) {}
+};
+
 UCLASS()
 class VIRUSFORCE_API AArena : public AActor
 {
