@@ -8,7 +8,6 @@
 
 enum class EWaveType : uint8;
 
-
 USTRUCT()
 struct FSpawnInstructions
 {
@@ -68,6 +67,12 @@ private:
 	FTimerDelegate SpawnMassWaveDel;
 
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
+	float DelayUntilMassWavesBegin = 60.f;
+
+	UPROPERTY(Category = Spawning, EditDefaultsOnly)
+	float TimeBetweenMassWaves = 30.f;
+
+	UPROPERTY(Category = Spawning, EditDefaultsOnly)
 	float SpawnDelayTime = 0.3f;
 
 	//used to determine how many viruses are spawned during a mass wave
@@ -91,5 +96,7 @@ private:
 	void ConsumeSpawnQueue();
 
 	UFUNCTION()
-		void SpawnVirusForMassWave(FSpawnInstructions SpawnInstructions);
+	void SpawnVirusForMassWave(FSpawnInstructions SpawnInstructions);
+
+	TSubclassOf<AVirus> GetVirusTypeToSpawn(EWaveType WaveType, int32 index);
 };

@@ -31,7 +31,12 @@ void AArena::BeginPlay()
 	//Wave Manger must be set in blueprint
 	WaveManager = FindComponentByClass<UWaveManager>();
 
-	GetWorldTimerManager().SetTimer(TimerHandle_MassSpawnTimer, this, &AArena::PopulateSpawnQueue, 30.f, true, 5.f);
+	GetWorldTimerManager().SetTimer(TimerHandle_MassSpawnTimer, 
+		this, 
+		&AArena::PopulateSpawnQueue, 
+		TimeBetweenMassWaves, 
+		true, 
+		DelayUntilMassWavesBegin);
 }
 
 // Called every frame
@@ -107,15 +112,72 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 
 void AArena::PopulateSpawnQueue()
 {
+	EWaveType WaveType = WaveManager->DetermineMassWaveSpawnType();
 	UE_LOG(LogTemp, Warning, TEXT("Populating queue"));
 	for (int32 i = 0; i < MassSpawnIterations; i++)
 	{
 		for (int32 j = 0; j < SpawnPointLocations.Num(); j++)
 		{
 			FRotator RandRotator = UKismetMathLibrary::RandomRotator();
-			FSpawnInstructions SpawnInstructions(SpawnPointLocations[j], WaveManager->Virus, FRotator(0.f, RandRotator.Yaw, 0.f));
+			FSpawnInstructions SpawnInstructions(SpawnPointLocations[j], GetVirusTypeToSpawn(WaveType, i), FRotator(0.f, RandRotator.Yaw, 0.f));
 			SpawnQueue.Enqueue(SpawnInstructions);
 		}
+	}
+}
+
+//index here represents which corner the virus is being spawned from
+TSubclassOf<AVirus> AArena::GetVirusTypeToSpawn(EWaveType WaveType, int32 index)
+{
+	switch (WaveType)
+	{
+		case EWaveType::BaseVirusWave:
+			return WaveManager->Virus;
+		case EWaveType::StraightVirusWave:
+			return WaveManager->StraightVirus;
+		case EWaveType::TrackingVirusWave:
+			return WaveManager->TrackingVirus;
+		case EWaveType::BaseAndStraightMixWave:
+			if (index == 0 || index == 2)
+			{
+				return WaveManager->Virus;
+			}
+			else
+			{
+				return WaveManager->StraightVirus;
+			}
+		case EWaveType::BaseAndTrackingMixWave:
+			if (index == 0 || index == 2)
+			{
+				return WaveManager->Virus;
+			}
+			else
+			{
+				return WaveManager->TrackingVirus;
+			}
+		case EWaveType::StraightAndTrackingMixWave:
+			if (index == 0 || index == 2)
+			{
+				return WaveManager->StraightVirus;
+			}
+			else
+			{
+				return WaveManager->TrackingVirus;
+			}
+		case EWaveType::TripleVirusWave:
+			if (index == 0 || index == 2)
+			{
+				return WaveManager->StraightVirus;
+			}
+			else if (index == 1)
+			{
+				return WaveManager->TrackingVirus;
+			}
+			else
+			{
+				return WaveManager->Virus;
+			}
+		default:
+			return WaveManager->Virus;
 	}
 }
 
