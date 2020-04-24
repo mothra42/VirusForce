@@ -11,10 +11,10 @@ enum class EWaveType : uint8
 {
 	BaseVirusWave,
 	StraightVirusWave,
-	FollowVirusWave,
+	TrackingVirusWave,
 	BaseAndStraightMixWave,
-	StraightAndFollowMixWave,
-	BaseAndFollowMixWave,
+	StraightAndTrackingMixWave,
+	BaseAndTrackingMixWave,
 	TripleVirusWave
 };
 
@@ -47,6 +47,8 @@ public:
 	TSubclassOf<AVirus> TrackingVirus;
 
 	TSubclassOf<AVirus> CurrentlySpawningVirusType;
+
+	EWaveType CurrentWaveType;
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

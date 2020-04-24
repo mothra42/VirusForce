@@ -85,13 +85,13 @@ EWaveType UWaveManager::DetermineMassWaveSpawnType()
 		case 1:
 			return EWaveType::StraightVirusWave;
 		case 2:
-			return EWaveType::FollowVirusWave;
+			return EWaveType::TrackingVirusWave;
 		case 3:
 			return EWaveType::BaseAndStraightMixWave;
 		case 4:
-			return EWaveType::BaseAndFollowMixWave;
+			return EWaveType::BaseAndTrackingMixWave;
 		case 5:
-			return EWaveType::StraightAndFollowMixWave;
+			return EWaveType::StraightAndTrackingMixWave;
 		case 6:
 			return EWaveType::TripleVirusWave;
 		default:
