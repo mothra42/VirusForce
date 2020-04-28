@@ -12,6 +12,8 @@
 #include "../Score/ScoreManager.h"
 #include "../HUD/VirusForceHUD.h"
 #include "../NPC/Virus.h"
+#include "../Arena/Arena.h"
+#include "TimerManager.h"
 
 AVirusForceGameMode::AVirusForceGameMode()
 {
@@ -71,6 +73,8 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	}
 	
 	World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 2.f);
+	World->GetTimerManager().PauseTimer(Arena->GetMassSpawnTimer());
+	World->GetTimerManager().PauseTimer(Arena->GetSpawnTimer());
 }
 
 void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
@@ -106,5 +110,7 @@ void AVirusForceGameMode::RespawnPlayer()
 	{
 		PlayerPawn->Destroy();
 		RestartPlayerAtTransform(PlayerController, PlayerDeathTransform);
+		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetMassSpawnTimer());
+		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetSpawnTimer());
 	}
 }

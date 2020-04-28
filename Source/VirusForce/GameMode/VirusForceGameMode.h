@@ -17,6 +17,8 @@ public:
 	UPROPERTY(Category = Lives, EditDefaultsOnly, BlueprintReadOnly)
 	int32 Lives = 3;
 
+	class AArena* Arena;
+
 	UFUNCTION(BlueprintCallable)
 	class UMarkedVirusComponent* GetMarkedVirusComponent();
 
@@ -26,6 +28,8 @@ public:
 	class AVirusForceHUD* GetHUDComponent();
 
 	void ResetGameOnLifeLost(UWorld* World);
+
+	FORCEINLINE void SetArena(AArena* InArena) { Arena = InArena; }
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = VirusTracking)
