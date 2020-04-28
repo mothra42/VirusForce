@@ -3,8 +3,6 @@
 
 #include "WaveManager.h"
 #include "../NPC/Virus.h"
-#include "../GameMode/VirusForceGameMode.h"
-#include "../Score/ScoreManager.h"
 
 // Sets default values for this component's properties
 UWaveManager::UWaveManager()
