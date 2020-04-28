@@ -17,10 +17,6 @@ UWaveManager::UWaveManager()
 void UWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
-	if (Virus != nullptr)
-	{
-		CurrentlySpawningVirusType = StraightVirus;
-	}
 }
 
 
@@ -35,10 +31,7 @@ void UWaveManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 //Method to set the spawned virus type
 TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 {
-	//TODO as more virus types are added we need to be able to change what is currently being spawned dynamically
-	//can use a round counter to determine what is being randomly spawned
-	//THOUGHT have a separate type of wave counter that will spawn mobs of enemies like in geometry wars
-	/*if (Virus != nullptr && StraightVirus != nullptr)
+	if (Virus != nullptr && StraightVirus != nullptr && StraightVirus != nullptr)
 	{
 		if (WaveCycle % 2 == 0)
 		{
@@ -56,9 +49,7 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 			return Virus; 
 		}
 	}
-	return nullptr;*/
-
-	return StraightVirus;
+	return nullptr;
 }
 
 EWaveType UWaveManager::DetermineMassWaveSpawnType()

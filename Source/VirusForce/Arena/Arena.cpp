@@ -35,7 +35,7 @@ void AArena::BeginPlay()
 		TimerHandle_SpawnSingleVirusTimer,
 		this,
 		&AArena::SpawnVirus,
-		10.f,
+		5.f,
 		true,
 		0.f);
 
@@ -54,26 +54,21 @@ void AArena::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	/*if (WaveManager != nullptr && WaveManager->bNextWaveCanSpawn == true)
-	{
-		SpawnVirus();
-	}*/
-
 	ConsumeSpawnQueue();
 }
 
 void AArena::SpawnVirus()
 {
 	FVector SpawnLocation;
-
+	TSubclassOf<AVirus> VirusClass = WaveManager->CycleSpawnedVirusType();
 	if (WaveManager != nullptr)
 	{
-		for (int32 i = 0; i < 9; i++)
+		for (int32 i = 0; i < 3; i++)
 		{
-			float VirusMeshRadius = WaveManager->CurrentlySpawningVirusType->GetDefaultObject<AVirus>()->MeshRadius;
+			float VirusMeshRadius = VirusClass->GetDefaultObject<AVirus>()->MeshRadius;
 			if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
 			{
-				PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), WaveManager->CurrentlySpawningVirusType);
+				PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), VirusClass);
 			}
 		}
 	}

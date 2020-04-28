@@ -41,18 +41,15 @@ public:
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
 	TSubclassOf<AVirus> TrackingVirus;
 
-	TSubclassOf<AVirus> CurrentlySpawningVirusType;
-
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
 	EWaveType DetermineMassWaveSpawnType();
+	TSubclassOf<AVirus> CycleSpawnedVirusType();
 
 private:
 
 	FTimerHandle TimerHandle_WaveTimerExpired;
 
 	int32 WaveCycle = 0;
-
-	TSubclassOf<AVirus> CycleSpawnedVirusType();
 };
