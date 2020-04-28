@@ -34,11 +34,6 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	UPROPERTY(Category = WaveTiming, EditDefaultsOnly)
-	float EnemyWaveRate;
-
-	bool bNextWaveCanSpawn = false;
-
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
 	TSubclassOf<class AVirus> Virus;
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
@@ -47,8 +42,6 @@ public:
 	TSubclassOf<AVirus> TrackingVirus;
 
 	TSubclassOf<AVirus> CurrentlySpawningVirusType;
-
-	EWaveType CurrentWaveType;
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -60,8 +53,6 @@ private:
 	FTimerHandle TimerHandle_WaveTimerExpired;
 
 	int32 WaveCycle = 0;
-	
-	void SetWaveCanSpawn();
 
 	TSubclassOf<AVirus> CycleSpawnedVirusType();
 };
