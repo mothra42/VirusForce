@@ -23,6 +23,10 @@ private:
 	//flag to check if virus has already been added to marked viruses
 	bool IsMarked = false;
 
+	FVector VirusScale = FVector();
+
+	void SetVirusReady();
+
 public:
 	// Sets default values for this pawn's properties
 	AVirus();
@@ -44,6 +48,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void SpawnInAnimation();
+
 public:	
 	/* The speed our ship moves around the level */
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
@@ -52,6 +58,9 @@ public:
 	UPROPERTY(Category = MeshSize, EditDefaultsOnly)
 	float MeshRadius;
 
+	UPROPERTY(Category = VirusSpawn, BlueprintReadOnly)
+	bool IsVirusReady = false;
+
 	EVirusType VirusType = EVirusType::BaseVirus;
 
 	TArray<FName> AvailableSocketNames;
@@ -59,9 +68,6 @@ public:
 	/** Returns ShipMeshComponent subobject **/
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
-
-	//UFUNCTION(BlueprintCallable)
-	//FORCEINLINE UFloatingPawnMovement* GetMovementComponent() const { return MovementComponent; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetVirusSpeed() const { return VirusSpeed; }

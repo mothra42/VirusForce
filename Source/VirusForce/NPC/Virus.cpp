@@ -46,6 +46,10 @@ void AVirus::BeginPlay()
 	{
 		MarkedVirusComponent = GameMode->GetMarkedVirusComponent();
 	}
+
+	//Setup mesh and collision for spawn in
+	SetActorEnableCollision(false);
+	ShipMeshComponent->SetRelativeScale3D(VirusScale);
 }
 
 // Called every frame
@@ -53,6 +57,10 @@ void AVirus::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 
+	if (!IsVirusReady)
+	{
+		SpawnInAnimation();
+	}
 }
 
 void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -95,4 +103,20 @@ void AVirus::DestroyAttachedAntibodies()
 	{
 		OutAttachedActors[i]->Destroy();
 	}
+}
+
+void AVirus::SpawnInAnimation()
+{
+	ShipMeshComponent->SetRelativeScale3D(VirusScale);
+	if (ShipMeshComponent->GetRelativeScale3D().Size() >= FVector(1.f).Size())
+	{
+		SetVirusReady();
+	}
+	VirusScale += FVector(0.01);
+}
+
+void AVirus::SetVirusReady()
+{
+	SetActorEnableCollision(true);
+	IsVirusReady = true;
 }
