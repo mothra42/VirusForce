@@ -58,6 +58,9 @@ public:
 	
 	void PopulateSpawnQueue();
 
+	FORCEINLINE FTimerHandle GetMassSpawnTimer() { return TimerHandle_MassSpawnTimer; }
+	FORCEINLINE FTimerHandle GetSpawnTimer() { return TimerHandle_SpawnSingleVirusTimer; }
+
 private:
 	//timers for handling mass spawn waves
 	FTimerHandle TimerHandle_MassSpawnTimer;

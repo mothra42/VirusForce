@@ -9,6 +9,7 @@
 #include "../WaveDesign/WaveManager.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/Public/EngineUtils.h"
+#include "../GameMode/VirusForceGameMode.h"
 #include "TimerManager.h"
 #include "Containers/Queue.h"
 
@@ -30,6 +31,13 @@ void AArena::BeginPlay()
 
 	//Wave Manger must be set in blueprint
 	WaveManager = FindComponentByClass<UWaveManager>();
+
+	//Set Arena in game mode
+	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
+	if (GameMode != nullptr)
+	{
+		GameMode->SetArena(this);
+	}
 
 	GetWorldTimerManager().SetTimer(
 		TimerHandle_SpawnSingleVirusTimer,
