@@ -59,12 +59,13 @@ public:
 	void PopulateSpawnQueue();
 
 private:
-
+	//timers for handling mass spawn waves
 	FTimerHandle TimerHandle_MassSpawnTimer;
-
 	FTimerHandle TimerHandle_SpawnDelayTimer;
-
 	FTimerDelegate SpawnMassWaveDel;
+
+	//timers for handling constant spawn waves
+	FTimerHandle TimerHandle_SpawnSingleVirusTimer;
 
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
 	float DelayUntilMassWavesBegin = 60.f;

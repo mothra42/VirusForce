@@ -31,7 +31,17 @@ void AArena::BeginPlay()
 	//Wave Manger must be set in blueprint
 	WaveManager = FindComponentByClass<UWaveManager>();
 
-	GetWorldTimerManager().SetTimer(TimerHandle_MassSpawnTimer, 
+	GetWorldTimerManager().SetTimer(
+		TimerHandle_SpawnSingleVirusTimer,
+		this,
+		&AArena::SpawnVirus,
+		10.f,
+		true,
+		0.f);
+
+	//timer for calling mass wave functions
+	GetWorldTimerManager().SetTimer(
+		TimerHandle_MassSpawnTimer, 
 		this, 
 		&AArena::PopulateSpawnQueue, 
 		TimeBetweenMassWaves, 
@@ -44,10 +54,10 @@ void AArena::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	if (WaveManager != nullptr && WaveManager->bNextWaveCanSpawn == true)
+	/*if (WaveManager != nullptr && WaveManager->bNextWaveCanSpawn == true)
 	{
 		SpawnVirus();
-	}
+	}*/
 
 	ConsumeSpawnQueue();
 }
@@ -58,10 +68,13 @@ void AArena::SpawnVirus()
 
 	if (WaveManager != nullptr)
 	{
-		float VirusMeshRadius = WaveManager->CurrentlySpawningVirusType->GetDefaultObject<AVirus>()->MeshRadius;
-		if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
+		for (int32 i = 0; i < 9; i++)
 		{
-			PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), WaveManager->CurrentlySpawningVirusType);
+			float VirusMeshRadius = WaveManager->CurrentlySpawningVirusType->GetDefaultObject<AVirus>()->MeshRadius;
+			if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
+			{
+				PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), WaveManager->CurrentlySpawningVirusType);
+			}
 		}
 	}
 }
@@ -77,7 +90,7 @@ bool AArena::bCanSpawnAtLocation(FVector Location, float Radius)
 		GlobalLocation + FVector(1, 1, 1), //small offset so sweep will work
 		FQuat::Identity,
 		ECollisionChannel::ECC_Visibility,
-		FCollisionShape::MakeSphere(50.f)
+		FCollisionShape::MakeSphere(Radius)
 		);
 
 	return !HasHit;
@@ -195,7 +208,6 @@ void AArena::ConsumeSpawnQueue()
 
 void AArena::SpawnVirusForMassWave(FSpawnInstructions SpawnInstructions)
 {
-	UE_LOG(LogTemp, Warning, TEXT("Spawn Locations would be %s"), *SpawnInstructions.Location.ToString());
 	UWorld* World = GetWorld();
 	if (World != NULL)
 	{
