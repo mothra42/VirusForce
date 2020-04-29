@@ -76,6 +76,7 @@ private:
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
 	float TimeBetweenMassWaves = 30.f;
 
+	//Controls the spacing of viruses spawning in a mass wave
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
 	float SpawnDelayTime = 0.3f;
 
