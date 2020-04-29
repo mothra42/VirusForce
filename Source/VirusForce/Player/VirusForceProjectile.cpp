@@ -115,3 +115,10 @@ void AVirusForceProjectile::AddVirusToMarkedViruses(AVirus* Virus)
 		Virus->AddToMarkedViruses();
 	}
 }
+
+void AVirusForceProjectile::CorrectVelocity(FVector RelativeVelocity)
+{
+	FVector MyVelocity = ProjectileMovement->Velocity;
+	FVector CorrectedVelocity = MyVelocity + RelativeVelocity;
+	ProjectileMovement->Velocity = CorrectedVelocity;
+}

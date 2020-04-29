@@ -15,6 +15,7 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "../NPC/KillerTCell.h"
 #include "../GameMode/VirusForceGameMode.h"
+#include "DrawDebugHelpers.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
@@ -127,12 +128,12 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			const FRotator FireRotation = FireDirection.Rotation();
 			// Spawn projectile at an offset from this pawn
 			const FVector SpawnLocation = GetActorLocation() + FireRotation.RotateVector(GunOffset);
-
 			UWorld* const World = GetWorld();
 			if (World != NULL && ProjectileClass != nullptr)
 			{
 				// spawn the projectile
-				World->SpawnActor<AVirusForceProjectile>(ProjectileClass, SpawnLocation, FireRotation);
+				AVirusForceProjectile* Projectile = World->SpawnActor<AVirusForceProjectile>(ProjectileClass, SpawnLocation, FireRotation);
+				Projectile->CorrectVelocity(MovementComponent->Velocity);
 			}
 
 			bCanFire = false;

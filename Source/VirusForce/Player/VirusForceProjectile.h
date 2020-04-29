@@ -40,6 +40,8 @@ public:
 
 	bool IsAttached = false;
 
+	void CorrectVelocity(FVector RelativeVelocity);
+
 private:
 	void DestroyProjectile();
 
