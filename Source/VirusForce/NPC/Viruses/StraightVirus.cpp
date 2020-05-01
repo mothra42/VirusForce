@@ -22,8 +22,6 @@ void AStraightVirus::BeginPlay()
 	Super::ShipMeshComponent->OnComponentHit.AddDynamic(this, &AStraightVirus::OnHit);
 
 	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
-	FRotator RotationToFacePlayer = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), PlayerPawn->GetActorLocation());
-	SetActorRotation(RotationToFacePlayer);
 }
 
 void AStraightVirus::Tick(float DeltaTime)
