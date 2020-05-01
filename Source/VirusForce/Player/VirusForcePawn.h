@@ -51,6 +51,9 @@ public:
 	UPROPERTY(Category = SpawnedKillerTCell, EditDefaultsOnly)
 	TSubclassOf<class AKillerTCell> KillerTCellClass;
 
+	UPROPERTY(Category = Movement, EditAnywhere, BlueprintReadOnly)
+	FVector PlayerVelocity;
+
 	TArray<FName> AvailableSocketNames;
 
 	// Begin Actor Interface

@@ -22,6 +22,9 @@ class AVirusForceProjectile : public AActor
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	UProjectileMovementComponent* ProjectileMovement;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
+	float ProjectileSpeed = 1200.f;
+
 	class AVirus* AttachedVirus;
 
 public:
@@ -40,7 +43,10 @@ public:
 
 	bool IsAttached = false;
 
-	void CorrectVelocity(FVector RelativeVelocity);
+	void CorrectVelocity();
+
+protected:
+	virtual void BeginPlay() override;
 
 private:
 	void DestroyProjectile();

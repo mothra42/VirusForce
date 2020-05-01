@@ -8,6 +8,7 @@
 #include "Engine/StaticMesh.h"
 #include "PhysicsEngine/PhysicsConstraintComponent.h"
 #include "VirusForcePawn.h"
+#include "Kismet/GameplayStatics.h"
 #include "../NPC/Virus.h"
 
 AVirusForceProjectile::AVirusForceProjectile() 
@@ -26,7 +27,6 @@ AVirusForceProjectile::AVirusForceProjectile()
 	// Use a ProjectileMovementComponent to govern this projectile's movement
 	ProjectileMovement = CreateDefaultSubobject<UProjectileMovementComponent>(TEXT("ProjectileMovement0"));
 	ProjectileMovement->UpdatedComponent = ProjectileMesh;
-	ProjectileMovement->InitialSpeed = 3000.f;
 	ProjectileMovement->MaxSpeed = 3000.f;
 	ProjectileMovement->bRotationFollowsVelocity = true;
 	ProjectileMovement->bShouldBounce = false;
@@ -36,13 +36,20 @@ AVirusForceProjectile::AVirusForceProjectile()
 	InitialLifeSpan = 0.0f;
 }
 
+void AVirusForceProjectile::BeginPlay()
+{
+	Super::BeginPlay();
+
+	CorrectVelocity();
+}
+
 void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	// Only add impulse and destroy projectile if we hit a physics
-	if ((OtherActor != NULL) && (OtherActor != this) && (OtherComp != NULL))
+	if ((OtherActor != nullptr) && (OtherComp != nullptr))
 	{
 		//if the hit actor is a virus attach and set is attached true.
 		AVirus* HitVirus = Cast<AVirus>(OtherActor);
+		//AVirusForceProjectile* Projectile = Cast<AVirusForceProjectile>(OtherActor);
 		if (HitVirus != nullptr)
 		{
 			FName NearestSocketName = FindNearestSocketName(HitVirus, Hit);
@@ -63,6 +70,13 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 			}
 			DestroyProjectile();
 		}
+		//else if (Projectile != nullptr)
+		//{
+		//	if (!Projectile->IsAttached)
+		//	{
+
+		//	}
+		//}
 		else
 		{
 			DestroyProjectile();
@@ -116,9 +130,14 @@ void AVirusForceProjectile::AddVirusToMarkedViruses(AVirus* Virus)
 	}
 }
 
-void AVirusForceProjectile::CorrectVelocity(FVector RelativeVelocity)
+void AVirusForceProjectile::CorrectVelocity()
 {
-	FVector MyVelocity = ProjectileMovement->Velocity;
-	FVector CorrectedVelocity = MyVelocity + RelativeVelocity;
-	ProjectileMovement->Velocity = CorrectedVelocity;
+	FVector BaseVelocity = GetActorForwardVector() * ProjectileSpeed;
+	APawn* Player = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
+	AVirusForcePawn* PlayerPawn = Cast<AVirusForcePawn>(Player);
+	if (PlayerPawn != nullptr)
+	{
+		FVector PlayerVelocity = PlayerPawn->PlayerVelocity;
+		ProjectileMovement->Velocity = BaseVelocity + PlayerVelocity;
+	}
 }

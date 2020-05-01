@@ -15,7 +15,6 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "../NPC/KillerTCell.h"
 #include "../GameMode/VirusForceGameMode.h"
-#include "DrawDebugHelpers.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
@@ -40,7 +39,7 @@ AVirusForcePawn::AVirusForcePawn()
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
 	CameraBoom->SetUsingAbsoluteRotation(true); // Don't want arm to rotate when ship does
-	CameraBoom->TargetArmLength = 1200.f;
+	CameraBoom->TargetArmLength = 500.f;
 	CameraBoom->SetRelativeRotation(FRotator(-80.f, 0.f, 0.f));
 	CameraBoom->bDoCollisionTest = false; // Don't want to pull camera in when it collides with level
 
@@ -83,6 +82,8 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 		const FVector MoveDirection = FVector(ForwardValue, RightValue, 0.f).GetClampedToMaxSize(1.0f);
 		// Calculate  movement
 		const FVector Movement = MoveDirection * MoveSpeed * DeltaSeconds;
+
+		PlayerVelocity = MoveDirection * MoveSpeed;
 
 		// If non-zero size, move this actor
 		if (Movement.SizeSquared() > 0.0f)
@@ -133,7 +134,6 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			{
 				// spawn the projectile
 				AVirusForceProjectile* Projectile = World->SpawnActor<AVirusForceProjectile>(ProjectileClass, SpawnLocation, FireRotation);
-				Projectile->CorrectVelocity(MovementComponent->Velocity);
 			}
 
 			bCanFire = false;
