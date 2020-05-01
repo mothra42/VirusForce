@@ -10,9 +10,10 @@
 #include "GameFramework/FloatingPawnMovement.h"
 #include "MarkedVirusComponent.h"
 #include "../GameMode/VirusForceGameMode.h"
-#include "Virus.h"
 #include "../Player/VirusForceProjectile.h"
 #include "../Score/ScoreManager.h"
+#include "Virus.h"
+
 
 // Sets default values
 AKillerTCell::AKillerTCell()
@@ -53,7 +54,6 @@ void AKillerTCell::BeginPlay()
 void AKillerTCell::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
 }
 
 void AKillerTCell::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
