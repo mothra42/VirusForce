@@ -25,6 +25,9 @@ class AVirusForcePawn : public APawn
 
 	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UFloatingPawnMovement* MovementComponent;
+
+	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
+	TArray<TSubclassOf<class AVirusForceProjectile>> AntibodyTypes;
 	
 public:
 	AVirusForcePawn();
@@ -90,6 +93,10 @@ private:
 	FTimerHandle TimerHandle_ShotTimerExpired;
 
 	void SpawnKillerTCellInWorld();
+
+	void SwitchAntibodyTypeUp();
+
+	void SwitchAntibodyTypeDown();
 
 public:
 	/** Returns ShipMeshComponent subobject **/

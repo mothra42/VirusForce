@@ -68,6 +68,8 @@ void AVirusForcePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis(FireForwardBinding);
 	PlayerInputComponent->BindAxis(FireRightBinding);
 	PlayerInputComponent->BindAction("SpawnKillerTCell", IE_Pressed, this, &AVirusForcePawn::SpawnKillerTCellInWorld);
+	PlayerInputComponent->BindAction("SwitchAntibodyTypeUp", IE_Pressed, this, &AVirusForcePawn::SwitchAntibodyTypeUp);
+	PlayerInputComponent->BindAction("SwitchAntibodyTypeDown", IE_Pressed, this, &AVirusForcePawn::SwitchAntibodyTypeDown);
 }
 
 void AVirusForcePawn::Tick(float DeltaSeconds)
@@ -116,6 +118,16 @@ void AVirusForcePawn::BeginPlay()
 	Super::BeginPlay();
 
 	AvailableSocketNames = ShipMeshComponent->GetAllSocketNames();
+}
+
+void AVirusForcePawn::SwitchAntibodyTypeUp()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Switching antibody up"));
+}
+
+void AVirusForcePawn::SwitchAntibodyTypeDown()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Switching antibody down"));
 }
 
 void AVirusForcePawn::FireShot(FVector FireDirection)
