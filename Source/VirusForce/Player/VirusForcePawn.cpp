@@ -123,11 +123,34 @@ void AVirusForcePawn::BeginPlay()
 void AVirusForcePawn::SwitchAntibodyTypeUp()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Switching antibody up"));
+	if (ProjectileIndexTracker >= 2)
+	{
+		ProjectileIndexTracker = 0;
+	}
+	else
+	{
+		ProjectileIndexTracker++;
+	}
+
+	UE_LOG(LogTemp, Warning, TEXT("My antibody tracker is %i"), ProjectileIndexTracker);
+	ProjectileClass = AntibodyTypes[ProjectileIndexTracker];
+	UE_LOG(LogTemp, Warning, TEXT("My antibody type is %s"), *ProjectileClass->GetName());
 }
 
 void AVirusForcePawn::SwitchAntibodyTypeDown()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Switching antibody down"));
+	if (ProjectileIndexTracker <= 0)
+	{
+		ProjectileIndexTracker = 2;
+	}
+	else
+	{
+		ProjectileIndexTracker--;
+	}
+	UE_LOG(LogTemp, Warning, TEXT("My antibody tracker is %i"), ProjectileIndexTracker);
+	ProjectileClass = AntibodyTypes[ProjectileIndexTracker];
+	UE_LOG(LogTemp, Warning, TEXT("My antibody type is %s"), *ProjectileClass->GetName());
 }
 
 void AVirusForcePawn::FireShot(FVector FireDirection)
@@ -145,7 +168,8 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			if (World != NULL && ProjectileClass != nullptr)
 			{
 				// spawn the projectile
-				AVirusForceProjectile* Projectile = World->SpawnActor<AVirusForceProjectile>(ProjectileClass, SpawnLocation, FireRotation);
+				//TSubclassOf<AVirusForceProjectile>* Projectile = World->SpawnActor<TSubclassOf<AVirusForceProjectile>>(ProjectileClass, SpawnLocation, FireRotation);
+				World->SpawnActor<AVirusForceProjectile>(ProjectileClass, SpawnLocation, FireRotation);
 			}
 
 			bCanFire = false;

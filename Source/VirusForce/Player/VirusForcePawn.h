@@ -49,7 +49,7 @@ public:
 	class USoundBase* FireSound;
 
 	UPROPERTY(Category = Projectile, EditDefaultsOnly)
-	TSubclassOf<class AVirusForceProjectile> ProjectileClass;
+	TSubclassOf<AVirusForceProjectile> ProjectileClass;
 
 	UPROPERTY(Category = SpawnedKillerTCell, EditDefaultsOnly)
 	TSubclassOf<class AKillerTCell> KillerTCellClass;
@@ -91,6 +91,8 @@ private:
 
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
+
+	int32 ProjectileIndexTracker = 0;
 
 	void SpawnKillerTCellInWorld();
 
