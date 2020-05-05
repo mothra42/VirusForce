@@ -61,6 +61,9 @@ public:
 	UPROPERTY(Category = VirusSpawn, BlueprintReadOnly)
 	bool IsVirusReady = false;
 
+	UPROPERTY(Category = Antibody, EditDefaultsOnly)
+	TSubclassOf<class AVirusForceProjectile> AcceptedProjectileClass;
+
 	EVirusType VirusType = EVirusType::BaseVirus;
 
 	TArray<FName> AvailableSocketNames;
