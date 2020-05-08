@@ -61,7 +61,7 @@ public:
 	UPROPERTY(Category = VirusSpawn, BlueprintReadOnly)
 	bool IsVirusReady = false;
 
-	UPROPERTY(Category = Antibody, EditDefaultsOnly)
+	UPROPERTY(Category = Antibody, EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<class AVirusForceProjectile> AcceptedProjectileClass;
 
 	EVirusType VirusType = EVirusType::BaseVirus;

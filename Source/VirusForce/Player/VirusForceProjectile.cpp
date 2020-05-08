@@ -49,9 +49,16 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 	{
 		//if the hit actor is a virus attach and set is attached true.
 		AVirus* HitVirus = Cast<AVirus>(OtherActor);
-		//AVirusForceProjectile* Projectile = Cast<AVirusForceProjectile>(OtherActor);
+
 		if (HitVirus != nullptr)
 		{
+			//if (this->StaticClass() == HitVirus->AcceptedProjectileClass)
+			//{
+				//this->StaticClass()->GetName();
+				UE_LOG(LogTemp, Warning, TEXT("this class is %s, and the accepted class is %s"),
+					*this->StaticClass()->GetName(),
+					*HitVirus->AcceptedProjectileClass->GetName());
+			//}
 			FName NearestSocketName = FindNearestSocketName(HitVirus, Hit);
 
 			if (NearestSocketName != FName("None"))

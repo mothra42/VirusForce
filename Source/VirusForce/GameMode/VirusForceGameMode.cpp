@@ -49,8 +49,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 
 	if (Lives < 0)
 	{
-	    //TODO quit to start screen
-		//TODO make start screen
+		UGameplayStatics::OpenLevel(GetWorld(), FName("StartScreen"));
 	}
 	//Reset MarkedVirusesArray
 	MarkedVirusComponent->PurgeMarkedViruses();
