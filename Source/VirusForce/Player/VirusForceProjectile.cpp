@@ -70,13 +70,6 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 			}
 			DestroyProjectile();
 		}
-		//else if (Projectile != nullptr)
-		//{
-		//	if (!Projectile->IsAttached)
-		//	{
-
-		//	}
-		//}
 		else
 		{
 			DestroyProjectile();
