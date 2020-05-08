@@ -131,10 +131,7 @@ void AVirusForcePawn::SwitchAntibodyTypeUp()
 	{
 		ProjectileIndexTracker++;
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("My antibody tracker is %i"), ProjectileIndexTracker);
 	ProjectileClass = AntibodyTypes[ProjectileIndexTracker];
-	UE_LOG(LogTemp, Warning, TEXT("My antibody type is %s"), *ProjectileClass->GetName());
 }
 
 void AVirusForcePawn::SwitchAntibodyTypeDown()
@@ -148,9 +145,12 @@ void AVirusForcePawn::SwitchAntibodyTypeDown()
 	{
 		ProjectileIndexTracker--;
 	}
-	UE_LOG(LogTemp, Warning, TEXT("My antibody tracker is %i"), ProjectileIndexTracker);
 	ProjectileClass = AntibodyTypes[ProjectileIndexTracker];
-	UE_LOG(LogTemp, Warning, TEXT("My antibody type is %s"), *ProjectileClass->GetName());
+}
+
+void AVirusForcePawn::SetProjectile(TSubclassOf<AVirusForceProjectile> ProjectileToSet)
+{
+	ProjectileClass = ProjectileToSet;
 }
 
 void AVirusForcePawn::FireShot(FVector FireDirection)

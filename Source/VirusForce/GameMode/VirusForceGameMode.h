@@ -48,6 +48,8 @@ private:
 	class AVirusForcePawn* PlayerPawn;
 
 	class APlayerController* PlayerController;
+
+	TSubclassOf<class AVirusForceProjectile> LastUsedProjectile;
 	
 	FTransform PlayerDeathTransform;
 

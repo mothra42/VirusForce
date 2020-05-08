@@ -72,6 +72,8 @@ public:
 
 	void LoseLife();
 
+	void SetProjectile(TSubclassOf<AVirusForceProjectile> ProjectileToSet);
+
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;

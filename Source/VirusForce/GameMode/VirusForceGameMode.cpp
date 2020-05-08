@@ -92,6 +92,7 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 		PlayerController = Cast<APlayerController>(PlayerPawn->GetController());
 		PlayerDeathTransform = PlayerPawn->GetActorTransform();
 		PlayerPawn->GetShipMeshComponent()->SetVisibility(false);
+		LastUsedProjectile = PlayerPawn->ProjectileClass;
 		return;
 	}
 
@@ -110,6 +111,11 @@ void AVirusForceGameMode::RespawnPlayer()
 	{
 		PlayerPawn->Destroy();
 		RestartPlayerAtTransform(PlayerController, PlayerDeathTransform);
+		AVirusForcePawn* NewPlayerPawn = Cast<AVirusForcePawn>(PlayerController->GetPawn());
+		if (NewPlayerPawn != nullptr)
+		{
+			NewPlayerPawn->SetProjectile(LastUsedProjectile);
+		}
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetMassSpawnTimer());
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetSpawnTimer());
 	}
