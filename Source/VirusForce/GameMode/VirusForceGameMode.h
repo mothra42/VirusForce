@@ -44,6 +44,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerRespawn)
 	TSubclassOf<class AVirusForcePawn> VirusForcePawn_BP;
 
+	virtual void BeginPlay() override;
+
 private:
 	class AVirusForcePawn* PlayerPawn;
 
@@ -58,6 +60,10 @@ private:
 	void DestroyPawn(APawn* Pawn);
 
 	void RespawnPlayer();
+
+	void SaveHighScore();
+
+	void LoadHighScore();
 };
 
 

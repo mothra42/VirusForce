@@ -13,6 +13,8 @@
 #include "../HUD/VirusForceHUD.h"
 #include "../NPC/Virus.h"
 #include "../Arena/Arena.h"
+#include "../SaveGame/VirusForceSaveGame.h"
+#include "../SaveGame/SaveGameHelper.h"
 #include "TimerManager.h"
 
 AVirusForceGameMode::AVirusForceGameMode()
@@ -42,6 +44,15 @@ AVirusForceHUD* AVirusForceGameMode::GetHUDComponent()
 	return HUD;
 }
 
+void AVirusForceGameMode::BeginPlay()
+{
+	Super::BeginPlay();
+
+	LoadHighScore();
+
+	//TODO set the save game object from the load to be used in the save so we can keep adding to the array
+}
+
 void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 {
 	//decrement lives
@@ -50,6 +61,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	if (Lives < 0)
 	{
 		UGameplayStatics::OpenLevel(GetWorld(), FName("StartScreen"));
+		SaveHighScore();
 	}
 	//Reset MarkedVirusesArray
 	MarkedVirusComponent->PurgeMarkedViruses();
@@ -118,4 +130,31 @@ void AVirusForceGameMode::RespawnPlayer()
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetMassSpawnTimer());
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetSpawnTimer());
 	}
+}
+
+void AVirusForceGameMode::SaveHighScore()
+{
+	if (UVirusForceSaveGame* SaveGameInstance = Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass())))
+	{
+		SaveGameInstance->SaveHighScore(TEXT("TestPlayer"), ScoreManagerComponent->Score);
+		SaveGameInstance->MyScore = ScoreManagerComponent->Score;
+
+		if (UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("TestSlot"), 0))
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Save Successful"));
+		}
+	}
+}
+
+void AVirusForceGameMode::LoadHighScore()
+{
+	FAsyncLoadGameFromSlotDelegate LoadedDelegate;
+	USaveGameHelper* SaveGameHelper = NewObject<USaveGameHelper>();
+	LoadedDelegate.BindUObject(SaveGameHelper, &USaveGameHelper::LoadGameDelegate);
+	UGameplayStatics::AsyncLoadGameFromSlot(TEXT("TestSlot"), 0, LoadedDelegate);
+	//if (UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("TestSlot"), 0)))
+	//{
+	//	// The operation was successful, so LoadedGame now contains the data we saved earlier.
+	//	UE_LOG(LogTemp, Warning, TEXT("LOADED: %i"), LoadedGame->MyScore);
+	//}
 }

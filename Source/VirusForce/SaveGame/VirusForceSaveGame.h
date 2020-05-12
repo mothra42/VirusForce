@@ -29,8 +29,17 @@ class VIRUSFORCE_API UVirusForceSaveGame : public USaveGame
 	UVirusForceSaveGame();
 	
 public:
+	UPROPERTY(VisibleAnywhere, Category = Basic)
 	TArray<FHighScoreStruct> HighScoreList;
 
-	UPROPERTY(VisibleAnywhere, Category = "Basics")
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	int32 MyScore;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
 	FString SaveSlotName;
+
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	uint32 UserIndex;
+
+	TArray<FHighScoreStruct> SaveHighScore(FString PlayerName, int32 Score);
 };
