@@ -4,11 +4,6 @@
 #include "SaveGameHelper.h"
 #include "VirusForceSaveGame.h"
 
-//USaveGameHelper::USaveGameHelper()
-//{
-//	UE_LOG(LogTemp, Warning, TEXT("Hey I'm created"));
-//}
-
 void USaveGameHelper::LoadGameDelegate(const FString& SlotName, const int32 UserIndex, USaveGame* LoadedGameData)
 {
 	if (LoadedGameData != nullptr)

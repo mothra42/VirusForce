@@ -18,10 +18,3 @@ TArray<FHighScoreStruct> UVirusForceSaveGame::SaveHighScore(FString PlayerName, 
 
 	return HighScoreList;
 }
-
-//void UVirusForceSaveGame::LoadGameDelegate(const FString& SlotName, const int32 UserIndex, USaveGame* LoadedGameData)
-//{
-//	UVirusForceSaveGame* SaveGame = Cast<UVirusForceSaveGame>(LoadedGameData);
-//
-//	UE_LOG(LogTemp, Warning, TEXT("loaded game data, high score list is %i long"), SaveGame->HighScoreList.Num());
-//}
