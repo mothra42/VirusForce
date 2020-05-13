@@ -14,8 +14,8 @@ class VIRUSFORCE_API USaveGameHelper : public UObject
 {
 	GENERATED_BODY()
 
-	//USaveGameHelper();
-
 public:
 	void LoadGameDelegate(const FString& SlotName, const int32 UserIndex, class USaveGame* LoadedGameData);
+
+	void SaveGameDelegate(const FString& SlotName, const int32 UserIndex, bool bSuccess);
 };

@@ -13,3 +13,11 @@ void USaveGameHelper::LoadGameDelegate(const FString& SlotName, const int32 User
 		UE_LOG(LogTemp, Warning, TEXT("loaded last score is %i"), SaveGame->MyScore);
 	}
 }
+
+void USaveGameHelper::SaveGameDelegate(const FString& SlotName, const int32 UserIndex, bool bSuccess)
+{
+	if (bSuccess)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Save Successful!"));
+	}
+}

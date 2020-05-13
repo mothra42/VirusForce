@@ -48,9 +48,10 @@ void AVirusForceGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	LoadHighScore();
-
-	//TODO set the save game object from the load to be used in the save so we can keep adding to the array
+	if (SavedGame == nullptr)
+	{
+		SavedGame = LoadHighScoreSync();
+	}
 }
 
 void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
@@ -134,27 +135,41 @@ void AVirusForceGameMode::RespawnPlayer()
 
 void AVirusForceGameMode::SaveHighScore()
 {
-	if (UVirusForceSaveGame* SaveGameInstance = Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass())))
+	if (SavedGame != nullptr)
 	{
-		SaveGameInstance->SaveHighScore(TEXT("TestPlayer"), ScoreManagerComponent->Score);
-		SaveGameInstance->MyScore = ScoreManagerComponent->Score;
-
-		if (UGameplayStatics::SaveGameToSlot(SaveGameInstance, TEXT("TestSlot"), 0))
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Save Successful"));
-		}
+		DelegateAsyncSave();
+	}
+	else
+	{
+		SavedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass()));
+		DelegateAsyncSave();
 	}
 }
 
-void AVirusForceGameMode::LoadHighScore()
+void AVirusForceGameMode::DelegateAsyncSave()
+{
+	FAsyncSaveGameToSlotDelegate SavedDelegate;
+	USaveGameHelper* SaveGameHelper = NewObject<USaveGameHelper>();
+	SavedDelegate.BindUObject(SaveGameHelper, &USaveGameHelper::SaveGameDelegate);
+	SavedGame->SaveHighScore(TEXT("TestPlayer"), ScoreManagerComponent->Score);
+	UGameplayStatics::AsyncSaveGameToSlot(SavedGame, TEXT("TestSlot"), 0, SavedDelegate);
+}
+
+void AVirusForceGameMode::LoadHighScoreAsync()
 {
 	FAsyncLoadGameFromSlotDelegate LoadedDelegate;
 	USaveGameHelper* SaveGameHelper = NewObject<USaveGameHelper>();
 	LoadedDelegate.BindUObject(SaveGameHelper, &USaveGameHelper::LoadGameDelegate);
 	UGameplayStatics::AsyncLoadGameFromSlot(TEXT("TestSlot"), 0, LoadedDelegate);
-	//if (UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("TestSlot"), 0)))
-	//{
-	//	// The operation was successful, so LoadedGame now contains the data we saved earlier.
-	//	UE_LOG(LogTemp, Warning, TEXT("LOADED: %i"), LoadedGame->MyScore);
-	//}
+}
+
+UVirusForceSaveGame* AVirusForceGameMode::LoadHighScoreSync()
+{
+	if (UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("TestSlot"), 0)))
+	{
+		return LoadedGame;
+	}
+
+	//if no save object found create a new one
+	return Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass()));
 }

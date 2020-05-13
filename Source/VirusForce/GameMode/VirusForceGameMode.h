@@ -51,6 +51,8 @@ private:
 
 	class APlayerController* PlayerController;
 
+	class UVirusForceSaveGame* SavedGame;
+
 	TSubclassOf<class AVirusForceProjectile> LastUsedProjectile;
 	
 	FTransform PlayerDeathTransform;
@@ -63,7 +65,11 @@ private:
 
 	void SaveHighScore();
 
-	void LoadHighScore();
+	void DelegateAsyncSave();
+
+	void LoadHighScoreAsync();
+
+	UVirusForceSaveGame* LoadHighScoreSync();
 };
 
 
