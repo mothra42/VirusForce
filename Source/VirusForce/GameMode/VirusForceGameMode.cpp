@@ -5,6 +5,7 @@
 #include "Engine/World.h"
 #include "GameFramework/PlayerController.h"
 #include "Components/StaticMeshComponent.h"
+#include "UObject/ConstructorHelpers.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "../Player/VirusForcePawn.h"
 #include "../Player/VirusForceProjectile.h"
@@ -13,8 +14,11 @@
 #include "../HUD/VirusForceHUD.h"
 #include "../NPC/Virus.h"
 #include "../Arena/Arena.h"
-#include "../SaveGame/VirusForceSaveGame.h"
+#include "../SaveGame/VirusForceSaveGame.h" 
 #include "../SaveGame/SaveGameHelper.h"
+#include "Blueprint/UserWidget.h"
+#include "../UI/HighScore/HighScoreWidget.h"
+#include "../GameInstance/VirusForceGameInstance.h"
 #include "TimerManager.h"
 
 AVirusForceGameMode::AVirusForceGameMode()
@@ -51,9 +55,11 @@ void AVirusForceGameMode::BeginPlay()
 	if (SavedGame == nullptr)
 	{
 		SavedGame = LoadHighScoreSync();
+		SavedGame->PrintOutInfo();
 	}
 }
 
+//TODO refactor this method, too much going on in one method.
 void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 {
 	//decrement lives
@@ -61,8 +67,14 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 
 	if (Lives < 0)
 	{
-		UGameplayStatics::OpenLevel(GetWorld(), FName("StartScreen"));
-		SaveHighScore();
+		UVirusForceGameInstance* GameInstance =  Cast<UVirusForceGameInstance>(GetGameInstance());
+		if (GameInstance != nullptr)
+		{
+			UGameplayStatics::SetGamePaused(World, true);
+			UHighScoreWidget* HighScoreWidget = GameInstance->CreateHighScoreList();
+			HighScoreWidget->Setup(SavedGame->HighScoreList);
+			SaveHighScore();
+		}
 	}
 	//Reset MarkedVirusesArray
 	MarkedVirusComponent->PurgeMarkedViruses();
@@ -137,6 +149,7 @@ void AVirusForceGameMode::SaveHighScore()
 {
 	if (SavedGame != nullptr)
 	{
+		UE_LOG(LogTemp, Warning, TEXT("not creating a new save game, saving into existing one"));
 		DelegateAsyncSave();
 	}
 	else

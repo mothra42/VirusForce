@@ -2,6 +2,7 @@
 
 
 #include "SaveGameHelper.h"
+#include "Kismet/GameplayStatics.h"
 #include "VirusForceSaveGame.h"
 
 void USaveGameHelper::LoadGameDelegate(const FString& SlotName, const int32 UserIndex, USaveGame* LoadedGameData)
@@ -9,8 +10,8 @@ void USaveGameHelper::LoadGameDelegate(const FString& SlotName, const int32 User
 	if (LoadedGameData != nullptr)
 	{
 		UVirusForceSaveGame* SaveGame = Cast<UVirusForceSaveGame>(LoadedGameData);
+		SaveGame->PrintOutInfo();
 		UE_LOG(LogTemp, Warning, TEXT("loaded game data, high score list is %i long"), SaveGame->HighScoreList.Num());
-		UE_LOG(LogTemp, Warning, TEXT("loaded last score is %i"), SaveGame->MyScore);
 	}
 }
 
@@ -19,5 +20,7 @@ void USaveGameHelper::SaveGameDelegate(const FString& SlotName, const int32 User
 	if (bSuccess)
 	{
 		UE_LOG(LogTemp, Warning, TEXT("Save Successful!"));
+		UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("TestSlot"), 0));
+		LoadedGame->PrintOutInfo();
 	}
 }
