@@ -59,6 +59,8 @@ private:
 
 	FTimerHandle TimerHandle_RespawnPlayer;
 
+	void DisplayHighScoreScreen();
+
 	void DestroyPawn(APawn* Pawn);
 
 	void RespawnPlayer();

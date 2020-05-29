@@ -67,14 +67,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 
 	if (Lives < 0)
 	{
-		UVirusForceGameInstance* GameInstance =  Cast<UVirusForceGameInstance>(GetGameInstance());
-		if (GameInstance != nullptr)
-		{
-			UGameplayStatics::SetGamePaused(World, true);
-			UHighScoreWidget* HighScoreWidget = GameInstance->CreateHighScoreList();
-			HighScoreWidget->Setup(SavedGame->HighScoreList);
-			SaveHighScore();
-		}
+		DisplayHighScoreScreen();
 	}
 	//Reset MarkedVirusesArray
 	MarkedVirusComponent->PurgeMarkedViruses();
@@ -99,6 +92,18 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 2.f);
 	World->GetTimerManager().PauseTimer(Arena->GetMassSpawnTimer());
 	World->GetTimerManager().PauseTimer(Arena->GetSpawnTimer());
+}
+
+void AVirusForceGameMode::DisplayHighScoreScreen()
+{
+	UVirusForceGameInstance* GameInstance = Cast<UVirusForceGameInstance>(GetGameInstance());
+	if (GameInstance != nullptr)
+	{
+		UGameplayStatics::SetGamePaused(GetWorld(), true);
+		UHighScoreWidget* HighScoreWidget = GameInstance->CreateHighScoreList();
+		HighScoreWidget->Setup(SavedGame->HighScoreList);
+		SaveHighScore();
+	}
 }
 
 void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
