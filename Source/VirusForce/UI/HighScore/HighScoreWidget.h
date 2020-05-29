@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
-#include "../../SaveGame/VirusForceSaveGame.h" //not ideal but seems to be the only way to get access to struct
 #include "HighScoreWidget.generated.h"
 
 
@@ -26,6 +25,8 @@ public:
 
 private:
 	TSubclassOf<class UScoreElement> ScoreElementWidgetClass;
+	TSubclassOf<class UNameInputWidget> NameInputWidgetClass;
+
 	void PopulateHighScores(TArray<FHighScoreStruct> HighScores);
 
 };
