@@ -59,5 +59,8 @@ int32 UMarkedVirusComponent::GetNumMarkedViruses()
 
 void UMarkedVirusComponent::PurgeMarkedViruses()
 {
-	MarkedViruses.Empty();
+	if (MarkedViruses.Num() >= 0)
+	{
+		MarkedViruses.Empty();
+	}
 }

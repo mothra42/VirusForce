@@ -52,13 +52,6 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 
 		if (HitVirus != nullptr)
 		{
-			//if (this->StaticClass() == HitVirus->AcceptedProjectileClass)
-			//{
-				//this->StaticClass()->GetName();
-				UE_LOG(LogTemp, Warning, TEXT("this class is %s, and the accepted class is %s"),
-					*this->StaticClass()->GetName(),
-					*HitVirus->AcceptedProjectileClass->GetName());
-			//}
 			FName NearestSocketName = FindNearestSocketName(HitVirus, Hit);
 
 			if (NearestSocketName != FName("None"))

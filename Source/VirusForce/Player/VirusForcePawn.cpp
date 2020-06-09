@@ -122,7 +122,6 @@ void AVirusForcePawn::BeginPlay()
 
 void AVirusForcePawn::SwitchAntibodyTypeUp()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Switching antibody up"));
 	if (ProjectileIndexTracker >= 2)
 	{
 		ProjectileIndexTracker = 0;
@@ -136,7 +135,6 @@ void AVirusForcePawn::SwitchAntibodyTypeUp()
 
 void AVirusForcePawn::SwitchAntibodyTypeDown()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Switching antibody down"));
 	if (ProjectileIndexTracker <= 0)
 	{
 		ProjectileIndexTracker = 2;

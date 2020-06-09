@@ -129,7 +129,6 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 void AArena::PopulateSpawnQueue()
 {
 	EWaveType WaveType = WaveManager->DetermineMassWaveSpawnType();
-	UE_LOG(LogTemp, Warning, TEXT("Populating queue"));
 	for (int32 i = 0; i < MassSpawnIterations; i++)
 	{
 		for (int32 j = 0; j < SpawnPointLocations.Num(); j++)
