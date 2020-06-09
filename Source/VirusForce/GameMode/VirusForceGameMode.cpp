@@ -14,7 +14,6 @@
 #include "../HUD/VirusForceHUD.h"
 #include "../NPC/Virus.h"
 #include "../Arena/Arena.h"
-#include "../SaveGame/SaveGameHelper.h"
 #include "Blueprint/UserWidget.h"
 #include "../UI/HighScore/HighScoreWidget.h"
 #include "../GameInstance/VirusForceGameInstance.h"
@@ -103,7 +102,6 @@ void AVirusForceGameMode::DisplayHighScoreScreen()
 	UVirusForceGameInstance* GameInstance = Cast<UVirusForceGameInstance>(GetGameInstance());
 	if (GameInstance != nullptr && ScoreManagerComponent != nullptr)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Hey I'm actualy calling the game instance"));
 		GameInstance->DisplayHighScoreScreen(ScoreManagerComponent->Score);
 	}
 }

@@ -4,8 +4,6 @@
 #include "VirusForceGameInstance.h"
 #include "UObject/ConstructorHelpers.h"
 #include "../UI/HighScore/HighScoreWidget.h"
-#include "../SaveGame/VirusForceSaveGame.h"
-#include "../SaveGame/SaveGameHelper.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
 //TODO move a lot of logic with tracking lives and such from game mode to game instance.
