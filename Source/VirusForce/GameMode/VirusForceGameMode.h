@@ -64,14 +64,6 @@ private:
 	void DestroyPawn(APawn* Pawn);
 
 	void RespawnPlayer();
-
-	void SaveHighScore();
-
-	void DelegateAsyncSave();
-
-	void LoadHighScoreAsync();
-
-	UVirusForceSaveGame* LoadHighScoreSync();
 };
 
 

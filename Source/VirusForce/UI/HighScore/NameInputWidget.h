@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Types/SlateEnums.h"
 #include "NameInputWidget.generated.h"
 
 
@@ -18,10 +19,13 @@ class VIRUSFORCE_API UNameInputWidget : public UUserWidget
 
 public:
     UPROPERTY(meta = (BindWidget))
-    class UEditableText* Name;
+    class UEditableTextBox* Name;
 
     UPROPERTY(meta = (BindWidget))
-    class UTextBlock* Score;
+    class UTextBlock* Rank;
+
+    UPROPERTY(meta = (BindWidget))
+    UTextBlock* Score;
 
     void SetupWidget(FText InScore);
 };

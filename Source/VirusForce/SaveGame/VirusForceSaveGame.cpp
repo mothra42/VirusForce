@@ -6,25 +6,52 @@
 
 UVirusForceSaveGame::UVirusForceSaveGame()
 {
-	SaveSlotName = TEXT("TestSlot");
-	UserIndex = 0;
+	SaveSlotName = TEXT("SaveSlot");
+	UserSaveIndex = 0;
+}
+
+//initialize the saved game object when game loads
+TArray<FHighScoreStruct> UVirusForceSaveGame::LoadSavedGame()
+{
+	if (UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserSaveIndex)))
+	{
+		return LoadedGame->HighScoreList;
+	}
+
+	return HighScoreList;
 }
 
 TArray<FHighScoreStruct> UVirusForceSaveGame::SaveHighScore(FString PlayerName, int32 Score)
 {
-	HighScoreElement = FHighScoreStruct(PlayerName, Score);
-	MyScore = Score;
+	FHighScoreStruct HighScoreElement = FHighScoreStruct(PlayerName, Score);
 	HighScoreList.Add(HighScoreElement);
-	ScoreArray.Add(Score);
-	UE_LOG(LogTemp, Warning, TEXT("printing out struct after adding to array"));
-	//PrintOutInfo();
+	PrintOutInfo();
+	DelegateAsyncSave();
 	return HighScoreList;
 }
 
 void UVirusForceSaveGame::PrintOutInfo()
 {
-	for (size_t i = 0; i < HighScoreList.Num(); i++)
+	if (HighScoreList.Num() >= 0)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Player Name is %s, Score is %i, MyScore is %i, Score stored in array %i"), *HighScoreList[i].PlayerName, HighScoreList[i].Score, MyScore, ScoreArray[i]);
+		for (int32 i = 0; i < HighScoreList.Num(); i++)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Player Name is %s, Score is %i"), *HighScoreList[i].PlayerName, HighScoreList[i].Score);
+		}
+	}
+}
+
+void UVirusForceSaveGame::DelegateAsyncSave()
+{
+	FAsyncSaveGameToSlotDelegate SavedDelegate;
+	SavedDelegate.BindUObject(this, &UVirusForceSaveGame::SaveGameDelegate);
+	UGameplayStatics::AsyncSaveGameToSlot(this, SaveSlotName, UserSaveIndex, SavedDelegate);
+}
+
+void UVirusForceSaveGame::SaveGameDelegate(const FString& SlotName, const int32 UserIndex, bool bSuccess)
+{
+	if (bSuccess)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Save Successful from save game class!"));
 	}
 }

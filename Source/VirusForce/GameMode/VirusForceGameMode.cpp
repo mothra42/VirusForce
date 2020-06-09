@@ -14,11 +14,11 @@
 #include "../HUD/VirusForceHUD.h"
 #include "../NPC/Virus.h"
 #include "../Arena/Arena.h"
-#include "../SaveGame/VirusForceSaveGame.h" 
 #include "../SaveGame/SaveGameHelper.h"
 #include "Blueprint/UserWidget.h"
 #include "../UI/HighScore/HighScoreWidget.h"
 #include "../GameInstance/VirusForceGameInstance.h"
+#include "Components/EditableTextBox.h"
 #include "TimerManager.h"
 
 AVirusForceGameMode::AVirusForceGameMode()
@@ -52,11 +52,11 @@ void AVirusForceGameMode::BeginPlay()
 {
 	Super::BeginPlay();
 
-	if (SavedGame == nullptr)
+	/*if (SavedGame == nullptr)
 	{
 		SavedGame = LoadHighScoreSync();
 		SavedGame->PrintOutInfo();
-	}
+	}*/
 }
 
 //TODO refactor this method, too much going on in one method.
@@ -67,42 +67,44 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 
 	if (Lives < 0)
 	{
+		UGameplayStatics::SetGamePaused(World, true);
 		DisplayHighScoreScreen();
 	}
 	//Reset MarkedVirusesArray
-	MarkedVirusComponent->PurgeMarkedViruses();
-
-	//destroy all pawns
-	TArray<AActor*> ActorArray;
-	UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), ActorArray);
-	for (int32 i = 0; i < ActorArray.Num(); i++)
+	else
 	{
-		APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
-		AVirusForceProjectile* ProjectileToDestroy = Cast<AVirusForceProjectile>(ActorArray[i]);
-		if (PawnToDestroy != nullptr)
+		MarkedVirusComponent->PurgeMarkedViruses();
+
+		//destroy all pawns
+		TArray<AActor*> ActorArray;
+		UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), ActorArray);
+		for (int32 i = 0; i < ActorArray.Num(); i++)
 		{
-			DestroyPawn(PawnToDestroy);
+			APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
+			AVirusForceProjectile* ProjectileToDestroy = Cast<AVirusForceProjectile>(ActorArray[i]);
+			if (PawnToDestroy != nullptr)
+			{
+				DestroyPawn(PawnToDestroy);
+			}
+			else if (ProjectileToDestroy != nullptr)
+			{
+				ProjectileToDestroy->Destroy();
+			}
 		}
-		else if (ProjectileToDestroy != nullptr)
-		{
-			ProjectileToDestroy->Destroy();
-		}
+
+		World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 2.f);
+		World->GetTimerManager().PauseTimer(Arena->GetMassSpawnTimer());
+		World->GetTimerManager().PauseTimer(Arena->GetSpawnTimer());
 	}
-	
-	World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 2.f);
-	World->GetTimerManager().PauseTimer(Arena->GetMassSpawnTimer());
-	World->GetTimerManager().PauseTimer(Arena->GetSpawnTimer());
 }
 
 void AVirusForceGameMode::DisplayHighScoreScreen()
 {
 	UVirusForceGameInstance* GameInstance = Cast<UVirusForceGameInstance>(GetGameInstance());
-	if (GameInstance != nullptr)
+	if (GameInstance != nullptr && ScoreManagerComponent != nullptr)
 	{
-		UGameplayStatics::SetGamePaused(GetWorld(), true);
-		UHighScoreWidget* HighScoreWidget = GameInstance->CreateHighScoreList();
-		HighScoreWidget->Setup(SavedGame->HighScoreList);
-		SaveHighScore();
+		UE_LOG(LogTemp, Warning, TEXT("Hey I'm actualy calling the game instance"));
+		GameInstance->DisplayHighScoreScreen(ScoreManagerComponent->Score);
 	}
 }
 
@@ -148,46 +150,4 @@ void AVirusForceGameMode::RespawnPlayer()
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetMassSpawnTimer());
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetSpawnTimer());
 	}
-}
-
-void AVirusForceGameMode::SaveHighScore()
-{
-	if (SavedGame != nullptr)
-	{
-		UE_LOG(LogTemp, Warning, TEXT("not creating a new save game, saving into existing one"));
-		DelegateAsyncSave();
-	}
-	else
-	{
-		SavedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass()));
-		DelegateAsyncSave();
-	}
-}
-
-void AVirusForceGameMode::DelegateAsyncSave()
-{
-	FAsyncSaveGameToSlotDelegate SavedDelegate;
-	USaveGameHelper* SaveGameHelper = NewObject<USaveGameHelper>();
-	SavedDelegate.BindUObject(SaveGameHelper, &USaveGameHelper::SaveGameDelegate);
-	SavedGame->SaveHighScore(TEXT("TestPlayer"), ScoreManagerComponent->Score);
-	UGameplayStatics::AsyncSaveGameToSlot(SavedGame, TEXT("TestSlot"), 0, SavedDelegate);
-}
-
-void AVirusForceGameMode::LoadHighScoreAsync()
-{
-	FAsyncLoadGameFromSlotDelegate LoadedDelegate;
-	USaveGameHelper* SaveGameHelper = NewObject<USaveGameHelper>();
-	LoadedDelegate.BindUObject(SaveGameHelper, &USaveGameHelper::LoadGameDelegate);
-	UGameplayStatics::AsyncLoadGameFromSlot(TEXT("TestSlot"), 0, LoadedDelegate);
-}
-
-UVirusForceSaveGame* AVirusForceGameMode::LoadHighScoreSync()
-{
-	if (UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::LoadGameFromSlot(TEXT("TestSlot"), 0)))
-	{
-		return LoadedGame;
-	}
-
-	//if no save object found create a new one
-	return Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass()));
 }
