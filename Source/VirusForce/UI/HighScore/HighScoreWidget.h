@@ -32,4 +32,5 @@ private:
 	TSubclassOf<class UNameInputWidget> NameInputWidgetClass;
 
 	void PopulateHighScores(TArray<FHighScoreStruct> HighScores, int32 NewScore);
+	void SortScores(TArray<FHighScoreStruct>& HighScores);
 };

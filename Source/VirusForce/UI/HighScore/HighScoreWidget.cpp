@@ -36,6 +36,7 @@ void UHighScoreWidget::PopulateHighScores(TArray<FHighScoreStruct> HighScores, i
     //check if new score is part of top ten scores, 
     //if it is then add it to viewport in proper place.
     //show top 10 scores
+    SortScores(HighScores);
     if (HighScores.Num() >= 0)
     {
         for (int32 i = 0; i < HighScores.Num(); i++)
@@ -67,4 +68,9 @@ void UHighScoreWidget::SaveOnPlayerNameCommitted(const FText& Text, ETextCommit:
             GameInstance->SaveHighScore(Text);
         }
     }
+}
+
+void UHighScoreWidget::SortScores(TArray<FHighScoreStruct>& HighScores)
+{
+    HighScores.Sort([](const FHighScoreStruct& a, const FHighScoreStruct& b) {return a.Score < b.Score;  });
 }
