@@ -27,5 +27,5 @@ public:
     UPROPERTY(meta = (BindWidget))
     UTextBlock* Score;
 
-    void SetupWidget(FText InScore);
+    void SetupWidget(FText InRank, FText InScore);
 };

@@ -6,7 +6,8 @@
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
 
-void UNameInputWidget::SetupWidget(FText InScore)
+void UNameInputWidget::SetupWidget(FText InRank, FText InScore)
 {
+	Rank->Text = InRank;
 	Score->Text = InScore;
 }

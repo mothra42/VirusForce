@@ -32,30 +32,36 @@ void UHighScoreWidget::Setup(TArray<FHighScoreStruct> HighScores, int32 NewScore
 }
 
 void UHighScoreWidget::PopulateHighScores(TArray<FHighScoreStruct> HighScores, int32 NewScore)
-{   //TODO need to sort scores
+{
     //check if new score is part of top ten scores, 
     //if it is then add it to viewport in proper place.
-    //show top 10 scores
+    HighScores.Add(FHighScoreStruct(TEXT("ThisIsNewestScore"), NewScore));
     SortScores(HighScores);
+
     if (HighScores.Num() >= 0)
     {
-        for (int32 i = 0; i < HighScores.Num(); i++)
+        int32 i = 0;
+        while (i < HighScores.Num() && i < 10)
         {
-            //UHighScoreWidget* HighScoreMenu = CreateWidget<UHighScoreWidget>(this, HighScoreWidgetClass);
-            UScoreElement* ScoreElement = CreateWidget<UScoreElement>(this, ScoreElementWidgetClass);
             FText Rank = FText::FromString(FString::FromInt(i + 1));
-            FText Name = FText::FromString(HighScores[i].PlayerName);
-            FText Score = FText::FromString(FString::FromInt(HighScores[i].Score));
-            ScoreElement->SetText(Rank, Name, Score);
-            HighScoreList->AddChildToVerticalBox(ScoreElement);
+            if (HighScores[i].PlayerName == "ThisIsNewestScore")
+            {
+                UNameInputWidget* NameInputWidget = CreateWidget<UNameInputWidget>(this, NameInputWidgetClass);
+                NameInputWidget->SetupWidget(Rank, FText::FromString(FString::FromInt(NewScore)));
+                NameInputWidget->Name->OnTextCommitted.AddDynamic(this, &UHighScoreWidget::SaveOnPlayerNameCommitted);
+                HighScoreList->AddChildToVerticalBox(NameInputWidget);
+            }
+            else
+            {
+                UScoreElement* ScoreElement = CreateWidget<UScoreElement>(this, ScoreElementWidgetClass);
+                FText Name = FText::FromString(HighScores[i].PlayerName);
+                FText Score = FText::FromString(FString::FromInt(HighScores[i].Score));
+                ScoreElement->SetText(Rank, Name, Score);
+                HighScoreList->AddChildToVerticalBox(ScoreElement);
+            }
+            i++;
         }
     }
-
-    UNameInputWidget* NameInputWidget = CreateWidget<UNameInputWidget>(this, NameInputWidgetClass);
-    NameInputWidget->SetupWidget(FText::FromString(FString::FromInt(NewScore)));
-    NameInputWidget->Name->OnTextCommitted.RemoveDynamic(this, &UHighScoreWidget::SaveOnPlayerNameCommitted);
-    NameInputWidget->Name->OnTextCommitted.AddDynamic(this, &UHighScoreWidget::SaveOnPlayerNameCommitted);
-    HighScoreList->AddChildToVerticalBox(NameInputWidget);
 }
 
 void UHighScoreWidget::SaveOnPlayerNameCommitted(const FText& Text, ETextCommit::Type CommitMethod)
@@ -72,5 +78,5 @@ void UHighScoreWidget::SaveOnPlayerNameCommitted(const FText& Text, ETextCommit:
 
 void UHighScoreWidget::SortScores(TArray<FHighScoreStruct>& HighScores)
 {
-    HighScores.Sort([](const FHighScoreStruct& a, const FHighScoreStruct& b) {return a.Score < b.Score;  });
+    HighScores.Sort([](const FHighScoreStruct& a, const FHighScoreStruct& b) {return a.Score > b.Score;  });
 }
