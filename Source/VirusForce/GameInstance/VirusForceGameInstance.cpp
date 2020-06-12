@@ -26,8 +26,8 @@ void UVirusForceGameInstance::Init()
 
 void UVirusForceGameInstance::LoadHighScores()
 {
-	UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass()));
-	HighScoreList = LoadedGame->LoadSavedGame();
+	LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass()));
+	LoadedGame->LoadSavedGame();
 }
 
 void UVirusForceGameInstance::DisplayHighScoreScreen(int32 Score)
@@ -35,7 +35,7 @@ void UVirusForceGameInstance::DisplayHighScoreScreen(int32 Score)
 	CreateHighScoreList();
 	if (HighScoreWidget != nullptr)
 	{
-		HighScoreWidget->Setup(HighScoreList, Score);
+		HighScoreWidget->Setup(LoadedGame->HighScoreList, Score);
 	}
 	FinalScore = Score;
 }
@@ -47,14 +47,12 @@ void UVirusForceGameInstance::CreateHighScoreList()
 
 void UVirusForceGameInstance::SaveHighScore(FText Name)
 {
-	SavedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::CreateSaveGameObject(UVirusForceSaveGame::StaticClass()));
-	SavedGame->HighScoreList = HighScoreList;
 	//if saved game is already present add on to existing file.
-	if (SavedGame != nullptr)
+	if (LoadedGame != nullptr)
 	{
-		SavedGame->SaveHighScore(Name.ToString(), FinalScore);
+		LoadedGame->SaveHighScore(Name.ToString(), FinalScore);
 		//update HighScoreList with latest high score;
-		HighScoreList = SavedGame->HighScoreList;
+		//HighScoreList = LoadedGame->HighScoreList;
 	}
 	else
 	{

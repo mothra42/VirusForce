@@ -25,6 +25,9 @@ private:
 
 	class UHighScoreWidget* HighScoreWidget;
 
+	UPROPERTY(VisibleAnywhere, Category = Basic)
+	class UVirusForceSaveGame* LoadedGame;
+
 	int32 FinalScore;
 
 	void LoadHighScores();

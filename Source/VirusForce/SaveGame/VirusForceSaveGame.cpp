@@ -15,7 +15,7 @@ TArray<FHighScoreStruct> UVirusForceSaveGame::LoadSavedGame()
 {
 	if (UVirusForceSaveGame* LoadedGame = Cast<UVirusForceSaveGame>(UGameplayStatics::LoadGameFromSlot(SaveSlotName, UserSaveIndex)))
 	{
-		return LoadedGame->HighScoreList;
+		return HighScoreList = LoadedGame->HighScoreList;
 	}
 
 	return HighScoreList;
