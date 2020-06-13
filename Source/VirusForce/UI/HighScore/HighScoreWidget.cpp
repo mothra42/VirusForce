@@ -43,7 +43,7 @@ void UHighScoreWidget::PopulateHighScores(TArray<FHighScoreStruct> HighScores, i
         int32 i = 0;
         while (i < HighScores.Num() && i < 10)
         {
-            FText Rank = FText::FromString(FString::FromInt(i + 1));
+            FText Rank = FText::FromString(FString::FromInt(i + 1) + ".");
             if (HighScores[i].PlayerName == "ThisIsNewestScore")
             {
                 UNameInputWidget* NameInputWidget = CreateWidget<UNameInputWidget>(this, NameInputWidgetClass);
@@ -66,7 +66,7 @@ void UHighScoreWidget::PopulateHighScores(TArray<FHighScoreStruct> HighScores, i
 
 void UHighScoreWidget::SaveOnPlayerNameCommitted(const FText& Text, ETextCommit::Type CommitMethod)
 {
-    if (CommitMethod == ETextCommit::Type::OnEnter)
+    if (CommitMethod == ETextCommit::Type::OnEnter || CommitMethod == ETextCommit::OnUserMovedFocus && !Text.EqualTo(FText()))
     {
         UVirusForceGameInstance* GameInstance = Cast<UVirusForceGameInstance>(GetGameInstance());
         if (GameInstance != nullptr)
