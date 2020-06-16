@@ -70,6 +70,13 @@ void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveC
 	{
 		Player->LoseLife();
 	}
+
+	if (Cast<AVirus>(OtherActor) != nullptr)
+	{
+		FVector ImpulseToApply = Hit.ImpactNormal.GetSafeNormal();
+
+		ShipMeshComponent->AddImpulse(ImpulseToApply * BounceStrength);
+	}
 }
 
 

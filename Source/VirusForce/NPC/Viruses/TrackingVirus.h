@@ -19,10 +19,4 @@ protected:
 
 public:
 	EVirusType VirusType = EVirusType::TrackingVirus;
-
-	void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
-
-private:
-	UPROPERTY(EditDefaultsOnly, Category = VirusCollision);
-	float BounceStrength = 500.f;
 };

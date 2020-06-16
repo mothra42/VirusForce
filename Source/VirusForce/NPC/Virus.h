@@ -25,6 +25,9 @@ private:
 
 	FVector VirusScale = FVector();
 
+	UPROPERTY(EditDefaultsOnly, Category = VirusCollision)
+	float BounceStrength = 20000.f;
+
 	void SetVirusReady();
 
 public:
