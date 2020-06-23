@@ -6,6 +6,7 @@
 #include "../NPC/Virus.h"
 #include "../NPC/Viruses/StraightVirus.h"
 #include "../NPC/Viruses/TrackingVirus.h"
+#include "../NPC/Viruses/BurstVirus.h"
 #include "../WaveDesign/WaveManager.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/Public/EngineUtils.h"

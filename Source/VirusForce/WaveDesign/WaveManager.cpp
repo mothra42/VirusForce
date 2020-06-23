@@ -31,7 +31,7 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 {
 	if (Virus != nullptr && StraightVirus != nullptr && StraightVirus != nullptr)
 	{
-		if (WaveCycle % 2 == 0)
+		if (WaveCycle % 7 == 0)
 		{
 			WaveCycle++;
 			return TrackingVirus;
@@ -40,6 +40,11 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 		{
 			WaveCycle++;
 			return StraightVirus;
+		}
+		else if (WaveCycle % 2 == 0)
+		{
+			WaveCycle++;
+			return BurstVirus;
 		}
 		else 
 		{ 

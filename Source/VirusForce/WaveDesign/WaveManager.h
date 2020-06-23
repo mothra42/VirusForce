@@ -40,6 +40,8 @@ public:
 	TSubclassOf<AVirus> StraightVirus;
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
 	TSubclassOf<AVirus> TrackingVirus;
+	UPROPERTY(Category = Viruses, EditDefaultsOnly)
+	TSubclassOf<AVirus> BurstVirus;
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
