@@ -19,9 +19,15 @@ void ABurstVirus::CheckWorldForInfectableCell()
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AInfectableCell::StaticClass(), FoundActors);
 
-	if (FoundActors.Num() >= 0)
+	for (int32 i = 0; i < FoundActors.Num(); i++)
 	{
-		SetInfectableCell(Cast<AInfectableCell>(FoundActors[0]));
+		AInfectableCell* InfectableCell = Cast<AInfectableCell>(FoundActors[i]);
+		if (InfectableCell != nullptr && !InfectableCell->InfectedStatus)
+		{
+			SetInfectableCell(InfectableCell);
+			InfectableCell->OnVirusInfection.AddDynamic(this, &ABurstVirus::ClearInfectableCell);
+			return;
+		}
 	}
 }
 
@@ -33,10 +39,19 @@ void ABurstVirus::SetInfectableCell(AInfectableCell* InfectableCell)
 	}
 }
 
+void ABurstVirus::ClearInfectableCell()
+{
+	if (CellToInfect != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Clearing infectable cell"));
+		CellToInfect = nullptr;
+	}
+}
+
 void ABurstVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//AInfectableCell* CellToInfect = Cast<AInfectableCell>(OtherActor);
-	if (Cast<AInfectableCell>(OtherActor) != nullptr)
+	AInfectableCell* InfectableCell = Cast<AInfectableCell>(OtherActor);
+	if (InfectableCell != nullptr && !InfectableCell->InfectedStatus)
 	{
 		InfectCell();
 	}

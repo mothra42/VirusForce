@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "../Virus.h"
 #include "BurstVirus.generated.h"
-
 /**
  * 
  */
@@ -29,5 +28,8 @@ class VIRUSFORCE_API ABurstVirus : public AVirus
 
 	public:
 		void SetInfectableCell(AInfectableCell* InfectableCell);
+
+		UFUNCTION()
+		void ClearInfectableCell();
 };
 
