@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "InfectableCell.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBurstVirusDelegate);
+
 UCLASS()
 class VIRUSFORCE_API AInfectableCell : public AActor
 {
@@ -28,6 +30,10 @@ public:
 
 	void BeginInfection();
 
+	bool InfectedStatus = false;
+
+	FBurstVirusDelegate OnVirusInfection;
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = InfectionProperties)
 	float IncubationTime = 10.f;
@@ -41,4 +47,6 @@ private:
 	void ProduceViruses();
 
 	void AlertVirusesOnSpawn();
+
+	void AlertVirusesOnInfection();
 };

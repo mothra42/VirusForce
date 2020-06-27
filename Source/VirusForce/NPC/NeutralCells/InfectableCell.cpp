@@ -38,6 +38,8 @@ void AInfectableCell::Tick(float DeltaTime)
 //set timer for infection process
 void AInfectableCell::BeginInfection()
 {
+	InfectedStatus = true;
+	AlertVirusesOnInfection();
 	GetWorldTimerManager().SetTimer(
 		TimerHandle_InfectionTimer,
 		this,
@@ -64,4 +66,9 @@ void AInfectableCell::AlertVirusesOnSpawn()
 		BurstVirus->SetInfectableCell(this);
 		++BurstVirusIterator;
 	}
+}
+
+void AInfectableCell::AlertVirusesOnInfection()
+{
+	OnVirusInfection.Broadcast();
 }
