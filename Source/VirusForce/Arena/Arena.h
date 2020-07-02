@@ -55,6 +55,9 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void SpawnVirus();
+
+	UFUNCTION()
+	void SpawnInfectableCell();
 	
 	void PopulateSpawnQueue();
 
@@ -87,6 +90,9 @@ private:
 	int32 MassSpawnIterations = 14;
 
 	TSubclassOf<AVirus> VirusClassToSpawn;
+
+	UPROPERTY(Category = InfectableCell, EditDefaultsOnly)
+	TSubclassOf<class AInfectableCell> InfectableCellClassToSpawn;
 	
 	TQueue<FSpawnInstructions> SpawnQueue;
 
@@ -97,6 +103,8 @@ private:
 	bool FindEmptyLocation(FVector& OutLocation, float Radius);
 
 	void PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass);
+
+	void PlaceInfectableCell(FVector SpawnPoint, TSubclassOf<AInfectableCell> InfectableCell);
 
 	void ConsumeSpawnQueue();
 

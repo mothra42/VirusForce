@@ -6,6 +6,8 @@
 #include "Components/ActorComponent.h"
 #include "WaveManager.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FWaveManagerDelegate);
+
 UENUM()
 enum class EWaveType : uint8
 {
@@ -42,6 +44,8 @@ public:
 	TSubclassOf<AVirus> TrackingVirus;
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
 	TSubclassOf<AVirus> BurstVirus;
+
+	FWaveManagerDelegate OnInfectableCellThresholdPassed;
 
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;

@@ -2,11 +2,13 @@
 
 
 #include "Arena.h"
+#include "../Player/VirusForcePawn.h"
 #include "Components/SceneComponent.h"
 #include "../NPC/Virus.h"
 #include "../NPC/Viruses/StraightVirus.h"
 #include "../NPC/Viruses/TrackingVirus.h"
 #include "../NPC/Viruses/BurstVirus.h"
+#include "../NPC/NeutralCells/InfectableCell.h"
 #include "../WaveDesign/WaveManager.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/Public/EngineUtils.h"
@@ -33,6 +35,7 @@ void AArena::BeginPlay()
 	//Wave Manger must be set in blueprint
 	WaveManager = FindComponentByClass<UWaveManager>();
 
+	WaveManager->OnInfectableCellThresholdPassed.AddDynamic(this, &AArena::SpawnInfectableCell);
 	//Set Arena in game mode
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
@@ -83,6 +86,19 @@ void AArena::SpawnVirus()
 	}
 }
 
+void AArena::SpawnInfectableCell()
+{
+	FVector SpawnLocation;
+
+	//TODO set a radius in infectable cell class
+	float MeshRadius = 65.f;
+	if (FindEmptyLocation(SpawnLocation, MeshRadius))
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Spawning infectable cell"));
+		PlaceInfectableCell(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), InfectableCellClassToSpawn);
+	}
+}
+
 bool AArena::bCanSpawnAtLocation(FVector Location, float Radius)
 {
 	FHitResult HitResult;
@@ -124,6 +140,16 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 	{
 		FRotator RandRotator = UKismetMathLibrary::RandomRotator();
 		AVirus* SpawnedVirus = World->SpawnActor<AVirus>(VirusClass, FVector(SpawnPoint.X, SpawnPoint.Y, 0.f), FRotator(0.f, RandRotator.Yaw, 0.f));
+	}
+}
+
+void AArena::PlaceInfectableCell(FVector SpawnPoint, TSubclassOf<AInfectableCell> InfectableCell)
+{
+	UWorld* World = GetWorld();
+	if (World != NULL && InfectableCell != nullptr)
+	{
+		FRotator RandRotator = UKismetMathLibrary::RandomRotator();
+		World->SpawnActor<AInfectableCell>(InfectableCell, FVector(SpawnPoint.X, SpawnPoint.Y, 0.f), FRotator(0.f, RandRotator.Yaw, 0.f));
 	}
 }
 

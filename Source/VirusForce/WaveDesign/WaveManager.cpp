@@ -29,8 +29,15 @@ void UWaveManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorCom
 //Method to set the spawned virus type
 TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 {
+	UE_LOG(LogTemp, Warning, TEXT("I'm on wave %i"), WaveCycle);
 	if (Virus != nullptr && StraightVirus != nullptr && StraightVirus != nullptr)
 	{
+		//every 10 cycles spawn a new infectable cell in the arena.
+		if (WaveCycle % 10 == 0)
+		{
+			OnInfectableCellThresholdPassed.Broadcast();
+		}
+
 		if (WaveCycle % 7 == 0)
 		{
 			WaveCycle++;
@@ -41,7 +48,7 @@ TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 			WaveCycle++;
 			return StraightVirus;
 		}
-		else if (WaveCycle % 2 == 0)
+		else if (WaveCycle % 11 == 0)
 		{
 			WaveCycle++;
 			return BurstVirus;
