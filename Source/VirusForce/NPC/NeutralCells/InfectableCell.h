@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "InfectableCell.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FBurstVirusDelegate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FInfectableCellDelegate);
 
 UCLASS()
 class VIRUSFORCE_API AInfectableCell : public AActor
@@ -35,7 +35,7 @@ public:
 
 	bool InfectedStatus = false;
 
-	FBurstVirusDelegate OnVirusInfection;
+	FInfectableCellDelegate OnVirusInfection;
 
 private:
 	UPROPERTY(EditDefaultsOnly, Category = InfectionProperties)
