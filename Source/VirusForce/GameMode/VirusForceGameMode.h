@@ -27,6 +27,8 @@ public:
 
 	class AVirusForceHUD* GetHUDComponent();
 
+	TSubclassOf<class AVirusForcePawn> GetPlayerPawnClass();
+
 	void ResetGameOnLifeLost(UWorld* World);
 
 	FORCEINLINE void SetArena(AArena* InArena) { Arena = InArena; }
@@ -41,7 +43,7 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = HUD)
 	AVirusForceHUD* HUD;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = PlayerRespawn)
+	UPROPERTY(EditDefaultsOnly, Category = PlayerRespawn)
 	TSubclassOf<class AVirusForcePawn> VirusForcePawn_BP;
 
 	virtual void BeginPlay() override;

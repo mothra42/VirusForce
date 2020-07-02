@@ -47,15 +47,14 @@ AVirusForceHUD* AVirusForceGameMode::GetHUDComponent()
 	return HUD;
 }
 
+TSubclassOf<AVirusForcePawn> AVirusForceGameMode::GetPlayerPawnClass()
+{
+	return VirusForcePawn_BP;
+}
+
 void AVirusForceGameMode::BeginPlay()
 {
 	Super::BeginPlay();
-
-	/*if (SavedGame == nullptr)
-	{
-		SavedGame = LoadHighScoreSync();
-		SavedGame->PrintOutInfo();
-	}*/
 }
 
 //TODO refactor this method, too much going on in one method.
