@@ -14,7 +14,7 @@ void ABurstVirus::BeginPlay()
 	CheckWorldForInfectableCell();
 }
 
-void ABurstVirus::CheckWorldForInfectableCell()
+bool ABurstVirus::CheckWorldForInfectableCell()
 {
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AInfectableCell::StaticClass(), FoundActors);
@@ -25,10 +25,12 @@ void ABurstVirus::CheckWorldForInfectableCell()
 		if (InfectableCell != nullptr && !InfectableCell->InfectedStatus)
 		{
 			SetInfectableCell(InfectableCell);
-			InfectableCell->OnVirusInfection.AddDynamic(this, &ABurstVirus::ClearInfectableCell);
-			return;
+			InfectableCell->OnVirusInfection.AddDynamic(this, &ABurstVirus::InfectNewCell);
+			return true;
 		}
 	}
+
+	return false;
 }
 
 void ABurstVirus::SetInfectableCell(AInfectableCell* InfectableCell)
@@ -39,11 +41,15 @@ void ABurstVirus::SetInfectableCell(AInfectableCell* InfectableCell)
 	}
 }
 
-void ABurstVirus::ClearInfectableCell()
+void ABurstVirus::InfectNewCell()
 {
-	if (CellToInfect != nullptr)
+	CellToInfect = nullptr;
+	if (CheckWorldForInfectableCell())
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Clearing infectable cell"));
+		return;
+	}
+	else
+	{
 		CellToInfect = nullptr;
 	}
 }

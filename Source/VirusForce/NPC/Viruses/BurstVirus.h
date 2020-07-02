@@ -24,12 +24,12 @@ class VIRUSFORCE_API ABurstVirus : public AVirus
 	private:
 		void InfectCell();
 
-		void CheckWorldForInfectableCell();
+		bool CheckWorldForInfectableCell();
 
 	public:
 		void SetInfectableCell(AInfectableCell* InfectableCell);
 
 		UFUNCTION()
-		void ClearInfectableCell();
+		void InfectNewCell();
 };
 
