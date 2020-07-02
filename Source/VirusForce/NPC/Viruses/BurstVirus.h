@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "../Virus.h"
 #include "BurstVirus.generated.h"
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBurstVirusDelegate, AInfectableCell*, CellToTrack);
+
 /**
  * 
  */
@@ -17,6 +20,9 @@ class VIRUSFORCE_API ABurstVirus : public AVirus
 		UPROPERTY(BlueprintReadOnly)
 		class AInfectableCell* CellToInfect;
 
+		UPROPERTY(Category = TargetedCell, BlueprintAssignable)
+		FBurstVirusDelegate OnCellToInfectChanged;
+
 		virtual void BeginPlay() override;
 
 		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
@@ -24,12 +30,10 @@ class VIRUSFORCE_API ABurstVirus : public AVirus
 	private:
 		void InfectCell();
 
-		bool CheckWorldForInfectableCell();
+		UFUNCTION()
+		void CheckWorldForInfectableCell();
 
 	public:
 		void SetInfectableCell(AInfectableCell* InfectableCell);
-
-		UFUNCTION()
-		void InfectNewCell();
 };
 

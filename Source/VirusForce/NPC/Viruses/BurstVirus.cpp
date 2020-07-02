@@ -14,7 +14,7 @@ void ABurstVirus::BeginPlay()
 	CheckWorldForInfectableCell();
 }
 
-bool ABurstVirus::CheckWorldForInfectableCell()
+void ABurstVirus::CheckWorldForInfectableCell()
 {
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AInfectableCell::StaticClass(), FoundActors);
@@ -25,33 +25,19 @@ bool ABurstVirus::CheckWorldForInfectableCell()
 		if (InfectableCell != nullptr && !InfectableCell->InfectedStatus)
 		{
 			SetInfectableCell(InfectableCell);
-			InfectableCell->OnVirusInfection.AddDynamic(this, &ABurstVirus::InfectNewCell);
-			return true;
+			InfectableCell->OnVirusInfection.AddDynamic(this, &ABurstVirus::CheckWorldForInfectableCell);
+			return;
 		}
 	}
 
-	return false;
+	//if no infectablevirus is found
+	SetInfectableCell(nullptr);
 }
 
 void ABurstVirus::SetInfectableCell(AInfectableCell* InfectableCell)
 {
-	if (InfectableCell != nullptr)
-	{
-		CellToInfect = InfectableCell;
-	}
-}
-
-void ABurstVirus::InfectNewCell()
-{
-	CellToInfect = nullptr;
-	if (CheckWorldForInfectableCell())
-	{
-		return;
-	}
-	else
-	{
-		CellToInfect = nullptr;
-	}
+	CellToInfect = InfectableCell;
+	OnCellToInfectChanged.Broadcast(InfectableCell);
 }
 
 void ABurstVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
