@@ -48,11 +48,20 @@ void AInfectableCell::BeginInfection()
 		);
 }
 
+//spawns more viruses once infection is completed
 void AInfectableCell::ProduceViruses()
 {
-	//Spawn more burst viruses or a new smaller type of virus with different behavior
+	SetActorEnableCollision(false);
+	FVector SpawnLocation = this->GetActorLocation();
+	UWorld* World = GetWorld();
+	int32 Yaw = 0;
+	//spawns viruses facing 45 degrees away from each other.
+	for (int32 i = 0; i < 7; i++)
+	{
+		World->SpawnActor<AVirus>(VirusTypeToSpawn, SpawnLocation, FRotator(0, Yaw, 0));
+		Yaw += 45;
+	}
 	Destroy();
-	UE_LOG(LogTemp, Warning, TEXT("I Was infected and now I'm blowing myself up"));
 }
 
 void AInfectableCell::AlertVirusesOnSpawn()

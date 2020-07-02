@@ -21,6 +21,9 @@ protected:
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UStaticMeshComponent* MeshComponent;
 
+	UPROPERTY(EditDefaultsOnly, Category = InfectionProperties)
+	TSubclassOf<class AVirus> VirusTypeToSpawn;
+
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -37,9 +40,6 @@ public:
 private:
 	UPROPERTY(EditDefaultsOnly, Category = InfectionProperties)
 	float IncubationTime = 10.f;
-
-	UPROPERTY(EditDefaultsOnly, Category = InfectionProperties)
-	TSubclassOf<class AVirus> VirusTypeToSpawn;
 
 	FTimerHandle TimerHandle_InfectionTimer;
 
