@@ -176,7 +176,7 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			// try and play the sound if specified
 			if (FireSound != nullptr)
 			{
-				UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+				//UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 			}
 
 			bCanFire = false;
