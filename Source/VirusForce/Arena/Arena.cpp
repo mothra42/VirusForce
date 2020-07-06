@@ -23,8 +23,8 @@ AArena::AArena()
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
-	MinExtent = FVector(-3000, -3000, 0);
-	MaxExtent = FVector(3000, 3000, 0);
+	MinExtent = FVector(-2950, -2950, 0);
+	MaxExtent = FVector(2950, 2950, 0);
 }
 
 // Called when the game starts or when spawned
