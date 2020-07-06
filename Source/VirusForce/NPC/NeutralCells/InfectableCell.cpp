@@ -26,6 +26,13 @@ void AInfectableCell::BeginPlay()
 	Super::BeginPlay();
 
 	AlertVirusesOnSpawn();
+
+	GetWorldTimerManager().SetTimer(
+		TimerHandle_InfectableCellLifetimeTimer,
+		this,
+		&AInfectableCell::ExitArena,
+		InfectableCellLifetime
+	);
 }
 
 // Called every frame
@@ -40,6 +47,7 @@ void AInfectableCell::BeginInfection()
 {
 	InfectedStatus = true;
 	AlertVirusesOnInfection();
+	GetWorldTimerManager().ClearTimer(TimerHandle_InfectableCellLifetimeTimer);
 	GetWorldTimerManager().SetTimer(
 		TimerHandle_InfectionTimer,
 		this,
@@ -61,6 +69,14 @@ void AInfectableCell::ProduceViruses()
 		World->SpawnActor<AVirus>(VirusTypeToSpawn, SpawnLocation, FRotator(0, Yaw, 0));
 		Yaw += 45;
 	}
+	Destroy();
+}
+
+void AInfectableCell::ExitArena()
+{
+	//set infected status to true to avoid this cell being set as a tracked cell
+	InfectedStatus = true;
+	OnVirusInfection.Broadcast();
 	Destroy();
 }
 

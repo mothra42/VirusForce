@@ -41,7 +41,12 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = InfectionProperties)
 	float IncubationTime = 10.f;
 
+	UPROPERTY(EditDefaultsOnly, Category = Properties)
+	float InfectableCellLifetime = 60.f;
+
 	FTimerHandle TimerHandle_InfectionTimer;
+
+	FTimerHandle TimerHandle_InfectableCellLifetimeTimer;
 
 	//function called when the infection ends producing more viruses
 	void ProduceViruses();
@@ -49,4 +54,6 @@ private:
 	void AlertVirusesOnSpawn();
 
 	void AlertVirusesOnInfection();
+
+	void ExitArena();
 };
