@@ -15,12 +15,14 @@
 // Sets default values
 AVirus::AVirus()
 {
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> VirusMesh(TEXT("/Game/Geometry/Meshes/VirusMeshes/StochasticVirus/StochasticVirus"));
 	// Create the mesh component
-	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
-	RootComponent = ShipMeshComponent;
-	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
+	VirusMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("VirusMesh"));
+	RootComponent = VirusMeshComponent;
+	VirusMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	VirusMeshComponent->SetStaticMesh(VirusMesh.Object);
+	VirusMeshComponent->bIgnoreRadialForce = true;
+	VirusMeshComponent->bIgnoreRadialImpulse = true;
 
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
@@ -35,9 +37,9 @@ AVirus::AVirus()
 void AVirus::BeginPlay()
 {
 	Super::BeginPlay();
-	AvailableSocketNames = ShipMeshComponent->GetAllSocketNames();
+	AvailableSocketNames = VirusMeshComponent->GetAllSocketNames();
 
-	ShipMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);
+	VirusMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);
 
 	//get marked virus component from game mode
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
@@ -48,7 +50,7 @@ void AVirus::BeginPlay()
 
 	//Setup mesh and collision for spawn in
 	SetActorEnableCollision(false);
-	ShipMeshComponent->SetRelativeScale3D(VirusScale);
+	VirusMeshComponent->SetRelativeScale3D(VirusScale);
 }
 
 // Called every frame
@@ -74,7 +76,7 @@ void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveC
 	{
 		FVector ImpulseToApply = Hit.ImpactNormal.GetSafeNormal();
 
-		ShipMeshComponent->AddImpulse(ImpulseToApply * BounceStrength);
+		VirusMeshComponent->AddImpulse(ImpulseToApply * BounceStrength);
 	}
 }
 
@@ -113,8 +115,8 @@ void AVirus::DestroyAttachedAntibodies()
 
 void AVirus::SpawnInAnimation()
 {
-	ShipMeshComponent->SetRelativeScale3D(VirusScale);
-	if (ShipMeshComponent->GetRelativeScale3D().Size() >= FVector(1.f).Size())
+	VirusMeshComponent->SetRelativeScale3D(VirusScale);
+	if (VirusMeshComponent->GetRelativeScale3D().Size() >= FVector(1.f).Size())
 	{
 		SetVirusReady();
 	}

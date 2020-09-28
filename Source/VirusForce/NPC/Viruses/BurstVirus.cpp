@@ -9,8 +9,8 @@ void ABurstVirus::BeginPlay()
 {
 	Super::BeginPlay();
 
-	Super::ShipMeshComponent->OnComponentHit.RemoveDynamic(this, &Super::OnHit);
-	Super::ShipMeshComponent->OnComponentHit.AddDynamic(this, &ABurstVirus::OnHit);
+	Super::VirusMeshComponent->OnComponentHit.RemoveDynamic(this, &Super::OnHit);
+	Super::VirusMeshComponent->OnComponentHit.AddDynamic(this, &ABurstVirus::OnHit);
 	CheckWorldForInfectableCell();
 }
 

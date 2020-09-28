@@ -18,12 +18,15 @@
 // Sets default values
 AKillerTCell::AKillerTCell()
 {
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellWall(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/CellWall"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> Core(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/Core"));
 	// Create the mesh component
-	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
-	RootComponent = ShipMeshComponent;
-	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
+	CellWallComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellWall"));
+	CoreComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Core"));
+	CoreComponent->AttachToComponent(CellWallComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("CoreSocket"));
+	RootComponent = CellWallComponent;
+	CellWallComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	CellWallComponent->SetStaticMesh(CellWall.Object);
 
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
@@ -36,7 +39,7 @@ AKillerTCell::AKillerTCell()
 void AKillerTCell::BeginPlay()
 {
 	Super::BeginPlay();
-	ShipMeshComponent->OnComponentHit.AddDynamic(this, &AKillerTCell::OnHit);
+	CellWallComponent->OnComponentHit.AddDynamic(this, &AKillerTCell::OnHit);
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
 	{

@@ -24,12 +24,15 @@ const FName AVirusForcePawn::SpawnKillerTCell("SpawnKillerTCell");
 
 AVirusForcePawn::AVirusForcePawn()
 {	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> ShipMesh(TEXT("/Game/TwinStick/Meshes/TwinStickUFO.TwinStickUFO"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellWall(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/CellWall"));
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> Core(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/Core"));
 	// Create the mesh component
-	ShipMeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShipMesh"));
-	RootComponent = ShipMeshComponent;
-	ShipMeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	ShipMeshComponent->SetStaticMesh(ShipMesh.Object);
+	CellWallComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellWall"));
+	CoreComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Core"));
+	CoreComponent->AttachToComponent(CellWallComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("CoreSocket"));
+	RootComponent = CellWallComponent;
+	CellWallComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	CellWallComponent->SetStaticMesh(CellWall.Object);
 	
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
@@ -117,12 +120,12 @@ void AVirusForcePawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AvailableSocketNames = ShipMeshComponent->GetAllSocketNames();
+	AvailableSocketNames = CellWallComponent->GetAllSocketNames();
 }
 
 void AVirusForcePawn::SwitchAntibodyTypeUp()
 {
-	if (ProjectileIndexTracker >= 2)
+	if (ProjectileIndexTracker >= 3)
 	{
 		ProjectileIndexTracker = 0;
 	}
@@ -137,7 +140,7 @@ void AVirusForcePawn::SwitchAntibodyTypeDown()
 {
 	if (ProjectileIndexTracker <= 0)
 	{
-		ProjectileIndexTracker = 2;
+		ProjectileIndexTracker = 3;
 	}
 	else
 	{
@@ -213,7 +216,14 @@ void AVirusForcePawn::LoseLife()
 		AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(World->GetAuthGameMode());
 		if (GameMode != nullptr)
 		{
-			GameMode->ResetGameOnLifeLost(World);
+			//GameMode->ResetGameOnLifeLost(World);
 		}
 	}
+}
+
+//used to set all mesh components of mesh invisible
+void AVirusForcePawn::SetPlayerInvisible()
+{
+	CellWallComponent->SetVisibility(false);
+	CoreComponent->SetVisibility(false);
 }

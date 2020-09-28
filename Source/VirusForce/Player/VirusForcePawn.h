@@ -13,7 +13,10 @@ class AVirusForcePawn : public APawn
 
 	/* The mesh component */
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ShipMeshComponent;
+	class UStaticMeshComponent* CellWallComponent;
+
+	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UStaticMeshComponent* CoreComponent;
 
 	/** The camera */
 	UPROPERTY(Category = Camera, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
@@ -72,6 +75,8 @@ public:
 
 	void LoseLife();
 
+	void SetPlayerInvisible();
+
 	void SetProjectile(TSubclassOf<AVirusForceProjectile> ProjectileToSet);
 
 	// Static names for axis bindings
@@ -103,9 +108,9 @@ private:
 	void SwitchAntibodyTypeDown();
 
 public:
-	/** Returns ShipMeshComponent subobject **/
+	/** Returns CellWallComponent subobject **/
 	UFUNCTION()
-	FORCEINLINE class UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
+	FORCEINLINE class UStaticMeshComponent* GetCellWallComponent() const { return CellWallComponent; }
 	/** Returns CameraComponent subobject **/
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 	/** Returns CameraBoom subobject **/

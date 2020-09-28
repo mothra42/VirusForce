@@ -37,7 +37,7 @@ public:
 protected:
 	/* The mesh component */
 	UPROPERTY(Category = Mesh, VisibleDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UStaticMeshComponent* ShipMeshComponent;
+	class UStaticMeshComponent* VirusMeshComponent;
 
 	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UFloatingPawnMovement* MovementComponent;
@@ -71,9 +71,9 @@ public:
 
 	TArray<FName> AvailableSocketNames;
 
-	/** Returns ShipMeshComponent subobject **/
+	/** Returns VirusMeshComponent subobject **/
 	UFUNCTION(BlueprintCallable)
-	FORCEINLINE UStaticMeshComponent* GetShipMeshComponent() const { return ShipMeshComponent; }
+	FORCEINLINE UStaticMeshComponent* GetVirusMeshComponent() const { return VirusMeshComponent; }
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetVirusSpeed() const { return VirusSpeed; }

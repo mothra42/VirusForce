@@ -18,8 +18,8 @@ AStraightVirus::AStraightVirus()
 void AStraightVirus::BeginPlay()
 {
 	Super::BeginPlay();
-	Super::ShipMeshComponent->OnComponentHit.RemoveDynamic(this, &Super::OnHit);
-	Super::ShipMeshComponent->OnComponentHit.AddDynamic(this, &AStraightVirus::OnHit);
+	Super::VirusMeshComponent->OnComponentHit.RemoveDynamic(this, &Super::OnHit);
+	Super::VirusMeshComponent->OnComponentHit.AddDynamic(this, &AStraightVirus::OnHit);
 
 	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 }
@@ -36,11 +36,11 @@ void AStraightVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPr
 	AArena* Arena = Cast<AArena>(OtherActor);
 	if (Arena != nullptr)
 	{
-		FVector ForwardVector = Super::ShipMeshComponent->GetForwardVector() * 500;
+		FVector ForwardVector = Super::VirusMeshComponent->GetForwardVector() * 500;
 
 		FVector ReflectedVector = ForwardVector.MirrorByVector(Hit.Normal);
 
-		FRotator NeededRotation = UKismetMathLibrary::FindLookAtRotation(Super::ShipMeshComponent->GetForwardVector(), ReflectedVector);
+		FRotator NeededRotation = UKismetMathLibrary::FindLookAtRotation(Super::VirusMeshComponent->GetForwardVector(), ReflectedVector);
 
 		SetActorRotation(NeededRotation);
 	}

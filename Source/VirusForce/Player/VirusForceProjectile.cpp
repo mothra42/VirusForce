@@ -58,7 +58,7 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 			{
 				ProjectileMovement->StopMovementImmediately();
 				ProjectileMesh->SetCollisionEnabled(ECollisionEnabled::NoCollision);
-				ProjectileMesh->AttachToComponent(HitVirus->GetShipMeshComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, NearestSocketName);
+				ProjectileMesh->AttachToComponent(HitVirus->GetVirusMeshComponent(), FAttachmentTransformRules::SnapToTargetNotIncludingScale, NearestSocketName);
 				
 				//remove the used socket from available names
 				HitVirus->AvailableSocketNames.Remove(NearestSocketName);
@@ -80,7 +80,7 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 FName AVirusForceProjectile::FindNearestSocketName(AVirus* HitVirus, FHitResult Hit)
 {
 	//attach projectile to available socket
-	UStaticMeshComponent* VirusStaticMesh = HitVirus->GetShipMeshComponent();
+	UStaticMeshComponent* VirusStaticMesh = HitVirus->GetVirusMeshComponent();
 	//if there are no available slots destroy the projectile
 	if (HitVirus->AvailableSocketNames.Num() <= 0)
 	{
