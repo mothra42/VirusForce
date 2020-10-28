@@ -119,7 +119,8 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 		PlayerPawn->DisableMovement();
 		PlayerController = Cast<APlayerController>(PlayerPawn->GetController());
 		PlayerDeathTransform = PlayerPawn->GetActorTransform();
-		PlayerPawn->GetShipMeshComponent()->SetVisibility(false);
+		//PlayerPawn->GetCellWallComponent()->SetVisibility(false);
+		PlayerPawn->SetPlayerInvisible();
 		LastUsedProjectile = PlayerPawn->ProjectileClass;
 		return;
 	}

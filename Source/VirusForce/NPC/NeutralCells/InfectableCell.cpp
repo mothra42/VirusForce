@@ -8,6 +8,7 @@
 #include "EngineUtils.h"
 #include "../Viruses/BurstVirus.h"
 #include "../Virus.h"
+#include "../../GameBackground/ArteryJunctionComponent.h"
 
 // Sets default values
 AInfectableCell::AInfectableCell()
@@ -15,6 +16,7 @@ AInfectableCell::AInfectableCell()
 	MeshComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellMesh"));
 	RootComponent = MeshComponent;
 	MeshComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	MeshComponent->OnComponentBeginOverlap.AddDynamic(this, &AInfectableCell::BeginOverlap);
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
@@ -96,4 +98,19 @@ void AInfectableCell::AlertVirusesOnSpawn()
 void AInfectableCell::AlertVirusesOnInfection()
 {
 	OnVirusInfection.Broadcast();
+}
+
+void AInfectableCell::BeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+	auto ArteryJunction = OtherComp->GetAttachParent();
+	UArteryJunctionComponent* OverlappedJunction = Cast<UArteryJunctionComponent>(ArteryJunction);
+	if (OverlappedJunction != nullptr)
+	{
+		//TODO pick a new artery to travel down
+		UE_LOG(LogTemp, Warning, TEXT("Junction is %s"), *OverlappedJunction->GetName());
+	}
+	else
+	{
+		UE_LOG(LogTemp, Warning, TEXT("Could not cast component to junction"));
+	}
 }

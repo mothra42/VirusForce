@@ -1,18 +1,22 @@
 // Copyright Adam Farmer 2020
 
-
 #include "ArteryJunctionComponent.h"
+#include "Components/SplineComponent.h"
+#include "Components/StaticMeshComponent.h"
 
 // Sets default values for this component's properties
 UArteryJunctionComponent::UArteryJunctionComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
+	//setup collision mesh
+	static ConstructorHelpers::FObjectFinder<UStaticMesh> CollisionBox(TEXT("/Game/Geometry/Meshes/1M_Cube"));
+	CollisionMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CollisionMesh"));
+	CollisionMesh->SetStaticMesh(CollisionBox.Object);
+	CollisionMesh->SetWorldScale3D(FVector(0.5, 0.5, 0.5));
+	CollisionMesh->bHiddenInGame = true;
+	CollisionMesh->SetupAttachment(this);
+	CollisionMesh->SetCollisionProfileName(FName("OverlapAllDynamic"));
+	CollisionMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysics);
 }
-
 
 // Called when the game starts
 void UArteryJunctionComponent::BeginPlay()
@@ -25,10 +29,22 @@ void UArteryJunctionComponent::BeginPlay()
 
 
 // Called every frame
-void UArteryJunctionComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+void UArteryJunctionComponent::TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 	// ...
 }
 
+void UArteryJunctionComponent::SetupConnection(USplineComponent* SplineComponent, int32 SplinePoint, FVector NewLocation)
+{
+	ArteryArray.Add(SplineComponent);
+	ArteryLocationMap.Add(SplineComponent, SplinePoint);
+	SplineComponent->SetLocationAtSplinePoint(SplinePoint, NewLocation, ESplineCoordinateSpace::World, true);
+	SplineComponent->bSplineHasBeenEdited = true;
+}
+
+UStaticMeshComponent* UArteryJunctionComponent::GetCollisionMesh()
+{
+	return CollisionMesh;
+}

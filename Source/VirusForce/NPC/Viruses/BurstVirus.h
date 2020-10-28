@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "../Virus.h"
+#include "StraightVirus.h"
 #include "BurstVirus.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBurstVirusDelegate, AInfectableCell*, CellToTrack);
@@ -12,7 +12,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FBurstVirusDelegate, AInfectableCell
  * 
  */
 UCLASS()
-class VIRUSFORCE_API ABurstVirus : public AVirus
+class VIRUSFORCE_API ABurstVirus : public AStraightVirus
 {
 	GENERATED_BODY()
 	
@@ -32,6 +32,8 @@ class VIRUSFORCE_API ABurstVirus : public AVirus
 
 		UFUNCTION()
 		void CheckWorldForInfectableCell();
+
+		void SetNewRandomDirection();
 
 	public:
 		void SetInfectableCell(AInfectableCell* InfectableCell);

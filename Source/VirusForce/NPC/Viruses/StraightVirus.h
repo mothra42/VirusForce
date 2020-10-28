@@ -14,6 +14,7 @@ class VIRUSFORCE_API AStraightVirus : public AVirus
 {
 	GENERATED_BODY()
 
+public:
 	AStraightVirus();
 	
 protected:

@@ -57,7 +57,8 @@ void AVirus::BeginPlay()
 void AVirus::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
-
+	auto Rotation = GetActorRotation();
+	SetActorRotation(FRotator(0.f, Rotation.Yaw, Rotation.Roll));
 	if (!IsVirusReady)
 	{
 		SpawnInAnimation();
@@ -76,7 +77,8 @@ void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveC
 	{
 		FVector ImpulseToApply = Hit.ImpactNormal.GetSafeNormal();
 
-		VirusMeshComponent->AddImpulse(ImpulseToApply * BounceStrength);
+		//add impulse to keep viruses from clumping together
+		VirusMeshComponent->AddImpulse(ImpulseToApply * BounceStrength, FName("Name_NONE"), true);
 	}
 }
 

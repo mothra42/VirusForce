@@ -7,7 +7,7 @@
 #include "ArteryJunctionComponent.generated.h"
 
 
-UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent) )
+UCLASS( ClassGroup=(Custom), meta=(BlueprintSpawnableComponent), Blueprintable )
 class VIRUSFORCE_API UArteryJunctionComponent : public USceneComponent
 {
 	GENERATED_BODY()
@@ -16,13 +16,23 @@ public:
 	// Sets default values for this component's properties
 	UArteryJunctionComponent();
 
+	TArray<class USplineComponent*> ArteryArray;
+
+	TMap<USplineComponent*, int32> ArteryLocationMap;
+
 protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	class UStaticMeshComponent* CollisionMesh;
+
 public:	
 	// Called every frame
-	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
+	virtual void TickComponent(float DeltaTime, enum ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
-		
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetupConnection(USplineComponent* SplineComponent, int32 SplinePoint, FVector NewLocation);
+
+	UFUNCTION(BlueprintCallable)
+	UStaticMeshComponent* GetCollisionMesh();
 };

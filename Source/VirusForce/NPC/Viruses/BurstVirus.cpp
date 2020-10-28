@@ -4,6 +4,7 @@
 #include "BurstVirus.h"
 #include "../NeutralCells/InfectableCell.h"
 #include "Kismet/GameplayStatics.h"
+#include "Kismet/KismetMathLibrary.h"
 
 void ABurstVirus::BeginPlay()
 {
@@ -38,6 +39,9 @@ void ABurstVirus::SetInfectableCell(AInfectableCell* InfectableCell)
 {
 	CellToInfect = InfectableCell;
 	OnCellToInfectChanged.Broadcast(InfectableCell);
+
+	//pick new random direction to start moving in
+	SetNewRandomDirection();
 }
 
 void ABurstVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -56,4 +60,10 @@ void ABurstVirus::InfectCell()
 	CellToInfect->BeginInfection();
 	DestroyAttachedAntibodies();
 	Destroy();
+}
+
+void ABurstVirus::SetNewRandomDirection()
+{
+	FRotator RandRotator = UKismetMathLibrary::RandomRotator();
+	SetActorRotation(FRotator(0.f, RandRotator.Yaw, GetActorRotation().Roll));
 }
