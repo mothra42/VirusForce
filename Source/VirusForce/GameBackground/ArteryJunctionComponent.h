@@ -35,4 +35,7 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	UStaticMeshComponent* GetCollisionMesh();
+
+	UFUNCTION(BlueprintCallable, Category = Setup)
+	void SetupArteryArrayAndMap(USplineComponent* SplineComponent, int32 SplinePoint);
 };

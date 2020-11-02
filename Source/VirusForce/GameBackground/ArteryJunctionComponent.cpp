@@ -24,6 +24,9 @@ void UArteryJunctionComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
+	TArray<UPrimitiveComponent*> OverlappingComponents;
+	CollisionMesh->GetOverlappingComponents(OverlappingComponents);
+	UE_LOG(LogTemp, Warning, TEXT("%s component has %i overlapping components"), *this->GetName(), OverlappingComponents.Num());
 	
 }
 
@@ -33,13 +36,13 @@ void UArteryJunctionComponent::TickComponent(float DeltaTime, enum ELevelTick Ti
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-	// ...
+	TArray<UPrimitiveComponent*> OverlappingComponents;
+	CollisionMesh->GetOverlappingComponents(OverlappingComponents);
+	UE_LOG(LogTemp, Warning, TEXT("%s component has %i overlapping components"), *this->GetName(), OverlappingComponents.Num());
 }
 
 void UArteryJunctionComponent::SetupConnection(USplineComponent* SplineComponent, int32 SplinePoint, FVector NewLocation)
 {
-	ArteryArray.Add(SplineComponent);
-	ArteryLocationMap.Add(SplineComponent, SplinePoint);
 	SplineComponent->SetLocationAtSplinePoint(SplinePoint, NewLocation, ESplineCoordinateSpace::World, true);
 	SplineComponent->bSplineHasBeenEdited = true;
 }
@@ -47,4 +50,11 @@ void UArteryJunctionComponent::SetupConnection(USplineComponent* SplineComponent
 UStaticMeshComponent* UArteryJunctionComponent::GetCollisionMesh()
 {
 	return CollisionMesh;
+}
+
+void UArteryJunctionComponent::SetupArteryArrayAndMap(USplineComponent* SplineComponent, int32 SplinePoint)
+{
+	ArteryArray.Add(SplineComponent);
+	ArteryLocationMap.Add(SplineComponent, SplinePoint);
+	UE_LOG(LogTemp, Warning, TEXT("Arteries in array %i"), ArteryArray.Num());
 }
