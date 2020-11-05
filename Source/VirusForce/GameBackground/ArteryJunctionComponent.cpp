@@ -38,7 +38,6 @@ void UArteryJunctionComponent::TickComponent(float DeltaTime, enum ELevelTick Ti
 
 	TArray<UPrimitiveComponent*> OverlappingComponents;
 	CollisionMesh->GetOverlappingComponents(OverlappingComponents);
-	UE_LOG(LogTemp, Warning, TEXT("%s component has %i overlapping components"), *this->GetName(), OverlappingComponents.Num());
 }
 
 void UArteryJunctionComponent::SetupConnection(USplineComponent* SplineComponent, int32 SplinePoint, FVector NewLocation)
@@ -56,5 +55,4 @@ void UArteryJunctionComponent::SetupArteryArrayAndMap(USplineComponent* SplineCo
 {
 	ArteryArray.Add(SplineComponent);
 	ArteryLocationMap.Add(SplineComponent, SplinePoint);
-	UE_LOG(LogTemp, Warning, TEXT("Arteries in array %i"), ArteryArray.Num());
 }
