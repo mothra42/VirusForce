@@ -106,19 +106,47 @@ USplineComponent* AInfectableCell::GetNewArtery(UPrimitiveComponent* OverlappedJ
 	UArteryJunctionComponent* OverlappedJunction = Cast<UArteryJunctionComponent>(ArteryJunction);
 	if (OverlappedJunction != nullptr)
 	{
-		//TODO pick a new artery to travel down
-		UE_LOG(LogTemp, Warning, TEXT("Junction is %s"), *OverlappedJunction->GetName());
-		UE_LOG(LogTemp, Warning, TEXT("Junction is %i"), OverlappedJunction->ArteryArray.Num());
 		for (size_t i = 0; i < OverlappedJunction->ArteryArray.Num(); i++)
 		{
-			UE_LOG(LogTemp, Warning, TEXT("looking for new artery"));
 			if (OverlappedJunction->ArteryArray[i] != CurrentArtery)
 			{
-				return OverlappedJunction->ArteryArray[i];
+				int32 NumSplinePoints = OverlappedJunction->ArteryArray[i]->GetNumberOfSplinePoints();
+				int32 NewSplinePoint = OverlappedJunction->ArteryLocationMap[OverlappedJunction->ArteryArray[i]];
+				int32 CurrentSplinePoint = OverlappedJunction->ArteryLocationMap[CurrentArtery];
+				//check if the other spline point is the end of that spline, if it is we will ignore it
+				if (NewSplinePoint < NumSplinePoints - 1)
+				{
+					if (CurrentSplinePoint == CurrentArtery->GetNumberOfSplinePoints() - 1)
+					{
+						return OverlappedJunction->ArteryArray[i];
+					}
+					else if (UKismetMathLibrary::RandomBoolWithWeight(0.3))
+					{
+						return OverlappedJunction->ArteryArray[i];
+					}
+				}
+				return nullptr;
 			}
 		}
 	}
-
-	UE_LOG(LogTemp, Warning, TEXT("Could not find new artery"));
 	return nullptr;
+}
+
+float AInfectableCell::GetTimeOffset(USplineComponent* Artery, UPrimitiveComponent* ArteryJunctionMesh)
+{
+	auto ArteryJunction = ArteryJunctionMesh->GetAttachParent();
+	UArteryJunctionComponent* OverlappedJunction = Cast<UArteryJunctionComponent>(ArteryJunction);
+	if (OverlappedJunction != nullptr)
+	{
+		int32 NumSplinePoints = Artery->GetNumberOfSplinePoints();
+		int32 SplinePoint = OverlappedJunction->ArteryLocationMap[Artery];
+		if (SplinePoint == 0)
+		{
+			return 0.0;
+		}
+		float DistanceAtPoint = Artery->GetDistanceAlongSplineAtSplinePoint(SplinePoint);
+		float TimeOffset = DistanceAtPoint / Artery->GetSplineLength();
+		return TimeOffset;
+	}
+	return 0.0;
 }

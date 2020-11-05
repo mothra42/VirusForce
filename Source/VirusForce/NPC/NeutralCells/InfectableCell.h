@@ -40,6 +40,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	class USplineComponent* GetNewArtery(UPrimitiveComponent* OverlappedJunctionMesh, USplineComponent* CurrentArtery);
 
+	UFUNCTION(BlueprintCallable)
+	float GetTimeOffset(USplineComponent* Artery, UPrimitiveComponent* ArteryJunctionMesh);
+
 private:
 	UPROPERTY(EditDefaultsOnly, Category = InfectionProperties)
 	float IncubationTime = 10.f;
