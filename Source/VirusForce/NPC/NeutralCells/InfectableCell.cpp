@@ -10,6 +10,7 @@
 #include "../Virus.h"
 #include "Components/SplineComponent.h"
 #include "../../GameBackground/ArteryJunctionComponent.h"
+#include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
 AInfectableCell::AInfectableCell()
