@@ -29,12 +29,12 @@ void AInfectableCell::BeginPlay()
 
 	AlertVirusesOnSpawn();
 
-	GetWorldTimerManager().SetTimer(
+	/*GetWorldTimerManager().SetTimer(
 		TimerHandle_InfectableCellLifetimeTimer,
 		this,
 		&AInfectableCell::ExitArena,
 		InfectableCellLifetime
-	);
+	);*/
 }
 
 // Called every frame
