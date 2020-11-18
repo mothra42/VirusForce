@@ -56,7 +56,7 @@ AVirusForcePawn::AVirusForcePawn()
 	// Movement
 	MoveSpeed = 1000.0f;
 	// Weapon
-	GunOffset = FVector(90.f, 0.f, 0.f);
+	GunOffset = FVector(130.f, 0.f, 0.f);
 	FireRate = 0.1f;
 	bCanFire = true;
 }
