@@ -45,6 +45,9 @@ protected:
 	UPROPERTY(Category = AI, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UMarkedVirusComponent* MarkedVirusComponent;
 
+	UPROPERTY(Category = VFX, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UParticleSystemComponent* BurstParticleEffect;
+
 	UPROPERTY(Category = VirusProperties, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float VirusSpeed = 1000.f;
 
@@ -64,6 +67,8 @@ public:
 	UPROPERTY(Category = VirusSpawn, BlueprintReadOnly)
 	bool IsVirusReady = false;
 
+	bool HasStoppedParticleEffect = false;
+
 	UPROPERTY(Category = Antibody, EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<class AVirusForceProjectile> AcceptedProjectileClass;
 
@@ -77,6 +82,8 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FORCEINLINE float GetVirusSpeed() const { return VirusSpeed; }
+
+	FORCEINLINE UParticleSystemComponent* GetParticleEffectComponent() const { return BurstParticleEffect; }
 
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;

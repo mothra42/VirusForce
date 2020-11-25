@@ -11,6 +11,7 @@
 #include "Engine/StaticMesh.h"
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/FloatingPawnMovement.h"
+#include "Particles/ParticleSystemComponent.h"
 
 // Sets default values
 AVirus::AVirus()
@@ -25,6 +26,9 @@ AVirus::AVirus()
 	VirusMeshComponent->bIgnoreRadialImpulse = true;
 
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
+
+	BurstParticleEffect = CreateDefaultSubobject<UParticleSystemComponent>(TEXT("BurstParticleEffect"));
+	BurstParticleEffect->AttachTo(VirusMeshComponent);
 
 	// Movement
 	MoveSpeed = 1000.0f;
@@ -51,6 +55,8 @@ void AVirus::BeginPlay()
 	//Setup mesh and collision for spawn in
 	SetActorEnableCollision(false);
 	VirusMeshComponent->SetRelativeScale3D(VirusScale);
+
+	BurstParticleEffect->Activate();
 }
 
 // Called every frame
@@ -101,7 +107,7 @@ int32 AVirus::NumOfAttachedAntibodies()
 {
 	TArray<AActor*> AttachedAntibodies;
 	GetAttachedActors(AttachedAntibodies);
-
+	UE_LOG(LogTemp, Warning, TEXT("Num of antibodies is %i"), AttachedAntibodies.Num());
 	return AttachedAntibodies.Num();
 }
 
