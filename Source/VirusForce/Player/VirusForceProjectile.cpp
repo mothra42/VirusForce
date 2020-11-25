@@ -10,6 +10,7 @@
 #include "VirusForcePawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "../NPC/Virus.h"
+#include "Particles/ParticleSystemComponent.h"
 
 AVirusForceProjectile::AVirusForceProjectile() 
 {
@@ -67,6 +68,11 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 				AttachedVirus = HitVirus;
 				AddVirusToMarkedViruses(HitVirus);
 				return;
+			}
+			else if(!HitVirus->HasStoppedParticleEffect)
+			{
+				HitVirus->GetParticleEffectComponent()->SetActive(false);
+				HitVirus->HasStoppedParticleEffect = true;
 			}
 			DestroyProjectile();
 		}
