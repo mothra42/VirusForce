@@ -23,7 +23,7 @@ void ABurstVirus::CheckWorldForInfectableCell()
 	for (int32 i = 0; i < FoundActors.Num(); i++)
 	{
 		AInfectableCell* InfectableCell = Cast<AInfectableCell>(FoundActors[i]);
-		if (InfectableCell != nullptr && !InfectableCell->InfectedStatus)
+		if (InfectableCell != nullptr && !InfectableCell->InfectedStatus && !InfectableCell->ActorHasTag(FName("CapillaryCell")))
 		{
 			SetInfectableCell(InfectableCell);
 			InfectableCell->OnVirusInfection.AddDynamic(this, &ABurstVirus::CheckWorldForInfectableCell);
