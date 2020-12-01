@@ -214,9 +214,9 @@ void AVirusForcePawn::LoseLife()
 	if (World != NULL)
 	{
 		AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(World->GetAuthGameMode());
-		if (GameMode != nullptr)
+		if (GameMode != nullptr && !bGodModeOn)
 		{
-			//GameMode->ResetGameOnLifeLost(World);
+			GameMode->ResetGameOnLifeLost(World);
 		}
 	}
 }

@@ -31,6 +31,9 @@ class AVirusForcePawn : public APawn
 
 	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class AVirusForceProjectile>> AntibodyTypes;
+
+	UPROPERTY(Category = Debug, EditDefaultsOnly, meta = (AllowPrivateAccess = "true"))
+	bool bGodModeOn = false;
 	
 public:
 	AVirusForcePawn();
