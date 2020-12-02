@@ -67,6 +67,9 @@ public:
 	UPROPERTY(Category = VirusSpawn, BlueprintReadOnly)
 	bool IsVirusReady = false;
 
+	UPROPERTY(Category = Movement, BlueprintReadOnly)
+	float SpeedModifier = 1.f;
+
 	bool HasStoppedParticleEffect = false;
 
 	UPROPERTY(Category = Antibody, EditDefaultsOnly, BlueprintReadOnly)
@@ -84,7 +87,6 @@ public:
 	FORCEINLINE float GetVirusSpeed() const { return VirusSpeed; }
 
 	FORCEINLINE UParticleSystemComponent* GetParticleEffectComponent() const { return BurstParticleEffect; }
-
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

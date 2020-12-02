@@ -19,4 +19,6 @@ protected:
 
 public:
 	EVirusType VirusType = EVirusType::TrackingVirus;
+
+	void AlterMovementSpeed();
 };

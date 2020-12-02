@@ -10,6 +10,7 @@
 #include "VirusForcePawn.h"
 #include "Kismet/GameplayStatics.h"
 #include "../NPC/Virus.h"
+#include "../NPC/Viruses/TrackingVirus.h"
 #include "Particles/ParticleSystemComponent.h"
 
 AVirusForceProjectile::AVirusForceProjectile() 
@@ -73,6 +74,12 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 			{
 				HitVirus->GetParticleEffectComponent()->SetActive(false);
 				HitVirus->HasStoppedParticleEffect = true;
+				HitVirus->SpeedModifier = 0.5;
+				ATrackingVirus* HitTrackingVirus = Cast<ATrackingVirus>(HitVirus);
+				if (HitTrackingVirus != nullptr)
+				{
+					HitTrackingVirus->AlterMovementSpeed();
+				}
 			}
 			DestroyProjectile();
 		}
