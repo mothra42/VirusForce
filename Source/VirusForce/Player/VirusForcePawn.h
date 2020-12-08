@@ -63,6 +63,9 @@ public:
 	UPROPERTY(Category = Movement, EditAnywhere, BlueprintReadOnly)
 	FVector PlayerVelocity;
 
+	UPROPERTY(Category = VFX, EditDefaultsOnly, BlueprintReadOnly)
+	class UParticleSystem* CellDeathEmitter;
+
 	TArray<FName> AvailableSocketNames;
 
 	// Begin Actor Interface

@@ -7,6 +7,7 @@
 #include "Components/StaticMeshComponent.h"
 #include "UObject/ConstructorHelpers.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Particles/ParticleSystem.h"
 #include "../Player/VirusForcePawn.h"
 #include "../Player/VirusForceProjectile.h"
 #include "../NPC/MarkedVirusComponent.h"
@@ -90,7 +91,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 			}
 		}
 
-		World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 2.f);
+		World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 1.5);
 		World->GetTimerManager().PauseTimer(Arena->GetMassSpawnTimer());
 		World->GetTimerManager().PauseTimer(Arena->GetSpawnTimer());
 	}
@@ -119,9 +120,16 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 		PlayerPawn->DisableMovement();
 		PlayerController = Cast<APlayerController>(PlayerPawn->GetController());
 		PlayerDeathTransform = PlayerPawn->GetActorTransform();
-		//PlayerPawn->GetCellWallComponent()->SetVisibility(false);
 		PlayerPawn->SetPlayerInvisible();
 		LastUsedProjectile = PlayerPawn->ProjectileClass;
+
+		//spawn death particle emitter
+		if (PlayerPawn->CellDeathEmitter != nullptr)
+		{
+			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
+				PlayerPawn->CellDeathEmitter,
+				PlayerDeathTransform);
+		}
 		return;
 	}
 
