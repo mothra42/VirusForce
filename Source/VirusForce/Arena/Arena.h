@@ -87,7 +87,7 @@ private:
 	//iteration starts at 0 so it is i + 1 to determine iterations
 	//also multiply by 4 to get total number of viruses spawning
 	UPROPERTY(Category = Spawning, EditDefaultsOnly)
-	int32 MassSpawnIterations = 14;
+	int32 MassSpawnIterations = 7;
 
 	TSubclassOf<AVirus> VirusClassToSpawn;
 
