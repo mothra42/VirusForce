@@ -24,6 +24,7 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	UPROPERTY()
 	class UStaticMeshComponent* CollisionMesh;
 
 public:	

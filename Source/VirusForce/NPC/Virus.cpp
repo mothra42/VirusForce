@@ -107,7 +107,7 @@ int32 AVirus::NumOfAttachedAntibodies()
 {
 	TArray<AActor*> AttachedAntibodies;
 	GetAttachedActors(AttachedAntibodies);
-	UE_LOG(LogTemp, Warning, TEXT("Num of antibodies is %i"), AttachedAntibodies.Num());
+	//UE_LOG(LogTemp, Warning, TEXT("Num of antibodies is %i"), AttachedAntibodies.Num());
 	return AttachedAntibodies.Num();
 }
 

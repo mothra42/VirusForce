@@ -23,7 +23,8 @@ AKillerTCell::AKillerTCell()
 	// Create the mesh component
 	CellWallComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellWall"));
 	CoreComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Core"));
-	CoreComponent->AttachToComponent(CellWallComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("CoreSocket"));
+	CoreComponent->SetupAttachment(CellWallComponent);
+	//CoreComponent->AttachToComponent(CellWallComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("CoreSocket"));
 	RootComponent = CellWallComponent;
 	CellWallComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	CellWallComponent->SetStaticMesh(CellWall.Object);

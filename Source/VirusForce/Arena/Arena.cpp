@@ -94,7 +94,7 @@ void AArena::SpawnInfectableCell()
 	float MeshRadius = 65.f;
 	if (FindEmptyLocation(SpawnLocation, MeshRadius))
 	{
-		UE_LOG(LogTemp, Warning, TEXT("Spawning infectable cell"));
+		//UE_LOG(LogTemp, Warning, TEXT("Spawning infectable cell"));
 		//PlaceInfectableCell(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), InfectableCellClassToSpawn);
 	}
 }
