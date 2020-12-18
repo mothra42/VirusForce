@@ -13,3 +13,5 @@ Saved
 *.xcodeproj
 *.xcworkspace
 Content/Levels/TwinStickExampleMap_BuiltData.uasset
+Build/WindowsNoEditor/FileOpenOrder/CookerOpenOrder.log
+Build/WindowsNoEditor/FileOpenOrder/EditorOpenOrder.log

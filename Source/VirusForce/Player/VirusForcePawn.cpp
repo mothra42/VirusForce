@@ -78,6 +78,7 @@ void AVirusForcePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 
 void AVirusForcePawn::Tick(float DeltaSeconds)
 {
+	Super::Tick(DeltaSeconds);
 	if (bCanMove)
 	{
 		// Find movement direction
