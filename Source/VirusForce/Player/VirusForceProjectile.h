@@ -25,6 +25,9 @@ class AVirusForceProjectile : public AActor
 	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Movement, meta = (AllowPrivateAccess = "true"))
 	float ProjectileSpeed = 1200.f;
 
+	UPROPERTY(EditDefaultsOnly, BlueprintReadWrite, Category = Material, meta = (AllowPrivateAccess))
+	class UMaterialInterface* ProjectileMaterial;
+
 	class AVirus* AttachedVirus;
 
 public:

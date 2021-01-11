@@ -6,6 +6,8 @@
 #include "GameFramework/Character.h"
 #include "VirusForcePawn.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSwitchProjectileTypeDelegate, int32, ProjectileIndex);
+
 UCLASS(Blueprintable)
 class AVirusForcePawn : public APawn
 {
@@ -54,8 +56,11 @@ public:
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
 	class USoundBase* FireSound;
 
-	UPROPERTY(Category = Projectile, EditDefaultsOnly)
+	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AVirusForceProjectile> ProjectileClass;
+
+	UPROPERTY(Category = Projectile, BlueprintAssignable)
+	FSwitchProjectileTypeDelegate SwitchProjectileTypeDelegate;
 
 	UPROPERTY(Category = SpawnedKillerTCell, EditDefaultsOnly)
 	TSubclassOf<class AKillerTCell> KillerTCellClass;
@@ -121,7 +126,6 @@ public:
 	FORCEINLINE class UCameraComponent* GetCameraComponent() const { return CameraComponent; }
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
-
 	FORCEINLINE void DisableMovement() { bCanMove = false; }
 };
 
