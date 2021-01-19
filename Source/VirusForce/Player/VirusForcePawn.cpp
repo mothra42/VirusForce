@@ -231,4 +231,5 @@ void AVirusForcePawn::SetPlayerInvisible()
 {
 	CellWallComponent->SetVisibility(false);
 	CoreComponent->SetVisibility(false);
+	SetVisibilityDelegate.Broadcast();
 }

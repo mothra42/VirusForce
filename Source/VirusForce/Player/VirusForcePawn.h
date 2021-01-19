@@ -7,6 +7,7 @@
 #include "VirusForcePawn.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSwitchProjectileTypeDelegate, int32, ProjectileIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVisibilityDelegate);
 
 UCLASS(Blueprintable)
 class AVirusForcePawn : public APawn
@@ -61,6 +62,9 @@ public:
 
 	UPROPERTY(Category = Projectile, BlueprintAssignable)
 	FSwitchProjectileTypeDelegate SwitchProjectileTypeDelegate;
+
+	UPROPERTY(Category = PlayerDeath, BlueprintAssignable)
+	FVisibilityDelegate SetVisibilityDelegate;
 
 	UPROPERTY(Category = SpawnedKillerTCell, EditDefaultsOnly)
 	TSubclassOf<class AKillerTCell> KillerTCellClass;
