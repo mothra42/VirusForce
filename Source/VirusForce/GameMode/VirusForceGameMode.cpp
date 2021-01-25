@@ -126,9 +126,10 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 		//spawn death particle emitter
 		if (PlayerPawn->CellDeathEmitter != nullptr)
 		{
+			FTransform EmitterTransform = FTransform(FRotator(), PlayerPawn->GetActorLocation(), PlayerPawn->GetActorScale());
 			UGameplayStatics::SpawnEmitterAtLocation(GetWorld(),
 				PlayerPawn->CellDeathEmitter,
-				PlayerDeathTransform);
+				EmitterTransform);
 		}
 		return;
 	}

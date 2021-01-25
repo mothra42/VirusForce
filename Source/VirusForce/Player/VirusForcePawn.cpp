@@ -27,13 +27,14 @@ AVirusForcePawn::AVirusForcePawn()
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellWall(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/CellWall"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Core(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/Core"));
 	// Create the mesh component
-	CellWallComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellWall"));
+	//CellWallComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellWall"));
 	CoreComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Core"));
-	CoreComponent->SetupAttachment(CellWallComponent);
+	//CoreComponent->SetupAttachment(CellWallComponent);
 	//CoreComponent->AttachToComponent(CellWallComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("CoreSocket"));
-	RootComponent = CellWallComponent;
-	CellWallComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
-	CellWallComponent->SetStaticMesh(CellWall.Object);
+	RootComponent = CoreComponent;
+	CoreComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
+	CoreComponent->SetStaticMesh(Core.Object);
+	CoreComponent->SetWorldScale3D(FVector(1.5, 1.5, 1.5));
 	
 	// Cache our sound effect
 	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
@@ -122,7 +123,7 @@ void AVirusForcePawn::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AvailableSocketNames = CellWallComponent->GetAllSocketNames();
+	//AvailableSocketNames = CellWallComponent->GetAllSocketNames();
 }
 
 void AVirusForcePawn::SwitchAntibodyTypeUp()
@@ -229,7 +230,7 @@ void AVirusForcePawn::LoseLife()
 //used to set all mesh components of mesh invisible
 void AVirusForcePawn::SetPlayerInvisible()
 {
-	CellWallComponent->SetVisibility(false);
+	//CellWallComponent->SetVisibility(false);
 	CoreComponent->SetVisibility(false);
 	SetVisibilityDelegate.Broadcast();
 }
