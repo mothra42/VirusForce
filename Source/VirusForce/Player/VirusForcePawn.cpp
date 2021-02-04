@@ -98,14 +98,16 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 		{
 			const FRotator NewRotation = Movement.Rotation();
 			FHitResult Hit(1.f);
-			RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
+			//RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
+			MovementComponent->AddInputVector(Movement, true);
 
 			//This is here so that the ship can move even if it is hitting a wall or other object
 			if (Hit.IsValidBlockingHit())
 			{
 				const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
 				const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
-				RootComponent->MoveComponent(Deflection, NewRotation, true);
+				//RootComponent->MoveComponent(Deflection, NewRotation, true);
+				MovementComponent->AddInputVector(Deflection, true);
 			}
 		}
 
@@ -122,7 +124,9 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 void AVirusForcePawn::BeginPlay()
 {
 	Super::BeginPlay();
-
+	bUseControllerRotationPitch = false;
+	bUseControllerRotationRoll = false;
+	bUseControllerRotationYaw = false;
 	//AvailableSocketNames = CellWallComponent->GetAllSocketNames();
 }
 
