@@ -76,7 +76,8 @@ public:
 	TSubclassOf<class AVirusForceProjectile> AcceptedProjectileClass;
 
 	EVirusType VirusType = EVirusType::BaseVirus;
-
+	
+	UPROPERTY(Category = Projectile, BlueprintReadOnly)
 	TArray<FName> AvailableSocketNames;
 
 	/** Returns VirusMeshComponent subobject **/
