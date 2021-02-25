@@ -35,6 +35,7 @@ public:
 
 	bool InfectedStatus = false;
 
+	UPROPERTY(Category = Infection, BlueprintAssignable)
 	FInfectableCellDelegate OnVirusInfection;
 
 	UFUNCTION(BlueprintCallable)
