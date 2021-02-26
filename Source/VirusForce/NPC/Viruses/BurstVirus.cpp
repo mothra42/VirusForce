@@ -5,6 +5,8 @@
 #include "../NeutralCells/InfectableCell.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "../../GameMode/VirusForceGameMode.h"
+#include "../MarkedVirusComponent.h"
 
 void ABurstVirus::BeginPlay()
 {
@@ -58,6 +60,9 @@ void ABurstVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 void ABurstVirus::InfectCell()
 {
 	CellToInfect->BeginInfection();
+	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
+	UMarkedVirusComponent* MyMarkedVirusComponent = GameMode->GetMarkedVirusComponent();
+	MyMarkedVirusComponent->RemoveFromMarkedViruses(this);
 	DestroyAttachedAntibodies();
 	Destroy();
 }

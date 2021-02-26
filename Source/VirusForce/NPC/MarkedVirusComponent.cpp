@@ -40,7 +40,7 @@ TArray<AVirus*> UMarkedVirusComponent::AddToMarkedViruses(AVirus* VirusToAdd)
 
 TArray<AVirus*> UMarkedVirusComponent::RemoveFromMarkedViruses(AVirus* VirusToRemove)
 {
-	if (VirusToRemove != nullptr)
+	if (VirusToRemove != nullptr && MarkedViruses.Contains(VirusToRemove))
 	{
 		MarkedViruses.Remove(VirusToRemove);
 	}
