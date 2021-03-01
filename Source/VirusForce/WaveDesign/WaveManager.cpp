@@ -3,6 +3,8 @@
 
 #include "WaveManager.h"
 #include "../NPC/Virus.h"
+#include "../Arena/Arena.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values for this component's properties
 UWaveManager::UWaveManager()
@@ -15,6 +17,8 @@ UWaveManager::UWaveManager()
 void UWaveManager::BeginPlay()
 {
 	Super::BeginPlay();
+
+	Arena = Cast<AArena>(UGameplayStatics::GetActorOfClass(GetWorld(), AArena::StaticClass()));
 }
 
 
@@ -22,22 +26,13 @@ void UWaveManager::BeginPlay()
 void UWaveManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	UWorld* const World = GetWorld();
 }
 
 //Method to set the spawned virus type
 TSubclassOf<AVirus> UWaveManager::CycleSpawnedVirusType()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("I'm on wave %i"), WaveCycle);
 	if (Virus != nullptr && StraightVirus != nullptr && StraightVirus != nullptr)
 	{
-		//every 10 cycles spawn a new infectable cell in the arena.
-		if (WaveCycle % 10 == 0)
-		{
-			OnInfectableCellThresholdPassed.Broadcast();
-		}
-
 		if (WaveCycle % 7 == 0)
 		{
 			WaveCycle++;
@@ -85,4 +80,15 @@ EWaveType UWaveManager::DetermineMassWaveSpawnType()
 		default:
 			return EWaveType::BaseVirusWave;
 	}
+}
+
+//called from blueprint
+void UWaveManager::SetupSpawnVirus(TSubclassOf<AVirus> VirusClass)
+{
+	Arena->SpawnVirus(VirusClass);
+}
+
+void UWaveManager::SetupMassSpawn(TSubclassOf<AVirus> VirusClass, int32 Iterations)
+{
+	Arena->PopulateSpawnQueue(VirusClass, Iterations);
 }

@@ -53,9 +53,16 @@ public:
 	EWaveType DetermineMassWaveSpawnType();
 	TSubclassOf<AVirus> CycleSpawnedVirusType();
 
-private:
+	UFUNCTION(Category = Spawn, BlueprintCallable)
+	void SetupSpawnVirus(TSubclassOf<AVirus> VirusClass);
 
+	UFUNCTION(Category = Spawn, BlueprintCallable)
+	void SetupMassSpawn(TSubclassOf<AVirus> VirusClass, int32 Iterations);
+
+private:
 	FTimerHandle TimerHandle_WaveTimerExpired;
 
 	int32 WaveCycle = 0;
+
+	class AArena* Arena;
 };

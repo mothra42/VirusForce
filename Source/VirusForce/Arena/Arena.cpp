@@ -9,7 +9,6 @@
 #include "../NPC/Viruses/TrackingVirus.h"
 #include "../NPC/Viruses/BurstVirus.h"
 #include "../NPC/NeutralCells/InfectableCell.h"
-#include "../WaveDesign/WaveManager.h"
 #include "Kismet/KismetMathLibrary.h"
 #include "Engine/Public/EngineUtils.h"
 #include "../GameMode/VirusForceGameMode.h"
@@ -32,33 +31,12 @@ void AArena::BeginPlay()
 {
 	Super::BeginPlay();
 
-	//Wave Manger must be set in blueprint
-	WaveManager = FindComponentByClass<UWaveManager>();
-
-	WaveManager->OnInfectableCellThresholdPassed.AddDynamic(this, &AArena::SpawnInfectableCell);
 	//Set Arena in game mode
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
 	{
 		GameMode->SetArena(this);
 	}
-
-	GetWorldTimerManager().SetTimer(
-		TimerHandle_SpawnSingleVirusTimer,
-		this,
-		&AArena::SpawnVirus,
-		5.f,
-		true,
-		0.f);
-
-	//timer for calling mass wave functions
-	GetWorldTimerManager().SetTimer(
-		TimerHandle_MassSpawnTimer, 
-		this, 
-		&AArena::PopulateSpawnQueue, 
-		TimeBetweenMassWaves, 
-		true, 
-		DelayUntilMassWavesBegin);
 }
 
 // Called every frame
@@ -69,36 +47,22 @@ void AArena::Tick(float DeltaTime)
 	ConsumeSpawnQueue();
 }
 
-void AArena::SpawnVirus()
+
+//called externally from wave manager
+void AArena::SpawnVirus(TSubclassOf<AVirus> VirusClass)
 {
 	FVector SpawnLocation;
-	TSubclassOf<AVirus> VirusClass = WaveManager->CycleSpawnedVirusType();
-	if (WaveManager != nullptr)
+	for (int32 i = 0; i < 3; i++)
 	{
-		for (int32 i = 0; i < 3; i++)
+		float VirusMeshRadius = VirusClass->GetDefaultObject<AVirus>()->MeshRadius;
+		if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
 		{
-			float VirusMeshRadius = VirusClass->GetDefaultObject<AVirus>()->MeshRadius;
-			if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
-			{
-				PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), VirusClass);
-			}
+			PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), VirusClass);
 		}
 	}
 }
 
-void AArena::SpawnInfectableCell()
-{
-	FVector SpawnLocation;
-
-	//TODO set a radius in infectable cell class
-	float MeshRadius = 65.f;
-	if (FindEmptyLocation(SpawnLocation, MeshRadius))
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("Spawning infectable cell"));
-		//PlaceInfectableCell(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), InfectableCellClassToSpawn);
-	}
-}
-
+//helper function
 bool AArena::bCanSpawnAtLocation(FVector Location, float Radius)
 {
 	FHitResult HitResult;
@@ -116,6 +80,7 @@ bool AArena::bCanSpawnAtLocation(FVector Location, float Radius)
 	return !HasHit;
 }
 
+//helper function
 bool AArena::FindEmptyLocation(FVector& OutLocation, float Radius)
 {
 	FBox Bounds(MinExtent, MaxExtent);
@@ -133,6 +98,7 @@ bool AArena::FindEmptyLocation(FVector& OutLocation, float Radius)
 	return false;
 }
 
+//helper function
 void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 {
 	UWorld* World = GetWorld();
@@ -143,83 +109,17 @@ void AArena::PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass)
 	}
 }
 
-void AArena::PlaceInfectableCell(FVector SpawnPoint, TSubclassOf<AInfectableCell> InfectableCell)
+//called externally from wave manager
+void AArena::PopulateSpawnQueue(TSubclassOf<AVirus> VirusClass, int32 Iterations)
 {
-	UWorld* World = GetWorld();
-	if (World != NULL && InfectableCell != nullptr)
-	{
-		FRotator RandRotator = UKismetMathLibrary::RandomRotator();
-		World->SpawnActor<AInfectableCell>(InfectableCell, FVector(SpawnPoint.X, SpawnPoint.Y, 0.f), FRotator(0.f, RandRotator.Yaw, 0.f));
-	}
-}
-
-void AArena::PopulateSpawnQueue()
-{
-	EWaveType WaveType = WaveManager->DetermineMassWaveSpawnType();
-	for (int32 i = 0; i < MassSpawnIterations; i++)
+	for (int32 i = 0; i < Iterations; i++)
 	{
 		for (int32 j = 0; j < SpawnPointLocations.Num(); j++)
 		{
 			FRotator RandRotator = UKismetMathLibrary::RandomRotator();
-			FSpawnInstructions SpawnInstructions(SpawnPointLocations[j], GetVirusTypeToSpawn(WaveType, i), FRotator(0.f, RandRotator.Yaw, 0.f));
+			FSpawnInstructions SpawnInstructions(SpawnPointLocations[j], VirusClass, FRotator(0.f, RandRotator.Yaw, 0.f));
 			SpawnQueue.Enqueue(SpawnInstructions);
 		}
-	}
-}
-
-//index here represents which corner the virus is being spawned from
-TSubclassOf<AVirus> AArena::GetVirusTypeToSpawn(EWaveType WaveType, int32 index)
-{
-	switch (WaveType)
-	{
-		case EWaveType::BaseVirusWave:
-			return WaveManager->Virus;
-		case EWaveType::StraightVirusWave:
-			return WaveManager->StraightVirus;
-		case EWaveType::TrackingVirusWave:
-			return WaveManager->TrackingVirus;
-		case EWaveType::BaseAndStraightMixWave:
-			if (index == 0 || index == 2)
-			{
-				return WaveManager->Virus;
-			}
-			else
-			{
-				return WaveManager->StraightVirus;
-			}
-		case EWaveType::BaseAndTrackingMixWave:
-			if (index == 0 || index == 2)
-			{
-				return WaveManager->Virus;
-			}
-			else
-			{
-				return WaveManager->TrackingVirus;
-			}
-		case EWaveType::StraightAndTrackingMixWave:
-			if (index == 0 || index == 2)
-			{
-				return WaveManager->StraightVirus;
-			}
-			else
-			{
-				return WaveManager->TrackingVirus;
-			}
-		case EWaveType::TripleVirusWave:
-			if (index == 0 || index == 2)
-			{
-				return WaveManager->StraightVirus;
-			}
-			else if (index == 1)
-			{
-				return WaveManager->TrackingVirus;
-			}
-			else
-			{
-				return WaveManager->Virus;
-			}
-		default:
-			return WaveManager->Virus;
 	}
 }
 
@@ -235,6 +135,7 @@ void AArena::ConsumeSpawnQueue()
 	}
 }
 
+//helper function
 void AArena::SpawnVirusForMassWave(FSpawnInstructions SpawnInstructions)
 {
 	UWorld* World = GetWorld();

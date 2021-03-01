@@ -29,9 +29,6 @@ UCLASS()
 class VIRUSFORCE_API AArena : public AActor
 {
 	GENERATED_BODY()
-	
-	UPROPERTY(Category = WaveManagement, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UWaveManager* WaveManager;
 
 	//set at beginplay in arena blueprint
 	UPROPERTY(Category = SpawnLocations, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
@@ -54,12 +51,9 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	void SpawnVirus();
-
-	UFUNCTION()
-	void SpawnInfectableCell();
+	void SpawnVirus(TSubclassOf<AVirus> VirusClass);
 	
-	void PopulateSpawnQueue();
+	void PopulateSpawnQueue(TSubclassOf<AVirus> VirusClass, int32 Iterations);
 
 	FORCEINLINE FTimerHandle GetMassSpawnTimer() { return TimerHandle_MassSpawnTimer; }
 	FORCEINLINE FTimerHandle GetSpawnTimer() { return TimerHandle_SpawnSingleVirusTimer; }
@@ -104,12 +98,8 @@ private:
 
 	void PlaceVirus(FVector SpawnPoint, TSubclassOf<AVirus> VirusClass);
 
-	void PlaceInfectableCell(FVector SpawnPoint, TSubclassOf<AInfectableCell> InfectableCell);
-
 	void ConsumeSpawnQueue();
 
 	UFUNCTION()
 	void SpawnVirusForMassWave(FSpawnInstructions SpawnInstructions);
-
-	TSubclassOf<AVirus> GetVirusTypeToSpawn(EWaveType WaveType, int32 index);
 };
