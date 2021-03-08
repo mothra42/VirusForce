@@ -44,7 +44,6 @@ void AVirus::BeginPlay()
 	AvailableSocketNames = VirusMeshComponent->GetAllSocketNames();
 
 	VirusMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);
-
 	//get marked virus component from game mode
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
@@ -77,14 +76,6 @@ void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveC
 	if (Player)
 	{
 		Player->LoseLife();
-	}
-
-	if (Cast<AVirus>(OtherActor) != nullptr)
-	{
-		FVector ImpulseToApply = Hit.ImpactNormal.GetSafeNormal();
-
-		//add impulse to keep viruses from clumping together
-		VirusMeshComponent->AddImpulse(ImpulseToApply * BounceStrength, FName("Name_NONE"), true);
 	}
 }
 

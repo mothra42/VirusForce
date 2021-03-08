@@ -25,9 +25,6 @@ private:
 
 	FVector VirusScale = FVector();
 
-	UPROPERTY(EditDefaultsOnly, Category = VirusCollision)
-	float BounceStrength = 20000.f;
-
 	void SetVirusReady();
 
 public:
@@ -50,6 +47,9 @@ protected:
 
 	UPROPERTY(Category = VirusProperties, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float VirusSpeed = 1000.f;
+
+	UPROPERTY(EditDefaultsOnly, Category = VirusCollision)
+	float BounceStrength = 20000.f;
 
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;

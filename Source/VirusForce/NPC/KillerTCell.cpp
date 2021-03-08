@@ -24,7 +24,6 @@ AKillerTCell::AKillerTCell()
 	CellWallComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellWall"));
 	CoreComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Core"));
 	CoreComponent->SetupAttachment(CellWallComponent);
-	//CoreComponent->AttachToComponent(CellWallComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("CoreSocket"));
 	RootComponent = CellWallComponent;
 	CellWallComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	CellWallComponent->SetStaticMesh(CellWall.Object);
@@ -40,7 +39,9 @@ AKillerTCell::AKillerTCell()
 void AKillerTCell::BeginPlay()
 {
 	Super::BeginPlay();
-	CellWallComponent->OnComponentHit.AddDynamic(this, &AKillerTCell::OnHit);
+	//CellWallComponent->OnComponentHit.AddDynamic(this, &AKillerTCell::OnHit);
+	CellWallComponent->OnComponentBeginOverlap.AddDynamic(this, &AKillerTCell::OnOverlapBegin);
+
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	if (GameMode != nullptr)
 	{
@@ -60,7 +61,13 @@ void AKillerTCell::Tick(float DeltaSeconds)
 	Super::Tick(DeltaSeconds);
 }
 
-void AKillerTCell::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+//void AKillerTCell::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
+//{
+//	ConsumeVirus(OtherActor);
+//	UE_LOG(LogTemp, Warning, TEXT("Consuming?"));
+//}
+
+void AKillerTCell::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 	ConsumeVirus(OtherActor);
 }
