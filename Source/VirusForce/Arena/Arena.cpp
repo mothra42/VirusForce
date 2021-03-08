@@ -52,13 +52,10 @@ void AArena::Tick(float DeltaTime)
 void AArena::SpawnVirus(TSubclassOf<AVirus> VirusClass)
 {
 	FVector SpawnLocation;
-	for (int32 i = 0; i < 3; i++)
+	float VirusMeshRadius = VirusClass->GetDefaultObject<AVirus>()->MeshRadius;
+	if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
 	{
-		float VirusMeshRadius = VirusClass->GetDefaultObject<AVirus>()->MeshRadius;
-		if (FindEmptyLocation(SpawnLocation, VirusMeshRadius))
-		{
-			PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), VirusClass);
-		}
+		PlaceVirus(FVector(SpawnLocation.X, SpawnLocation.Y, 0.f), VirusClass);
 	}
 }
 

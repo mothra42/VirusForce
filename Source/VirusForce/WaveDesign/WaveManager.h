@@ -45,13 +45,8 @@ public:
 	UPROPERTY(Category = Viruses, EditDefaultsOnly)
 	TSubclassOf<AVirus> BurstVirus;
 
-	FWaveManagerDelegate OnInfectableCellThresholdPassed;
-
 	// Called every frame
 	virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
-
-	EWaveType DetermineMassWaveSpawnType();
-	TSubclassOf<AVirus> CycleSpawnedVirusType();
 
 	UFUNCTION(Category = Spawn, BlueprintCallable)
 	void SetupSpawnVirus(TSubclassOf<AVirus> VirusClass);
@@ -60,9 +55,9 @@ public:
 	void SetupMassSpawn(TSubclassOf<AVirus> VirusClass, int32 Iterations);
 
 private:
-	FTimerHandle TimerHandle_WaveTimerExpired;
-
 	int32 WaveCycle = 0;
+
+	int32 MaxMassWaveIterations = 7;
 
 	class AArena* Arena;
 };
