@@ -29,27 +29,19 @@ void AInfectableCell::BeginPlay()
 	Super::BeginPlay();
 
 	AlertVirusesOnSpawn();
-
-	/*GetWorldTimerManager().SetTimer(
-		TimerHandle_InfectableCellLifetimeTimer,
-		this,
-		&AInfectableCell::ExitArena,
-		InfectableCellLifetime
-	);*/
 }
 
 // Called every frame
 void AInfectableCell::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
 }
 
 //set timer for infection process
 void AInfectableCell::BeginInfection()
 {
 	InfectedStatus = true;
-	AlertVirusesOnInfection();
+	OnVirusInfection.Broadcast();
 	GetWorldTimerManager().ClearTimer(TimerHandle_InfectableCellLifetimeTimer);
 	GetWorldTimerManager().SetTimer(
 		TimerHandle_InfectionTimer,
@@ -75,14 +67,6 @@ void AInfectableCell::ProduceViruses()
 	Destroy();
 }
 
-void AInfectableCell::ExitArena()
-{
-	//set infected status to true to avoid this cell being set as a tracked cell
-	InfectedStatus = true;
-	OnVirusInfection.Broadcast();
-	Destroy();
-}
-
 void AInfectableCell::AlertVirusesOnSpawn()
 {
 	TActorIterator<ABurstVirus> BurstVirusIterator = TActorIterator<ABurstVirus>(GetWorld());
@@ -94,11 +78,6 @@ void AInfectableCell::AlertVirusesOnSpawn()
 		BurstVirus->SetInfectableCell(this);
 		++BurstVirusIterator;
 	}
-}
-
-void AInfectableCell::AlertVirusesOnInfection()
-{
-	OnVirusInfection.Broadcast();
 }
 
 USplineComponent* AInfectableCell::GetNewArtery(UPrimitiveComponent* OverlappedJunctionMesh, USplineComponent* CurrentArtery)

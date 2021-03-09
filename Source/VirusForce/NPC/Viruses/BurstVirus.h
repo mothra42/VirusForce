@@ -30,6 +30,8 @@ class VIRUSFORCE_API ABurstVirus : public AStraightVirus
 	private:
 		void InfectCell();
 
+		void AlertVirusesOnInfection();
+
 		UFUNCTION()
 		void CheckWorldForInfectableCell();
 

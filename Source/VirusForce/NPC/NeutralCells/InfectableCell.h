@@ -33,6 +33,7 @@ public:
 
 	void BeginInfection();
 
+	UPROPERTY(Category = InfectionState, BlueprintReadOnly)
 	bool InfectedStatus = false;
 
 	UPROPERTY(Category = Infection, BlueprintAssignable)
@@ -59,8 +60,4 @@ private:
 	void ProduceViruses();
 
 	void AlertVirusesOnSpawn();
-
-	void AlertVirusesOnInfection();
-
-	void ExitArena();
 };

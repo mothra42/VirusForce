@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "../../GameMode/VirusForceGameMode.h"
 #include "../MarkedVirusComponent.h"
+#include "EngineUtils.h"
 
 void ABurstVirus::BeginPlay()
 {
@@ -19,6 +20,7 @@ void ABurstVirus::BeginPlay()
 
 void ABurstVirus::CheckWorldForInfectableCell()
 {
+	//UE_LOG(LogTemp, Warning, TEXT("Checking for infectable viruses"))
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AInfectableCell::StaticClass(), FoundActors);
 
@@ -28,20 +30,15 @@ void ABurstVirus::CheckWorldForInfectableCell()
 		if (InfectableCell != nullptr && !InfectableCell->InfectedStatus && !InfectableCell->ActorHasTag(FName("CapillaryCell")))
 		{
 			SetInfectableCell(InfectableCell);
-			InfectableCell->OnVirusInfection.AddDynamic(this, &ABurstVirus::CheckWorldForInfectableCell);
 			return;
 		}
 	}
-
-	//if no infectablevirus is found
-	SetInfectableCell(nullptr);
 }
 
 void ABurstVirus::SetInfectableCell(AInfectableCell* InfectableCell)
 {
 	CellToInfect = InfectableCell;
 	OnCellToInfectChanged.Broadcast(InfectableCell);
-
 	//pick new random direction to start moving in
 	SetNewRandomDirection();
 }
@@ -60,11 +57,26 @@ void ABurstVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimi
 void ABurstVirus::InfectCell()
 {
 	CellToInfect->BeginInfection();
+	AlertVirusesOnInfection();
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
 	UMarkedVirusComponent* MyMarkedVirusComponent = GameMode->GetMarkedVirusComponent();
 	MyMarkedVirusComponent->RemoveFromMarkedViruses(this);
 	DestroyAttachedAntibodies();
 	Destroy();
+}
+
+void ABurstVirus::AlertVirusesOnInfection()
+{
+	TActorIterator<ABurstVirus> BurstVirusIterator = TActorIterator<ABurstVirus>(GetWorld());
+
+	while (BurstVirusIterator)
+	{
+		//call function that adds this infectable cell to BurstVirus AI
+		ABurstVirus* BurstVirus = *BurstVirusIterator;
+		BurstVirus->OnCellToInfectChanged.Broadcast(nullptr);
+		BurstVirus->SetNewRandomDirection();
+		++BurstVirusIterator;
+	}
 }
 
 void ABurstVirus::SetNewRandomDirection()
