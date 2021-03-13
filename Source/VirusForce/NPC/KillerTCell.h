@@ -42,6 +42,8 @@ private:
 
 	void IncreaseScoreForConsumingVirus(AVirus* VirusToDestroy);
 
+	TArray<AVirus*> RemoveVirusFromMarkedViruses(AVirus* VirusToRemove);
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -50,14 +52,14 @@ public:
 	UPROPERTY(Category = Gameplay, EditAnywhere, BlueprintReadWrite)
 	float MoveSpeed;
 
+	UPROPERTY(Category = MarkedViruses, BlueprintReadOnly)
+	TArray<AVirus*> MyMarkedViruses;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 	UFUNCTION()
 	FORCEINLINE class UStaticMeshComponent* GetCellWallComponent() const { return CellWallComponent; }
-
-	//UFUNCTION()
-	//virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit);
 
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);

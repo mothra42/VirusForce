@@ -14,7 +14,9 @@
 #include "Sound/SoundBase.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "../NPC/KillerTCell.h"
+#include "../NPC/Virus.h"
 #include "../GameMode/VirusForceGameMode.h"
+#include "../NPC/MarkedVirusComponent.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
@@ -26,11 +28,7 @@ AVirusForcePawn::AVirusForcePawn()
 {	
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellWall(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/CellWall"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Core(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/Core"));
-	// Create the mesh component
-	//CellWallComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CellWall"));
 	CoreComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Core"));
-	//CoreComponent->SetupAttachment(CellWallComponent);
-	//CoreComponent->AttachToComponent(CellWallComponent, FAttachmentTransformRules::SnapToTargetNotIncludingScale, FName("CoreSocket"));
 	RootComponent = CoreComponent;
 	CoreComponent->SetCollisionProfileName(UCollisionProfile::Pawn_ProfileName);
 	CoreComponent->SetStaticMesh(Core.Object);
@@ -72,7 +70,7 @@ void AVirusForcePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 	PlayerInputComponent->BindAxis(MoveRightBinding);
 	PlayerInputComponent->BindAxis(FireForwardBinding);
 	PlayerInputComponent->BindAxis(FireRightBinding);
-	PlayerInputComponent->BindAction("SpawnKillerTCell", IE_Pressed, this, &AVirusForcePawn::SpawnKillerTCellInWorld);
+	PlayerInputComponent->BindAction("SpawnKillerTCell", IE_Pressed, this, &AVirusForcePawn::SetupKillerTCellSpawn);
 	PlayerInputComponent->BindAction("SwitchAntibodyTypeUp", IE_Pressed, this, &AVirusForcePawn::SwitchAntibodyTypeUp);
 	PlayerInputComponent->BindAction("SwitchAntibodyTypeDown", IE_Pressed, this, &AVirusForcePawn::SwitchAntibodyTypeDown);
 }
@@ -98,7 +96,6 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 		{
 			const FRotator NewRotation = Movement.Rotation();
 			FHitResult Hit(1.f);
-			//RootComponent->MoveComponent(Movement, NewRotation, true, &Hit);
 			MovementComponent->AddInputVector(Movement, true);
 
 			//This is here so that the ship can move even if it is hitting a wall or other object
@@ -106,7 +103,6 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 			{
 				const FVector Normal2D = Hit.Normal.GetSafeNormal2D();
 				const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
-				//RootComponent->MoveComponent(Deflection, NewRotation, true);
 				MovementComponent->AddInputVector(Deflection, true);
 			}
 		}
@@ -127,7 +123,6 @@ void AVirusForcePawn::BeginPlay()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
-	//AvailableSocketNames = CellWallComponent->GetAllSocketNames();
 }
 
 void AVirusForcePawn::SwitchAntibodyTypeUp()
@@ -179,7 +174,6 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			if (World != NULL && ProjectileClass != nullptr)
 			{
 				// spawn the projectile
-				//TSubclassOf<AVirusForceProjectile>* Projectile = World->SpawnActor<TSubclassOf<AVirusForceProjectile>>(ProjectileClass, SpawnLocation, FireRotation);
 				World->SpawnActor<AVirusForceProjectile>(ProjectileClass, SpawnLocation, FireRotation);
 			}
 
@@ -189,6 +183,7 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			// try and play the sound if specified
 			if (FireSound != nullptr)
 			{
+				//TODO add sound effect
 				//UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
 			}
 
@@ -202,17 +197,74 @@ void AVirusForcePawn::ShotTimerExpired()
 	bCanFire = true;
 }
 
-//TODO when input is pressed spawn killer T Cell, where is to be decided whether its a fixed position or if it should spawn in a random position.
-void AVirusForcePawn::SpawnKillerTCellInWorld()
+void AVirusForcePawn::SetupKillerTCellSpawn()
 {
-	//TODO find random location on plane
-	FVector SpawnLocation = FVector(70.f, 1780.f, 0.f);
-	FRotator SpawnRotation = FRotator(0.f, 0.f, 0.f);
+	TArray<AActor*> KillerCellArray;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AKillerTCell::StaticClass(), KillerCellArray);
+	//only spawn new killer t cells if none are in the arena
+	if (KillerCellArray.Num() <= 0)
+	{
+		//find number of viruses in arena to determine how many killer cells to spawn
+		TArray<AActor*> VirusArray;
+		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AVirus::StaticClass(), VirusArray);
+		int32 NumVirusesInArena = VirusArray.Num();
+		int32 NumKillerCellsToSpawn = DetermineNumKillerCellsToSpawn(NumVirusesInArena);
+		SpawnKillerTCellInWorld(NumKillerCellsToSpawn);
+	}
+}
+
+int32 AVirusForcePawn::DetermineNumKillerCellsToSpawn(int32 NumVirusesInArena)
+{
+	if (NumVirusesInArena <= 15)
+	{
+		return 1;
+	}
+	else if (NumVirusesInArena <= 40)
+	{
+		return 2;
+	}
+	//default to spawning 3 killer cells
+	return 3;
+}
+
+void AVirusForcePawn::SpawnKillerTCellInWorld(int32 SpawnNumber)
+{
+	FVector SpawnLocation;
+	FRotator SpawnRotation = FRotator();
+	TArray<AKillerTCell*> KillerTCellArray;
 	UWorld* const World = GetWorld();
 	if (World != NULL && KillerTCellClass != nullptr)
 	{
-		// spawn the killer t cell
-		World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation);
+		switch (SpawnNumber)
+		{
+		case 1:
+			SpawnLocation = FVector(0.f, 0.f, -11400.f);
+			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
+			break;
+		case 2:
+			SpawnLocation = FVector(-250.f, 0.f, -11400.f);
+			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
+			SpawnLocation = FVector(250.f, 0.f, -11400.f);
+			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
+			break;
+		case 3:
+			SpawnLocation = FVector(-250.f, 250.f, -11400.f);
+			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
+			SpawnLocation = FVector(250.f, 250.f, -11400.f);
+			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
+			SpawnLocation = FVector(0.f, -250.f, -11400.f);
+			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
+			break;
+		default:
+			UE_LOG(LogTemp, Warning, TEXT("Unexpected number of viruses spawning"));
+			return;
+		}
+		AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
+		if (GameMode != nullptr)
+		{
+			UMarkedVirusComponent* MarkedVirusComponent = GameMode->GetMarkedVirusComponent();
+			MarkedVirusComponent->DistributeMarkedViruses(SpawnNumber, KillerTCellArray);
+		}
 	}
 }
 
@@ -234,7 +286,6 @@ void AVirusForcePawn::LoseLife()
 //used to set all mesh components of mesh invisible
 void AVirusForcePawn::SetPlayerInvisible()
 {
-	//CellWallComponent->SetVisibility(false);
 	CoreComponent->SetVisibility(false);
 	SetVisibilityDelegate.Broadcast();
 }

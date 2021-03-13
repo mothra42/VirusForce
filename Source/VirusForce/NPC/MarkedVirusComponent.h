@@ -33,6 +33,9 @@ public:
 	UFUNCTION(BlueprintCallable)
 	TArray<AVirus*> GetMarkedViruses();
 
+	UFUNCTION()
+	void DistributeMarkedViruses(int32 NumKillerCells, TArray<class AKillerTCell*> KillerTCellArray);
+
 	int32 GetNumMarkedViruses();
 
 	void PurgeMarkedViruses();

@@ -9,6 +9,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSwitchProjectileTypeDelegate, int32, ProjectileIndex);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVisibilityDelegate);
 
+
 UCLASS(Blueprintable)
 class AVirusForcePawn : public APawn
 {
@@ -116,7 +117,11 @@ private:
 
 	int32 ProjectileIndexTracker = 0;
 
-	void SpawnKillerTCellInWorld();
+	void SetupKillerTCellSpawn();
+
+	void SpawnKillerTCellInWorld(int32 SpawnNumber);
+
+	int32 DetermineNumKillerCellsToSpawn(int32 NumVirusesInArena);
 
 	void SwitchAntibodyTypeUp();
 

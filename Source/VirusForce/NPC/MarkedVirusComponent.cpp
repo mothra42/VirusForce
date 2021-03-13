@@ -3,6 +3,7 @@
 
 #include "MarkedVirusComponent.h"
 #include "Virus.h"
+#include "KillerTCell.h"
 
 
 //Marked Virus Component is used to report a virus is marked and to keep track of marked viruses on screen
@@ -26,7 +27,6 @@ void UMarkedVirusComponent::BeginPlay()
 	Super::BeginPlay();
 
 	// ...
-	
 }
 
 TArray<AVirus*> UMarkedVirusComponent::AddToMarkedViruses(AVirus* VirusToAdd)
@@ -62,5 +62,59 @@ void UMarkedVirusComponent::PurgeMarkedViruses()
 	if (MarkedViruses.Num() >= 0)
 	{
 		MarkedViruses.Empty();
+	}
+}
+
+void UMarkedVirusComponent::DistributeMarkedViruses(int32 NumKillerCells, TArray<AKillerTCell*> KillerTCellArray)
+{
+	UE_LOG(LogTemp, Warning, TEXT("How Many Spawns to Have? %i"), KillerTCellArray.Num());
+	//TODO
+	/*
+	* Need to break up MarkedViruses in up to 3 parts and distribute them to Killer cells MyMarkedViruses
+	* This will require changes in the AI blueprints to use each instance of MyMarkedViruses
+	*/
+	if (KillerTCellArray.Num() > 0)
+	{
+		switch (NumKillerCells)
+		{
+		case 1:
+		{
+			KillerTCellArray[0]->MyMarkedViruses = MarkedViruses;
+			break;
+		}
+		case 2:
+		{
+			int32 HalfPoint = MarkedViruses.Num() / 2;
+			for (int32 i = 0; i < HalfPoint; i++)
+			{
+				KillerTCellArray[0]->MyMarkedViruses.Add(MarkedViruses[i]);
+			}
+	
+			for (int32 i = HalfPoint; i < MarkedViruses.Num(); i++)
+			{
+				KillerTCellArray[1]->MyMarkedViruses.Add(MarkedViruses[i]);
+			}
+			break;
+		}
+		case 3:
+		{
+			int32 ThirdPoint = MarkedViruses.Num() / 3;
+			for (int32 i = 0; i < ThirdPoint; i++)
+			{
+				KillerTCellArray[0]->MyMarkedViruses.Add(MarkedViruses[i]);
+			}
+	
+			for (int32 i = ThirdPoint; i < ThirdPoint + ThirdPoint; i++)
+			{
+				KillerTCellArray[1]->MyMarkedViruses.Add(MarkedViruses[i]);
+			}
+	
+			for (int32 i = ThirdPoint + ThirdPoint; i < MarkedViruses.Num(); i++)
+			{
+				KillerTCellArray[2]->MyMarkedViruses.Add(MarkedViruses[i]);
+			}
+			break;
+		}
+		}
 	}
 }

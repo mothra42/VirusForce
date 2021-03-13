@@ -39,7 +39,6 @@ AKillerTCell::AKillerTCell()
 void AKillerTCell::BeginPlay()
 {
 	Super::BeginPlay();
-	//CellWallComponent->OnComponentHit.AddDynamic(this, &AKillerTCell::OnHit);
 	CellWallComponent->OnComponentBeginOverlap.AddDynamic(this, &AKillerTCell::OnOverlapBegin);
 
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
@@ -49,9 +48,6 @@ void AKillerTCell::BeginPlay()
 		NumberOfVirusesToConsume = MarkedVirusComponent->GetNumMarkedViruses();
 
 		ScoreManager = GameMode->GetScoreManagerComponent();
-
-		//in case the player calls a Killer T Cell before any virus are marked destroy self immediately
-		DestroySelfWhenFinishedConsuming();
 	}
 }
 
@@ -60,12 +56,6 @@ void AKillerTCell::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
 }
-
-//void AKillerTCell::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
-//{
-//	ConsumeVirus(OtherActor);
-//	UE_LOG(LogTemp, Warning, TEXT("Consuming?"));
-//}
 
 void AKillerTCell::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
@@ -80,7 +70,7 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 		AVirus* Virus = Cast<AVirus>(ActorToConsume);
 		if (Virus != nullptr)
 		{
-			if (MarkedVirusComponent->GetMarkedViruses().Find(Virus) >= 0)
+			if (MyMarkedViruses.Find(Virus) >= 0)
 			{
 				IncreaseScoreForConsumingVirus(Virus);
 				DestroyVirus(Virus);
@@ -112,12 +102,13 @@ void AKillerTCell::DestroyVirus(AVirus* VirusToDestroy)
 	AIController->Destroy();
 	VirusToDestroy->DestroyAttachedAntibodies();
 	TArray<AVirus*>MarkedViruses = MarkedVirusComponent->RemoveFromMarkedViruses(VirusToDestroy);
+	RemoveVirusFromMarkedViruses(VirusToDestroy);
 	VirusToDestroy->Destroy();
 }
 
 void AKillerTCell::DestroySelfWhenFinishedConsuming()
 {
-	if (MarkedVirusComponent->GetMarkedViruses().Num() <= 0)
+	if (MyMarkedViruses.Num() <= 0)
 	{
 		auto MyAIController = GetController();
 		MyAIController->PawnPendingDestroy(this);
@@ -133,3 +124,14 @@ void AKillerTCell::IncreaseScoreForConsumingVirus(AVirus* Virus)
 		ScoreManager->IncreaseScore(Virus, NumberOfVirusesToConsume);
 	}
 }
+
+TArray<AVirus*> AKillerTCell::RemoveVirusFromMarkedViruses(AVirus* VirusToRemove)
+{
+	if (VirusToRemove != nullptr && MyMarkedViruses.Contains(VirusToRemove))
+	{
+		MyMarkedViruses.Remove(VirusToRemove);
+	}
+	return MyMarkedViruses;
+}
+
+//TODO Create "animation" of killer cell rising from starting point, can swirl around FVector(0.f, 0.f, 0.f);
