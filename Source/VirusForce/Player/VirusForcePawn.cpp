@@ -238,21 +238,21 @@ void AVirusForcePawn::SpawnKillerTCellInWorld(int32 SpawnNumber)
 		switch (SpawnNumber)
 		{
 		case 1:
-			SpawnLocation = FVector(0.f, 0.f, -11400.f);
+			SpawnLocation = FVector(0.f, 0.f, -10000.f);
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
 			break;
 		case 2:
-			SpawnLocation = FVector(-250.f, 0.f, -11400.f);
+			SpawnLocation = FVector(-250.f, 0.f, -10000.f);
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
-			SpawnLocation = FVector(250.f, 0.f, -11400.f);
+			SpawnLocation = FVector(250.f, 0.f, -10000.f);
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
 			break;
 		case 3:
-			SpawnLocation = FVector(-250.f, 250.f, -11400.f);
+			SpawnLocation = FVector(-250.f, 250.f, -10000.f);
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
-			SpawnLocation = FVector(250.f, 250.f, -11400.f);
+			SpawnLocation = FVector(250.f, 250.f, -10000.f);
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
-			SpawnLocation = FVector(0.f, -250.f, -11400.f);
+			SpawnLocation = FVector(0.f, -250.f, -10000.f);
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
 			break;
 		default:
