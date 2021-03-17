@@ -55,6 +55,10 @@ public:
 	UPROPERTY(Category = MarkedViruses, BlueprintReadOnly)
 	TArray<AVirus*> MyMarkedViruses;
 
+	FVector ActorLocation = FVector(0.f, 0.f, 0.f);
+
+	FVector* ActorLocationPointer;
+
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 

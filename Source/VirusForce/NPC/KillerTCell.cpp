@@ -49,12 +49,19 @@ void AKillerTCell::BeginPlay()
 
 		ScoreManager = GameMode->GetScoreManagerComponent();
 	}
+
+	ActorLocationPointer = &ActorLocation;
 }
 
 // Called every frame
 void AKillerTCell::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+	ActorLocation = GetActorLocation();
+	if (ActorLocationPointer != nullptr)
+	{
+		//UE_LOG(LogTemp, Warning, TEXT("Working? %s"), *ActorLocationPointer->ToString());
+	}
 }
 
 void AKillerTCell::OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
@@ -68,6 +75,15 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 	{
 		TArray<AActor*> OutAttachedActors;
 		AVirus* Virus = Cast<AVirus>(ActorToConsume);
+		if (Virus->KillerTCellLocationPointer != nullptr)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Killer T Cell is %s"), *Virus->KillerTCellLocationPointer->ToString())
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("FUCK"));
+		}
+		
 		if (Virus != nullptr)
 		{
 			if (MyMarkedViruses.Find(Virus) >= 0)

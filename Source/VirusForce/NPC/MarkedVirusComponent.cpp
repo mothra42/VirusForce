@@ -67,12 +67,6 @@ void UMarkedVirusComponent::PurgeMarkedViruses()
 
 void UMarkedVirusComponent::DistributeMarkedViruses(int32 NumKillerCells, TArray<AKillerTCell*> KillerTCellArray)
 {
-	UE_LOG(LogTemp, Warning, TEXT("How Many Spawns to Have? %i"), KillerTCellArray.Num());
-	//TODO
-	/*
-	* Need to break up MarkedViruses in up to 3 parts and distribute them to Killer cells MyMarkedViruses
-	* This will require changes in the AI blueprints to use each instance of MyMarkedViruses
-	*/
 	if (KillerTCellArray.Num() > 0)
 	{
 		switch (NumKillerCells)
@@ -80,6 +74,20 @@ void UMarkedVirusComponent::DistributeMarkedViruses(int32 NumKillerCells, TArray
 		case 1:
 		{
 			KillerTCellArray[0]->MyMarkedViruses = MarkedViruses;
+			if (KillerTCellArray[0]->ActorLocationPointer == nullptr)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Null in Marked"))
+			}
+			MarkedViruses[0]->KillerTCellLocationPointer = KillerTCellArray[0]->ActorLocationPointer;
+
+			if (MarkedViruses[0]->KillerTCellLocationPointer == nullptr)
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Still null"))
+			}
+			else
+			{
+				UE_LOG(LogTemp, Warning, TEXT("Marked Virus Comp %s"), *MarkedViruses[0]->KillerTCellLocationPointer->ToString())
+			}
 			break;
 		}
 		case 2:

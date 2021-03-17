@@ -68,6 +68,10 @@ void AVirus::Tick(float DeltaSeconds)
 	{
 		SpawnInAnimation();
 	}
+	if (KillerTCellLocationPointer != nullptr)
+	{
+		UE_LOG(LogTemp, Warning, TEXT("In Virus %s"), *KillerTCellLocationPointer->ToString());
+	}
 }
 
 void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
