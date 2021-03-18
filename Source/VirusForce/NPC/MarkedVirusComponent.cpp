@@ -74,19 +74,10 @@ void UMarkedVirusComponent::DistributeMarkedViruses(int32 NumKillerCells, TArray
 		case 1:
 		{
 			KillerTCellArray[0]->MyMarkedViruses = MarkedViruses;
-			if (KillerTCellArray[0]->ActorLocationPointer == nullptr)
+			for (int32 i = 0; i < MarkedViruses.Num(); i++)
 			{
-				UE_LOG(LogTemp, Warning, TEXT("Null in Marked"))
-			}
-			MarkedViruses[0]->KillerTCellLocationPointer = KillerTCellArray[0]->ActorLocationPointer;
-
-			if (MarkedViruses[0]->KillerTCellLocationPointer == nullptr)
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Still null"))
-			}
-			else
-			{
-				UE_LOG(LogTemp, Warning, TEXT("Marked Virus Comp %s"), *MarkedViruses[0]->KillerTCellLocationPointer->ToString())
+				MarkedViruses[i]->KillerTCellLocationPointer = KillerTCellArray[0]->ActorLocationPointer;
+				MarkedViruses[i]->bIsHunted = true;
 			}
 			break;
 		}
@@ -96,11 +87,15 @@ void UMarkedVirusComponent::DistributeMarkedViruses(int32 NumKillerCells, TArray
 			for (int32 i = 0; i < HalfPoint; i++)
 			{
 				KillerTCellArray[0]->MyMarkedViruses.Add(MarkedViruses[i]);
+				MarkedViruses[i]->KillerTCellLocationPointer = KillerTCellArray[0]->ActorLocationPointer;
+				MarkedViruses[i]->bIsHunted = true;
 			}
 	
 			for (int32 i = HalfPoint; i < MarkedViruses.Num(); i++)
 			{
 				KillerTCellArray[1]->MyMarkedViruses.Add(MarkedViruses[i]);
+				MarkedViruses[i]->KillerTCellLocationPointer = KillerTCellArray[1]->ActorLocationPointer;
+				MarkedViruses[i]->bIsHunted = true;
 			}
 			break;
 		}
@@ -110,16 +105,22 @@ void UMarkedVirusComponent::DistributeMarkedViruses(int32 NumKillerCells, TArray
 			for (int32 i = 0; i < ThirdPoint; i++)
 			{
 				KillerTCellArray[0]->MyMarkedViruses.Add(MarkedViruses[i]);
+				MarkedViruses[i]->KillerTCellLocationPointer = KillerTCellArray[0]->ActorLocationPointer;
+				MarkedViruses[i]->bIsHunted = true;
 			}
 	
 			for (int32 i = ThirdPoint; i < ThirdPoint + ThirdPoint; i++)
 			{
 				KillerTCellArray[1]->MyMarkedViruses.Add(MarkedViruses[i]);
+				MarkedViruses[i]->KillerTCellLocationPointer = KillerTCellArray[1]->ActorLocationPointer;
+				MarkedViruses[i]->bIsHunted = true;
 			}
 	
 			for (int32 i = ThirdPoint + ThirdPoint; i < MarkedViruses.Num(); i++)
 			{
 				KillerTCellArray[2]->MyMarkedViruses.Add(MarkedViruses[i]);
+				MarkedViruses[i]->KillerTCellLocationPointer = KillerTCellArray[2]->ActorLocationPointer;
+				MarkedViruses[i]->bIsHunted = true;
 			}
 			break;
 		}

@@ -70,10 +70,10 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 				AddVirusToMarkedViruses(HitVirus);
 				return;
 			}
-			else if(!HitVirus->HasStoppedParticleEffect)
+			else if(!HitVirus->bHasStoppedParticleEffect)
 			{
 				HitVirus->GetParticleEffectComponent()->SetActive(false);
-				HitVirus->HasStoppedParticleEffect = true;
+				HitVirus->bHasStoppedParticleEffect = true;
 				HitVirus->SpeedModifier = 0.5;
 				ATrackingVirus* HitTrackingVirus = Cast<ATrackingVirus>(HitVirus);
 				if (HitTrackingVirus != nullptr)

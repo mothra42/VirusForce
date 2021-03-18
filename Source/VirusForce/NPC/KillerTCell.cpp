@@ -79,10 +79,6 @@ void AKillerTCell::ConsumeVirus(AActor* ActorToConsume)
 		{
 			UE_LOG(LogTemp, Warning, TEXT("Killer T Cell is %s"), *Virus->KillerTCellLocationPointer->ToString())
 		}
-		else
-		{
-			UE_LOG(LogTemp, Warning, TEXT("FUCK"));
-		}
 		
 		if (Virus != nullptr)
 		{

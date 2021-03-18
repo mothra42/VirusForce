@@ -131,3 +131,14 @@ void AVirus::SetVirusReady()
 	SetActorEnableCollision(true);
 	IsVirusReady = true;
 }
+
+FVector AVirus::GetKillerTCellLocation()
+{
+	if (KillerTCellLocationPointer != nullptr)
+	{
+		return *KillerTCellLocationPointer;
+	}
+
+	//if killer t cell pointer is not set, set the value to something far outside the arena
+	return FVector(0.f, 0.f, -10000.f);
+}

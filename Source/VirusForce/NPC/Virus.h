@@ -70,7 +70,10 @@ public:
 	UPROPERTY(Category = Movement, BlueprintReadOnly)
 	float SpeedModifier = 1.f;
 
-	bool HasStoppedParticleEffect = false;
+	bool bHasStoppedParticleEffect = false;
+
+	UPROPERTY(Category = MaterialSwitching, BlueprintReadOnly)
+	bool bIsHunted = false;
 
 	UPROPERTY(Category = Antibody, EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<class AVirusForceProjectile> AcceptedProjectileClass;
@@ -103,4 +106,7 @@ public:
 	void DestroyAttachedAntibodies();
 
 	FVector* KillerTCellLocationPointer;
+
+	UFUNCTION(BlueprintCallable)
+	FVector GetKillerTCellLocation();
 };
