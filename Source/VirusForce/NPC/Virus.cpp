@@ -68,9 +68,9 @@ void AVirus::Tick(float DeltaSeconds)
 	{
 		SpawnInAnimation();
 	}
-	if (KillerTCellLocationPointer != nullptr)
+	if (KillerTCellLocationPointer != nullptr && bIsHunted)
 	{
-		UE_LOG(LogTemp, Warning, TEXT("In Virus %s"), *KillerTCellLocationPointer->ToString());
+		//UE_LOG(LogTemp, Warning, TEXT("I am Virus %s, I'll be sucked into location %s"), *GetName(), *KillerTCellLocationPointer->ToString());
 	}
 }
 
