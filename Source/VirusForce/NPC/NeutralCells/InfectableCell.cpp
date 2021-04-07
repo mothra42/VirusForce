@@ -10,6 +10,7 @@
 #include "../Virus.h"
 #include "Components/SplineComponent.h"
 #include "../../GameBackground/ArteryJunctionComponent.h"
+#include "../../Arena/Arena.h"
 #include "Kismet/KismetMathLibrary.h"
 
 // Sets default values
@@ -28,7 +29,12 @@ void AInfectableCell::BeginPlay()
 {
 	Super::BeginPlay();
 
-	AlertVirusesOnSpawn();
+	GetWorldTimerManager().SetTimer(
+		TimerHandle_AlertVirusTimer,
+		this,
+		&AInfectableCell::AlertVirusesOnSpawn,
+		TimeBeforeAlertViruses
+		);
 }
 
 // Called every frame
@@ -40,9 +46,20 @@ void AInfectableCell::Tick(float DeltaTime)
 //set timer for infection process
 void AInfectableCell::BeginInfection()
 {
+	//check to see if the cell is overlapping the arena when it is infected
+	//if it is abort infection process.
+	TArray<AActor*> OverlappingActors;
+	GetOverlappingActors(OverlappingActors);
+	for (int32 i = 0; i < OverlappingActors.Num(); i++)
+	{
+		if (Cast<AArena*>(OverlappingActors[i]) != nullptr)
+		{
+			return;
+		}
+	}
+
 	InfectedStatus = true;
 	OnVirusInfection.Broadcast();
-	GetWorldTimerManager().ClearTimer(TimerHandle_InfectableCellLifetimeTimer);
 	GetWorldTimerManager().SetTimer(
 		TimerHandle_InfectionTimer,
 		this,
