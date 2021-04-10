@@ -33,6 +33,9 @@ class AVirusForcePawn : public APawn
 	UPROPERTY(Category = Movement, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UFloatingPawnMovement* MovementComponent;
 
+	UPROPERTY(Category = Audio, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UAudioComponent* PlayerAudioComponent;
+
 	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadWrite, meta = (AllowPrivateAccess = "true"))
 	TArray<TSubclassOf<class AVirusForceProjectile>> AntibodyTypes;
 
@@ -56,7 +59,10 @@ public:
 
 	/** Sound to play each time we fire */
 	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
-	class USoundBase* FireSound;
+	class USoundBase* MovingSound;
+
+	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
+	USoundBase* ProjectileSound;
 
 	UPROPERTY(Category = Projectile, EditDefaultsOnly, BlueprintReadOnly)
 	TSubclassOf<AVirusForceProjectile> ProjectileClass;
@@ -111,6 +117,8 @@ private:
 	uint32 bCanFire : 1;
 
 	bool bCanMove = true;
+
+	bool bPlayingMovingSound = false;
 
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;

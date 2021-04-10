@@ -17,6 +17,7 @@
 #include "../NPC/Virus.h"
 #include "../GameMode/VirusForceGameMode.h"
 #include "../NPC/MarkedVirusComponent.h"
+#include "Components/AudioComponent.h"
 
 const FName AVirusForcePawn::MoveForwardBinding("MoveForward");
 const FName AVirusForcePawn::MoveRightBinding("MoveRight");
@@ -26,7 +27,6 @@ const FName AVirusForcePawn::SpawnKillerTCell("SpawnKillerTCell");
 
 AVirusForcePawn::AVirusForcePawn()
 {	
-	static ConstructorHelpers::FObjectFinder<UStaticMesh> CellWall(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/CellWall"));
 	static ConstructorHelpers::FObjectFinder<UStaticMesh> Core(TEXT("/Game/Geometry/Meshes/PlayerMeshes/Player/Core"));
 	CoreComponent = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Core"));
 	RootComponent = CoreComponent;
@@ -35,8 +35,10 @@ AVirusForcePawn::AVirusForcePawn()
 	CoreComponent->SetWorldScale3D(FVector(1.5, 1.5, 1.5));
 	
 	// Cache our sound effect
-	static ConstructorHelpers::FObjectFinder<USoundBase> FireAudio(TEXT("/Game/TwinStick/Audio/TwinStickFire.TwinStickFire"));
-	FireSound = FireAudio.Object;
+	static ConstructorHelpers::FObjectFinder<USoundBase> ProjectileAudio(TEXT("/Game/SFX/PlayerSounds/ProjectileSFX"));
+	static ConstructorHelpers::FObjectFinder<USoundBase> MovingAudio(TEXT("/Game/SFX/PlayerSounds/PlayerMoveSound"));
+	ProjectileSound = ProjectileAudio.Object;
+	MovingSound = MovingAudio.Object;
 
 	// Create a camera boom...
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
@@ -52,6 +54,8 @@ AVirusForcePawn::AVirusForcePawn()
 	CameraComponent->bUsePawnControlRotation = false;	// Camera does not rotate relative to arm
 
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
+	PlayerAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("PlayerAudioComponent"));
+	PlayerAudioComponent->SetSound(MovingSound);
 
 	// Movement
 	MoveSpeed = 1000.0f;
@@ -105,6 +109,17 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 				const FVector Deflection = FVector::VectorPlaneProject(Movement, Normal2D) * (1.f - Hit.Time);
 				MovementComponent->AddInputVector(Deflection, true);
 			}
+
+			if (!PlayerAudioComponent->IsPlaying() && (ForwardValue != 0.f || RightValue != 0.f))
+			{
+				bPlayingMovingSound = true;
+				//UGameplayStatics::PlaySoundAtLocation(this, MovingSound, GetActorLocation());
+				PlayerAudioComponent->Play();
+			}
+		}
+		else
+		{
+			PlayerAudioComponent->Stop();
 		}
 
 		// Create fire direction vector
@@ -123,6 +138,8 @@ void AVirusForcePawn::BeginPlay()
 	bUseControllerRotationPitch = false;
 	bUseControllerRotationRoll = false;
 	bUseControllerRotationYaw = false;
+
+	PlayerAudioComponent->Stop();
 }
 
 void AVirusForcePawn::SwitchAntibodyTypeUp()
@@ -181,10 +198,9 @@ void AVirusForcePawn::FireShot(FVector FireDirection)
 			World->GetTimerManager().SetTimer(TimerHandle_ShotTimerExpired, this, &AVirusForcePawn::ShotTimerExpired, FireRate);
 
 			// try and play the sound if specified
-			if (FireSound != nullptr)
+			if (ProjectileSound != nullptr)
 			{
-				//TODO add sound effect
-				//UGameplayStatics::PlaySoundAtLocation(this, FireSound, GetActorLocation());
+				UGameplayStatics::PlaySoundAtLocation(this, ProjectileSound, GetActorLocation());
 			}
 
 			bCanFire = false;
@@ -256,7 +272,7 @@ void AVirusForcePawn::SpawnKillerTCellInWorld(int32 SpawnNumber)
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
 			break;
 		default:
-			UE_LOG(LogTemp, Warning, TEXT("Unexpected number of viruses spawning"));
+			//UE_LOG(LogTemp, Warning, TEXT("Unexpected number of viruses spawning"));
 			return;
 		}
 		AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
