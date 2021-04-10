@@ -52,7 +52,7 @@ void AInfectableCell::BeginInfection()
 	GetOverlappingActors(OverlappingActors);
 	for (int32 i = 0; i < OverlappingActors.Num(); i++)
 	{
-		if (Cast<AArena*>(OverlappingActors[i]) != nullptr)
+		if (Cast<AArena>(OverlappingActors[i]) != nullptr)
 		{
 			return;
 		}
