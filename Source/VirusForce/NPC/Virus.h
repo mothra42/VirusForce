@@ -45,12 +45,6 @@ protected:
 	UPROPERTY(Category = VFX, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	class UParticleSystemComponent* BurstParticleEffect;
 
-	UPROPERTY(Category = Audio, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
-	class UAudioComponent* VirusAudioComponent;
-
-	UPROPERTY(Category = Audio, EditAnywhere, BlueprintReadWrite)
-	class USoundBase* SuctionSound;
-
 	UPROPERTY(Category = VirusProperties, EditDefaultsOnly, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
 	float VirusSpeed = 1000.f;
 
@@ -77,6 +71,9 @@ public:
 	float SpeedModifier = 1.f;
 
 	bool bHasStoppedParticleEffect = false;
+
+	UPROPERTY(Category = VirusState, BlueprintReadWrite)
+	bool isBeingAttackedByKillerTCell = false;
 
 	UPROPERTY(Category = MaterialSwitching, BlueprintReadOnly)
 	bool bIsHunted = false;
@@ -115,7 +112,4 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FVector GetKillerTCellLocation();
-
-	UFUNCTION(BlueprintCallable)
-	void PlaySuctionSound();
 };

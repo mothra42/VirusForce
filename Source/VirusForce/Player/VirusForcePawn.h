@@ -135,6 +135,8 @@ private:
 
 	void SwitchAntibodyTypeDown();
 
+	class UMarkedVirusComponent* GetMarkedVirusComponent();
+
 public:
 	/** Returns CellWallComponent subobject **/
 	UFUNCTION()

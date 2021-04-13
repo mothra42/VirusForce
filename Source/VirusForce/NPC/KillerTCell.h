@@ -25,6 +25,12 @@ class VIRUSFORCE_API AKillerTCell : public APawn
 
 	class UScoreManager* ScoreManager;
 
+	UPROPERTY(Category = Audio, VisibleAnywhere, BlueprintReadOnly, meta = (AllowPrivateAccess = "true"))
+	class UAudioComponent* KillerTCellAudioComponent;
+
+	UPROPERTY(Category = Audio, EditAnywhere)
+	class USoundBase* SuctionSound;
+
 public:
 	// Sets default values for this pawn's properties
 	AKillerTCell();
@@ -67,4 +73,7 @@ public:
 
 	UFUNCTION()
 	virtual void OnOverlapBegin(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+
+	UFUNCTION(BlueprintCallable)
+	void PlaySuctionSound();
 };

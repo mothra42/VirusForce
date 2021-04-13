@@ -220,12 +220,12 @@ void AVirusForcePawn::SetupKillerTCellSpawn()
 	//only spawn new killer t cells if none are in the arena
 	if (KillerCellArray.Num() <= 0)
 	{
-		//find number of viruses in arena to determine how many killer cells to spawn
-		TArray<AActor*> VirusArray;
-		UGameplayStatics::GetAllActorsOfClass(GetWorld(), AVirus::StaticClass(), VirusArray);
-		int32 NumVirusesInArena = VirusArray.Num();
-		int32 NumKillerCellsToSpawn = DetermineNumKillerCellsToSpawn(NumVirusesInArena);
-		SpawnKillerTCellInWorld(NumKillerCellsToSpawn);
+		UMarkedVirusComponent* MarkedVirusComponent = GetMarkedVirusComponent();
+		if (GetMarkedVirusComponent != nullptr)
+		{
+			int32 NumKillerCellsToSpawn = DetermineNumKillerCellsToSpawn(MarkedVirusComponent->GetMarkedViruses().Num());
+			SpawnKillerTCellInWorld(NumKillerCellsToSpawn);
+		}
 	}
 }
 
@@ -275,13 +275,25 @@ void AVirusForcePawn::SpawnKillerTCellInWorld(int32 SpawnNumber)
 			//UE_LOG(LogTemp, Warning, TEXT("Unexpected number of viruses spawning"));
 			return;
 		}
-		AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
-		if (GameMode != nullptr)
+
+		UMarkedVirusComponent* MarkedVirusComponent = GetMarkedVirusComponent();
+		if (MarkedVirusComponent != nullptr)
 		{
-			UMarkedVirusComponent* MarkedVirusComponent = GameMode->GetMarkedVirusComponent();
 			MarkedVirusComponent->DistributeMarkedViruses(SpawnNumber, KillerTCellArray);
 		}
 	}
+}
+
+//helper function to retrieve the marked virus component
+UMarkedVirusComponent* AVirusForcePawn::GetMarkedVirusComponent()
+{
+	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
+	if (GameMode != nullptr)
+	{
+		return GameMode->GetMarkedVirusComponent();
+	}
+
+	return nullptr;
 }
 
 //Lives are stored in the game mode, calls game mode to run lost life function

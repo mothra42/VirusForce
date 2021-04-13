@@ -12,6 +12,7 @@
 #include "../GameMode/VirusForceGameMode.h"
 #include "../Player/VirusForceProjectile.h"
 #include "../Score/ScoreManager.h"
+#include "Components/AudioComponent.h"
 #include "Virus.h"
 
 
@@ -33,12 +34,20 @@ AKillerTCell::AKillerTCell()
 	// Movement
 	MoveSpeed = 1000.0f;
 
+	//sound
+	static ConstructorHelpers::FObjectFinder<USoundBase> SuckingAudio(TEXT("/Game/SFX/VirusSounds/VirusForceSuction"));
+	SuctionSound = SuckingAudio.Object;
+
+	KillerTCellAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("KillerTCellAudioComponent"));
+	KillerTCellAudioComponent->SetSound(SuctionSound);
+
 }
 
 // Called when the game starts or when spawned
 void AKillerTCell::BeginPlay()
 {
 	Super::BeginPlay();
+	KillerTCellAudioComponent->Stop();
 	CellWallComponent->OnComponentBeginOverlap.AddDynamic(this, &AKillerTCell::OnOverlapBegin);
 
 	AVirusForceGameMode* GameMode = Cast<AVirusForceGameMode>(GetWorld()->GetAuthGameMode());
@@ -136,4 +145,9 @@ TArray<AVirus*> AKillerTCell::RemoveVirusFromMarkedViruses(AVirus* VirusToRemove
 		MyMarkedViruses.Remove(VirusToRemove);
 	}
 	return MyMarkedViruses;
+}
+
+void AKillerTCell::PlaySuctionSound()
+{
+	UGameplayStatics::PlaySoundAtLocation(this, SuctionSound, GetActorLocation());
 }

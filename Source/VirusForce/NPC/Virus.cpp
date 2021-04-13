@@ -12,7 +12,7 @@
 #include "Kismet/GameplayStatics.h"
 #include "GameFramework/FloatingPawnMovement.h"
 #include "Particles/ParticleSystemComponent.h"
-#include "Components/AudioComponent.h"
+
 
 // Sets default values
 AVirus::AVirus()
@@ -25,13 +25,6 @@ AVirus::AVirus()
 	VirusMeshComponent->SetStaticMesh(VirusMesh.Object);
 	VirusMeshComponent->bIgnoreRadialForce = true;
 	VirusMeshComponent->bIgnoreRadialImpulse = true;
-
-	//sound
-	static ConstructorHelpers::FObjectFinder<USoundBase> SuckingAudio(TEXT("/Game/SFX/VirusSounds/VirusForceSuction"));
-	SuctionSound = SuckingAudio.Object;
-
-	VirusAudioComponent = CreateDefaultSubobject<UAudioComponent>(TEXT("VirusAudioComponent"));
-	VirusAudioComponent->SetSound(SuctionSound);
 
 	MovementComponent = CreateDefaultSubobject<UFloatingPawnMovement>(TEXT("FloatingPawnMovement"));
 
@@ -49,7 +42,6 @@ AVirus::AVirus()
 void AVirus::BeginPlay()
 {
 	Super::BeginPlay();
-	VirusAudioComponent->Stop();
 	AvailableSocketNames = VirusMeshComponent->GetAllSocketNames();
 
 	VirusMeshComponent->OnComponentHit.AddDynamic(this, &AVirus::OnHit);
@@ -150,9 +142,4 @@ FVector AVirus::GetKillerTCellLocation()
 
 	//if killer t cell pointer is not set, set the value to something far outside the arena
 	return FVector(0.f, 0.f, -10000.f);
-}
-
-void AVirus::PlaySuctionSound()
-{
-	VirusAudioComponent->Play();
 }
