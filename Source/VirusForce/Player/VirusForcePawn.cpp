@@ -221,7 +221,7 @@ void AVirusForcePawn::SetupKillerTCellSpawn()
 	if (KillerCellArray.Num() <= 0)
 	{
 		UMarkedVirusComponent* MarkedVirusComponent = GetMarkedVirusComponent();
-		if (GetMarkedVirusComponent != nullptr)
+		if (GetMarkedVirusComponent() != nullptr)
 		{
 			int32 NumKillerCellsToSpawn = DetermineNumKillerCellsToSpawn(MarkedVirusComponent->GetMarkedViruses().Num());
 			SpawnKillerTCellInWorld(NumKillerCellsToSpawn);
@@ -272,7 +272,7 @@ void AVirusForcePawn::SpawnKillerTCellInWorld(int32 SpawnNumber)
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
 			break;
 		default:
-			//UE_LOG(LogTemp, Warning, TEXT("Unexpected number of viruses spawning"));
+			UE_LOG(LogTemp, Warning, TEXT("Unexpected number of viruses spawning"));
 			return;
 		}
 
