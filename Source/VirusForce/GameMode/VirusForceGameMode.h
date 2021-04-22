@@ -61,7 +61,11 @@ private:
 
 	FTimerHandle TimerHandle_RespawnPlayer;
 
+	FTimerHandle TimerHandle_LastDeathPause;
+
 	void DisplayHighScoreScreen();
+
+	void PurgePlayfield(UWorld* World);
 
 	void DestroyPawn(APawn* Pawn);
 

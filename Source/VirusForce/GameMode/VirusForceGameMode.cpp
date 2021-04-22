@@ -58,42 +58,47 @@ void AVirusForceGameMode::BeginPlay()
 	Super::BeginPlay();
 }
 
-//TODO refactor this method, too much going on in one method.
 void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 {
-	//decrement lives
-	Lives--;
-
-	if (Lives < 0)
+	if (Lives == 0)
 	{
-		UGameplayStatics::SetGamePaused(World, true);
-		DisplayHighScoreScreen();
+		// reset playfield and transition to high score screen
+		//UGameplayStatics::SetGamePaused(World, true);
+		PurgePlayfield(World);
+		World->GetTimerManager().SetTimer(TimerHandle_LastDeathPause, this, &AVirusForceGameMode::DisplayHighScoreScreen, 1.3);
 	}
-	//Reset MarkedVirusesArray
 	else
 	{
-		MarkedVirusComponent->PurgeMarkedViruses();
-
-		//destroy all pawns
-		TArray<AActor*> ActorArray;
-		UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), ActorArray);
-		for (int32 i = 0; i < ActorArray.Num(); i++)
-		{
-			APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
-			AVirusForceProjectile* ProjectileToDestroy = Cast<AVirusForceProjectile>(ActorArray[i]);
-			if (PawnToDestroy != nullptr)
-			{
-				DestroyPawn(PawnToDestroy);
-			}
-			else if (ProjectileToDestroy != nullptr)
-			{
-				ProjectileToDestroy->Destroy();
-			}
-		}
+		//decrement lives on death
+		Lives--;
+		//reset playfield and respawn player
+		PurgePlayfield(World);
 
 		World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 1.5);
 		World->GetTimerManager().PauseTimer(Arena->GetMassSpawnTimer());
 		World->GetTimerManager().PauseTimer(Arena->GetSpawnTimer());
+	}
+}
+
+void AVirusForceGameMode::PurgePlayfield(UWorld* World)
+{
+	MarkedVirusComponent->PurgeMarkedViruses();
+
+	//destroy all pawns
+	TArray<AActor*> ActorArray;
+	UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), ActorArray);
+	for (int32 i = 0; i < ActorArray.Num(); i++)
+	{
+		APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
+		AVirusForceProjectile* ProjectileToDestroy = Cast<AVirusForceProjectile>(ActorArray[i]);
+		if (PawnToDestroy != nullptr)
+		{
+			DestroyPawn(PawnToDestroy);
+		}
+		else if (ProjectileToDestroy != nullptr)
+		{
+			ProjectileToDestroy->Destroy();
+		}
 	}
 }
 
@@ -118,6 +123,7 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 	{
 		PlayerPawn = Cast<AVirusForcePawn>(Pawn);
 		PlayerPawn->DisableMovement();
+		PlayerPawn->StopPlayingMovementAudio();
 		PlayerController = Cast<APlayerController>(PlayerPawn->GetController());
 		PlayerDeathTransform = PlayerPawn->GetActorTransform();
 		PlayerPawn->SetPlayerInvisible();
