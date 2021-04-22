@@ -101,6 +101,8 @@ public:
 
 	void SetProjectile(TSubclassOf<AVirusForceProjectile> ProjectileToSet);
 
+	void StopPlayingMovementAudio();
+
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;

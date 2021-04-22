@@ -317,3 +317,9 @@ void AVirusForcePawn::SetPlayerInvisible()
 	CoreComponent->SetVisibility(false);
 	SetVisibilityDelegate.Broadcast();
 }
+
+//used in case movement was recorded on player death. called in Game Mode
+void AVirusForcePawn::StopPlayingMovementAudio()
+{
+	PlayerAudioComponent->Stop();
+}
