@@ -81,7 +81,7 @@ void AInfectableCell::ProduceViruses()
 		World->SpawnActor<AVirus>(VirusTypeToSpawn, SpawnLocation, FRotator(0, Yaw, 0));
 		Yaw += 45;
 	}
-	Destroy();
+	//destroy is now called in the blueprint at the end of the disintegration timeline
 }
 
 void AInfectableCell::AlertVirusesOnSpawn()

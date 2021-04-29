@@ -15,6 +15,7 @@
 #include "../HUD/VirusForceHUD.h"
 #include "../NPC/Virus.h"
 #include "../Arena/Arena.h"
+#include "../NPC/NeutralCells/InfectableCell.h"
 #include "Blueprint/UserWidget.h"
 #include "../UI/HighScore/HighScoreWidget.h"
 #include "../GameInstance/VirusForceGameInstance.h"
@@ -108,6 +109,7 @@ void AVirusForceGameMode::DisplayHighScoreScreen()
 	if (GameInstance != nullptr && ScoreManagerComponent != nullptr)
 	{
 		GameInstance->DisplayHighScoreScreen(ScoreManagerComponent->Score);
+		OnTransitionToHighScoreScreen.Broadcast();
 	}
 }
 

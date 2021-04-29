@@ -6,6 +6,8 @@
 #include "GameFramework/GameModeBase.h"
 #include "VirusForceGameMode.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTransitionToHighScoreScreen);
+
 UCLASS(MinimalAPI)
 class AVirusForceGameMode : public AGameModeBase
 {
@@ -32,6 +34,9 @@ public:
 	void ResetGameOnLifeLost(UWorld* World);
 
 	FORCEINLINE void SetArena(AArena* InArena) { Arena = InArena; }
+
+	UPROPERTY(Category = HighScoreUI, BlueprintAssignable)
+	FTransitionToHighScoreScreen OnTransitionToHighScoreScreen;
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = VirusTracking)
