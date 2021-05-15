@@ -24,10 +24,10 @@ void UScoreManager::BeginPlay()
 	
 }
 
-int32 UScoreManager::IncreaseScore(AVirus* Virus, int32 MarkedVirusMultiplier)
+int64 UScoreManager::IncreaseScore(AVirus* Virus, int32 MarkedVirusMultiplier)
 {
-	int32 BaseScore = FindScoreByVirusType(FindVirusType(Virus));
-	int32 AntibodyMultiplier = GetAntibodyMultiplier(Virus);
+	int64 BaseScore = FindScoreByVirusType(FindVirusType(Virus));
+	int64 AntibodyMultiplier = GetAntibodyMultiplier(Virus);
 	Score += (BaseScore * AntibodyMultiplier * MarkedVirusMultiplier);
 	NumberOfVirusConsumed++;
 	return Score;

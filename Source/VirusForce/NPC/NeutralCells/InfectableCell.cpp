@@ -12,6 +12,7 @@
 #include "../../GameBackground/ArteryJunctionComponent.h"
 #include "../../Arena/Arena.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "../../GameMode/VirusForceGameMode.h"
 
 // Sets default values
 AInfectableCell::AInfectableCell()

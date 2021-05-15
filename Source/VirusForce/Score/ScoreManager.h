@@ -31,10 +31,10 @@ protected:
 public:	
 
 	UPROPERTY(Category = Score, BlueprintReadOnly)
-	int32 Score = 0;
+	int64 Score = 0;
 
 	//increases the score
-	int32 IncreaseScore(class AVirus* Virus, int32 MarkedVirusMultiplier);
+	int64 IncreaseScore(class AVirus* Virus, int32 MarkedVirusMultiplier);
 
 private:
 
