@@ -231,7 +231,11 @@ void AVirusForcePawn::SetupKillerTCellSpawn()
 
 int32 AVirusForcePawn::DetermineNumKillerCellsToSpawn(int32 NumVirusesInArena)
 {
-	if (NumVirusesInArena <= 15)
+	if (NumVirusesInArena <= 0)
+	{
+		return 0;
+	}
+	else if (NumVirusesInArena <= 15)
 	{
 		return 1;
 	}
@@ -272,7 +276,6 @@ void AVirusForcePawn::SpawnKillerTCellInWorld(int32 SpawnNumber)
 			KillerTCellArray.Add(World->SpawnActor<AKillerTCell>(KillerTCellClass, SpawnLocation, SpawnRotation));
 			break;
 		default:
-			UE_LOG(LogTemp, Warning, TEXT("Unexpected number of viruses spawning"));
 			return;
 		}
 
