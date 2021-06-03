@@ -82,8 +82,10 @@ void AVirusForcePawn::SetupPlayerInputComponent(class UInputComponent* PlayerInp
 void AVirusForcePawn::Tick(float DeltaSeconds)
 {
 	Super::Tick(DeltaSeconds);
+
+	//handle movement
 	if (bCanMove)
-	{
+	{	
 		// Find movement direction
 		const float ForwardValue = GetInputAxisValue(MoveForwardBinding);
 		const float RightValue = GetInputAxisValue(MoveRightBinding);
