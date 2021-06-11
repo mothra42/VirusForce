@@ -31,11 +31,26 @@ void UHighScoreWidget::Setup(TArray<FHighScoreStruct> HighScores, int32 NewScore
     PlayerController->bShowMouseCursor = true;
 }
 
+void UHighScoreWidget::Setup(TArray<FHighScoreStruct> HighScores)
+{
+    PopulateHighScores(HighScores, NULL);
+    this->AddToViewport();
+    UWorld* World = GetWorld();
+    APlayerController* PlayerController = World->GetFirstPlayerController();
+    FInputModeUIOnly InputModeData;
+    InputModeData.SetLockMouseToViewportBehavior(EMouseLockMode::DoNotLock);
+    PlayerController->SetInputMode(InputModeData);
+    PlayerController->bShowMouseCursor = true;
+}
+
 void UHighScoreWidget::PopulateHighScores(TArray<FHighScoreStruct> HighScores, int32 NewScore)
 {
     //check if new score is part of top ten scores, 
     //if it is then add it to viewport in proper place.
-    HighScores.Add(FHighScoreStruct(TEXT("ThisIsNewestScore"), NewScore));
+    if (NewScore)
+    {
+        HighScores.Add(FHighScoreStruct(TEXT("ThisIsNewestScore"), NewScore));
+    }
     SortScores(HighScores);
 
     if (HighScores.Num() >= 0)

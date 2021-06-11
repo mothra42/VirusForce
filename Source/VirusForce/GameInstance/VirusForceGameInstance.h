@@ -25,14 +25,14 @@ private:
 
 	class UHighScoreWidget* HighScoreWidget;
 
-	UPROPERTY(VisibleAnywhere, Category = Basic)
-	class UVirusForceSaveGame* LoadedGame;
-
 	int32 FinalScore;
 
 	void LoadHighScores();
 
 public:
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Basic)
+	class UVirusForceSaveGame* LoadedGame;
+
 	void CreateHighScoreList();
 
 	void DisplayHighScoreScreen(int32 Score);

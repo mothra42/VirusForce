@@ -6,7 +6,7 @@
 #include "GameFramework/SaveGame.h"
 #include "VirusForceSaveGame.generated.h"
 
-USTRUCT()
+USTRUCT(BlueprintType)
 struct FHighScoreStruct
 {
 	GENERATED_USTRUCT_BODY()
@@ -34,7 +34,7 @@ public:
 	//UPROPERTY(VisibleAnywhere, Category = Basic)
 	//FHighScoreStruct HighScoreElement;
 
-	UPROPERTY(VisibleAnywhere, Category = Basic)
+	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Basic)
 	TArray<FHighScoreStruct> HighScoreList;
 
 	UPROPERTY(VisibleAnywhere, Category = Basic)
