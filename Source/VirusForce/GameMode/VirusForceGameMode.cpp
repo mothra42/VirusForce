@@ -21,6 +21,9 @@
 #include "../GameInstance/VirusForceGameInstance.h"
 #include "Components/EditableTextBox.h"
 #include "TimerManager.h"
+#include "Camera/CameraActor.h"
+#include "Camera/CameraComponent.h"
+#include "Camera/PlayerCameraManager.h"
 
 AVirusForceGameMode::AVirusForceGameMode()
 {
@@ -65,7 +68,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	{
 		// reset playfield and transition to high score screen
 		//UGameplayStatics::SetGamePaused(World, true);
-		PurgePlayfield(World);
+		PurgePlayfield();
 		World->GetTimerManager().SetTimer(TimerHandle_LastDeathPause, this, &AVirusForceGameMode::DisplayHighScoreScreen, 1.3);
 	}
 	else
@@ -73,7 +76,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 		//decrement lives on death
 		Lives--;
 		//reset playfield and respawn player
-		PurgePlayfield(World);
+		PurgePlayfield();
 
 		World->GetTimerManager().SetTimer(TimerHandle_RespawnPlayer, this, &AVirusForceGameMode::RespawnPlayer, 1.5);
 		World->GetTimerManager().PauseTimer(Arena->GetMassSpawnTimer());
@@ -81,13 +84,13 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	}
 }
 
-void AVirusForceGameMode::PurgePlayfield(UWorld* World)
+void AVirusForceGameMode::PurgePlayfield()
 {
 	MarkedVirusComponent->PurgeMarkedViruses();
 
 	//destroy all pawns
 	TArray<AActor*> ActorArray;
-	UGameplayStatics::GetAllActorsOfClass(World, AActor::StaticClass(), ActorArray);
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), ActorArray);
 	for (int32 i = 0; i < ActorArray.Num(); i++)
 	{
 		APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
@@ -111,6 +114,12 @@ void AVirusForceGameMode::DisplayHighScoreScreen()
 		GameInstance->DisplayHighScoreScreen(ScoreManagerComponent->Score);
 		OnTransitionToHighScoreScreen.Broadcast();
 	}
+	//spawn new camera in high center of the arena and move view to that
+	ACameraActor* ScoreScreenCamera = GetWorld()->SpawnActor<ACameraActor>(FVector(-143.28, -44.74, 3511.32), FRotator(-90.f, 0.f, 0.f));
+	ScoreScreenCamera->GetCameraComponent()->bConstrainAspectRatio = false;
+	//GetPlayerController
+	//APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
+	PlayerController->SetViewTargetWithBlend(ScoreScreenCamera, 0.0);
 }
 
 void AVirusForceGameMode::DestroyPawn(APawn* Pawn)

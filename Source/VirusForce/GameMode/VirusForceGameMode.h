@@ -38,6 +38,9 @@ public:
 	UPROPERTY(Category = HighScoreUI, BlueprintAssignable)
 	FTransitionToHighScoreScreen OnTransitionToHighScoreScreen;
 
+	UFUNCTION(BlueprintCallable)
+	void PurgePlayfield();
+
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = VirusTracking)
 	UMarkedVirusComponent* MarkedVirusComponent;
@@ -69,8 +72,6 @@ private:
 	FTimerHandle TimerHandle_LastDeathPause;
 
 	void DisplayHighScoreScreen();
-
-	void PurgePlayfield(UWorld* World);
 
 	void DestroyPawn(APawn* Pawn);
 
