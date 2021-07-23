@@ -7,10 +7,4 @@
 void ATrackingVirus::BeginPlay()
 {
 	Super::BeginPlay();
-
-}
-
-void ATrackingVirus::AlterMovementSpeed()
-{
-	Super::MovementComponent->MaxSpeed *= Super::SpeedModifier;
 }

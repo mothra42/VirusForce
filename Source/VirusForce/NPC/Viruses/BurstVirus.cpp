@@ -7,6 +7,7 @@
 #include "Kismet/KismetMathLibrary.h"
 #include "../../GameMode/VirusForceGameMode.h"
 #include "../MarkedVirusComponent.h"
+#include "GameFramework/FloatingPawnMovement.h"
 #include "EngineUtils.h"
 
 void ABurstVirus::BeginPlay()
@@ -20,7 +21,6 @@ void ABurstVirus::BeginPlay()
 
 void ABurstVirus::CheckWorldForInfectableCell()
 {
-	//UE_LOG(LogTemp, Warning, TEXT("Checking for infectable viruses"))
 	TArray<AActor*> FoundActors;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AInfectableCell::StaticClass(), FoundActors);
 

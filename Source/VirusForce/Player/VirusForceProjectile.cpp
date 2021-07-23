@@ -75,11 +75,7 @@ void AVirusForceProjectile::OnHit(UPrimitiveComponent* HitComp, AActor* OtherAct
 				HitVirus->GetParticleEffectComponent()->SetActive(false);
 				HitVirus->bHasStoppedParticleEffect = true;
 				HitVirus->SpeedModifier = 0.5;
-				ATrackingVirus* HitTrackingVirus = Cast<ATrackingVirus>(HitVirus);
-				if (HitTrackingVirus != nullptr)
-				{
-					HitTrackingVirus->AlterMovementSpeed();
-				}
+				HitVirus->AlterMovementSpeed();
 			}
 			DestroyProjectile();
 		}

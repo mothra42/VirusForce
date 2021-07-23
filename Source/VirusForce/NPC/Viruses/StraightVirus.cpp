@@ -20,8 +20,6 @@ void AStraightVirus::BeginPlay()
 	Super::BeginPlay();
 	Super::VirusMeshComponent->OnComponentHit.RemoveDynamic(this, &Super::OnHit);
 	Super::VirusMeshComponent->OnComponentHit.AddDynamic(this, &AStraightVirus::OnHit);
-
-	APawn* PlayerPawn = UGameplayStatics::GetPlayerPawn(GetWorld(), 0);
 }
 
 void AStraightVirus::Tick(float DeltaTime)

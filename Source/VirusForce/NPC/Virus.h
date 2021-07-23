@@ -112,4 +112,6 @@ public:
 
 	UFUNCTION(BlueprintCallable)
 	FVector GetKillerTCellLocation();
+
+	void AlterMovementSpeed();
 };
