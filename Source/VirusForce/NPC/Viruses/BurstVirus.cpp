@@ -19,6 +19,18 @@ void ABurstVirus::BeginPlay()
 	CheckWorldForInfectableCell();
 }
 
+void ABurstVirus::Tick(float DeltaTime)
+{
+	Super::Tick(DeltaTime);
+	//clamp velocity to max speed if it is ever exceeded.
+	float CurrentSpeed = Super::MovementComponent->Velocity.Size();
+	if (CurrentSpeed > Super::MovementComponent->MaxSpeed)
+	{
+		FVector ClampedVelocity = Super::MovementComponent->Velocity.GetSafeNormal() * Super::MovementComponent->MaxSpeed;
+		Super::MovementComponent->Velocity = ClampedVelocity;
+	}
+}
+
 void ABurstVirus::CheckWorldForInfectableCell()
 {
 	TArray<AActor*> FoundActors;

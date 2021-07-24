@@ -25,6 +25,8 @@ class VIRUSFORCE_API ABurstVirus : public AStraightVirus
 
 		virtual void BeginPlay() override;
 
+		virtual void Tick(float DeltaTime) override;
+
 		virtual void OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit) override;
 
 	private:
