@@ -120,6 +120,11 @@ void AArena::PopulateSpawnQueue(TSubclassOf<AVirus> VirusClass, int32 Iterations
 	}
 }
 
+void AArena::ClearSpawnQueue()
+{
+	SpawnQueue.Empty();
+}
+
 void AArena::ConsumeSpawnQueue()
 {
 	if (!SpawnQueue.IsEmpty() && GetWorldTimerManager().GetTimerRemaining(TimerHandle_SpawnDelayTimer) <= 0)

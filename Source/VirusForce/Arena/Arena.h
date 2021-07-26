@@ -55,6 +55,9 @@ public:
 	
 	void PopulateSpawnQueue(TSubclassOf<AVirus> VirusClass, int32 Iterations);
 
+	UFUNCTION(BlueprintCallable)
+	void ClearSpawnQueue();
+
 	FORCEINLINE FTimerHandle GetMassSpawnTimer() { return TimerHandle_MassSpawnTimer; }
 	FORCEINLINE FTimerHandle GetSpawnTimer() { return TimerHandle_SpawnSingleVirusTimer; }
 
