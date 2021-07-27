@@ -164,13 +164,20 @@ void AVirusForceGameMode::RespawnPlayer()
 {
 	if (PlayerController != nullptr && PlayerPawn != nullptr)
 	{
+		FTransform PlayerTransform = PlayerPawn->GetTransform();
 		PlayerPawn->Destroy();
-		RestartPlayerAtTransform(PlayerController, PlayerDeathTransform);
-		AVirusForcePawn* NewPlayerPawn = Cast<AVirusForcePawn>(PlayerController->GetPawn());
+		//use deferred spawn to set projectile class before begin play is called
+		AVirusForcePawn* NewPlayerPawn = GetWorld()->SpawnActorDeferred<AVirusForcePawn>(
+			GetPlayerPawnClass(), 
+			PlayerTransform
+			);
 		if (NewPlayerPawn != nullptr)
 		{
 			NewPlayerPawn->SetProjectile(LastUsedProjectile);
 		}
+
+		UGameplayStatics::FinishSpawningActor(NewPlayerPawn, PlayerTransform);
+		PlayerController->Possess(NewPlayerPawn);
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetMassSpawnTimer());
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetSpawnTimer());
 	}

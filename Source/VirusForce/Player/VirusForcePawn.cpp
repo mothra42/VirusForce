@@ -156,7 +156,7 @@ void AVirusForcePawn::SwitchAntibodyTypeUp()
 	}
 	ProjectileClass = AntibodyTypes[ProjectileIndexTracker];
 	
-	SwitchProjectileTypeDelegate.Broadcast(ProjectileIndexTracker);
+	SwitchProjectileTypeDelegate.Broadcast();
 }
 
 void AVirusForcePawn::SwitchAntibodyTypeDown()
@@ -170,12 +170,13 @@ void AVirusForcePawn::SwitchAntibodyTypeDown()
 		ProjectileIndexTracker--;
 	}
 	ProjectileClass = AntibodyTypes[ProjectileIndexTracker];
-	SwitchProjectileTypeDelegate.Broadcast(ProjectileIndexTracker);
+	SwitchProjectileTypeDelegate.Broadcast();
 }
 
 void AVirusForcePawn::SetProjectile(TSubclassOf<AVirusForceProjectile> ProjectileToSet)
 {
 	ProjectileClass = ProjectileToSet;
+	ProjectileIndexTracker = AntibodyTypes.Find(ProjectileClass);
 }
 
 void AVirusForcePawn::FireShot(FVector FireDirection)

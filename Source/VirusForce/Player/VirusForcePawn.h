@@ -6,7 +6,7 @@
 #include "GameFramework/Character.h"
 #include "VirusForcePawn.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSwitchProjectileTypeDelegate, int32, ProjectileIndex);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FSwitchProjectileTypeDelegate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FVisibilityDelegate);
 
 
