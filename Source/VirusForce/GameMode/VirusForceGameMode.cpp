@@ -71,7 +71,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 		// reset playfield and transition to high score screen
 		//UGameplayStatics::SetGamePaused(World, true);
 		PurgePlayfield();
-		World->GetTimerManager().SetTimer(TimerHandle_LastDeathPause, this, &AVirusForceGameMode::DisplayHighScoreScreen, 2.0); //1.3 previous length
+		World->GetTimerManager().SetTimer(TimerHandle_LastDeathPause, this, &AVirusForceGameMode::DisplayHighScoreScreen, 1.3); //1.3 previous length
 	}
 	else
 	{
@@ -128,7 +128,7 @@ void AVirusForceGameMode::DisplayHighScoreScreen()
 	//spawn new camera in high center of the arena and move view to that
 	ACameraActor* ScoreScreenCamera = GetWorld()->SpawnActor<ACameraActor>(FVector(-143.28, -44.74, 3511.32), FRotator(-90.f, 0.f, 0.f));
 	ScoreScreenCamera->GetCameraComponent()->bConstrainAspectRatio = false;
-	PlayerController->SetViewTargetWithBlend(ScoreScreenCamera, 0.5);
+	PlayerController->SetViewTargetWithBlend(ScoreScreenCamera, 0.f);
 	
 	AVirusForcePawn* Player = Cast<AVirusForcePawn>(UGameplayStatics::GetActorOfClass(GetWorld(), GetPlayerPawnClass()));
 	if (Player != nullptr)
