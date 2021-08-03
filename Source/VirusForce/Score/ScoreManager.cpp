@@ -78,3 +78,8 @@ int32 UScoreManager::GetAntibodyMultiplier(AVirus* Virus)
 {
 	return Virus->NumOfAttachedAntibodies();
 }
+
+void UScoreManager::ResetScore()
+{
+	Score = 0;
+}

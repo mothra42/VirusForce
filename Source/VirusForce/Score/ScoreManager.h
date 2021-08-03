@@ -36,6 +36,8 @@ public:
 	//increases the score
 	int64 IncreaseScore(class AVirus* Virus, int32 MarkedVirusMultiplier);
 
+	void ResetScore();
+
 private:
 
 	//finds virus type of consumed virus
