@@ -35,6 +35,8 @@ AVirusForceGameMode::AVirusForceGameMode()
 	ScoreManagerComponent = CreateDefaultSubobject<UScoreManager>(TEXT("ScoreManagerComponent"));
 
 	HUD = CreateDefaultSubobject<AVirusForceHUD>(TEXT("HUD"));
+
+	Lives = MaxLives;
 }
 
 UMarkedVirusComponent* AVirusForceGameMode::GetMarkedVirusComponent()
@@ -69,7 +71,7 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 		// reset playfield and transition to high score screen
 		//UGameplayStatics::SetGamePaused(World, true);
 		PurgePlayfield();
-		World->GetTimerManager().SetTimer(TimerHandle_LastDeathPause, this, &AVirusForceGameMode::DisplayHighScoreScreen, 1.3);
+		World->GetTimerManager().SetTimer(TimerHandle_LastDeathPause, this, &AVirusForceGameMode::DisplayHighScoreScreen, 2.0); //1.3 previous length
 	}
 	else
 	{
@@ -84,10 +86,9 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	}
 }
 
-void AVirusForceGameMode::PurgePlayfield()
+void AVirusForceGameMode::PurgePlayfield(bool bSkipPlayer)
 {
 	MarkedVirusComponent->PurgeMarkedViruses();
-
 	//destroy all pawns
 	TArray<AActor*> ActorArray;
 	UGameplayStatics::GetAllActorsOfClass(GetWorld(), AActor::StaticClass(), ActorArray);
@@ -95,7 +96,11 @@ void AVirusForceGameMode::PurgePlayfield()
 	{
 		APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
 		AVirusForceProjectile* ProjectileToDestroy = Cast<AVirusForceProjectile>(ActorArray[i]);
-		if (PawnToDestroy != nullptr)
+		if (bSkipPlayer && Cast<AVirusForcePawn>(PawnToDestroy) != nullptr)
+		{
+			continue;
+		}
+		else if (PawnToDestroy != nullptr)
 		{
 			DestroyPawn(PawnToDestroy);
 		}
@@ -104,6 +109,12 @@ void AVirusForceGameMode::PurgePlayfield()
 			ProjectileToDestroy->Destroy();
 		}
 	}
+}
+
+void AVirusForceGameMode::ResetGame()
+{
+	Lives = MaxLives;
+	ScoreManagerComponent->ResetScore();
 }
 
 void AVirusForceGameMode::DisplayHighScoreScreen()
@@ -117,9 +128,13 @@ void AVirusForceGameMode::DisplayHighScoreScreen()
 	//spawn new camera in high center of the arena and move view to that
 	ACameraActor* ScoreScreenCamera = GetWorld()->SpawnActor<ACameraActor>(FVector(-143.28, -44.74, 3511.32), FRotator(-90.f, 0.f, 0.f));
 	ScoreScreenCamera->GetCameraComponent()->bConstrainAspectRatio = false;
-	//GetPlayerController
-	//APlayerController* PlayerController = UGameplayStatics::GetPlayerController(GetWorld(), 0);
-	PlayerController->SetViewTargetWithBlend(ScoreScreenCamera, 0.0);
+	PlayerController->SetViewTargetWithBlend(ScoreScreenCamera, 0.5);
+	
+	AVirusForcePawn* Player = Cast<AVirusForcePawn>(UGameplayStatics::GetActorOfClass(GetWorld(), GetPlayerPawnClass()));
+	if (Player != nullptr)
+	{
+		Player->SetDestroyInNextGame();
+	}
 }
 
 void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
@@ -139,7 +154,6 @@ void AVirusForceGameMode::DestroyPawn(APawn* Pawn)
 		PlayerDeathTransform = PlayerPawn->GetActorTransform();
 		PlayerPawn->SetPlayerInvisible();
 		LastUsedProjectile = PlayerPawn->ProjectileClass;
-
 		//spawn death particle emitter
 		if (PlayerPawn->CellDeathEmitter != nullptr)
 		{
@@ -164,19 +178,19 @@ void AVirusForceGameMode::RespawnPlayer()
 {
 	if (PlayerController != nullptr && PlayerPawn != nullptr)
 	{
-		FTransform PlayerTransform = PlayerPawn->GetTransform();
+		PreviousPlayerTransform = PlayerPawn->GetTransform();
 		PlayerPawn->Destroy();
 		//use deferred spawn to set projectile class before begin play is called
 		AVirusForcePawn* NewPlayerPawn = GetWorld()->SpawnActorDeferred<AVirusForcePawn>(
 			GetPlayerPawnClass(), 
-			PlayerTransform
+			PreviousPlayerTransform
 			);
 		if (NewPlayerPawn != nullptr)
 		{
 			NewPlayerPawn->SetProjectile(LastUsedProjectile);
 		}
 
-		UGameplayStatics::FinishSpawningActor(NewPlayerPawn, PlayerTransform);
+		UGameplayStatics::FinishSpawningActor(NewPlayerPawn, PreviousPlayerTransform);
 		PlayerController->Possess(NewPlayerPawn);
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetMassSpawnTimer());
 		GetWorld()->GetTimerManager().UnPauseTimer(Arena->GetSpawnTimer());

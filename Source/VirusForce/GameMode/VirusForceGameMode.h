@@ -17,7 +17,10 @@ public:
 	AVirusForceGameMode();
 
 	UPROPERTY(Category = Lives, EditDefaultsOnly, BlueprintReadOnly)
-	int32 Lives = 3;
+	int32 Lives;
+
+	UPROPERTY(Category = Lives, EditDefaultsOnly, BlueprintReadOnly)
+	int32 MaxLives = 3;
 
 	class AArena* Arena;
 
@@ -39,7 +42,10 @@ public:
 	FTransitionToHighScoreScreen OnTransitionToHighScoreScreen;
 
 	UFUNCTION(BlueprintCallable)
-	void PurgePlayfield();
+	void PurgePlayfield(bool bSkipPlayer = false);
+
+	UFUNCTION(BlueprintCallable)
+	void ResetGame();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = VirusTracking)
@@ -58,6 +64,8 @@ protected:
 
 private:
 	class AVirusForcePawn* PlayerPawn;
+
+	FTransform PreviousPlayerTransform;
 
 	class APlayerController* PlayerController;
 
