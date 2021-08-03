@@ -329,3 +329,11 @@ void AVirusForcePawn::StopPlayingMovementAudio()
 {
 	PlayerAudioComponent->Stop();
 }
+
+void AVirusForcePawn::RemoveSelfFromGame()
+{
+	if (bDestroyInNextGame)
+	{
+		Destroy();
+	}
+}

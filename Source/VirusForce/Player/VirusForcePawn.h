@@ -103,6 +103,9 @@ public:
 
 	void StopPlayingMovementAudio();
 
+	UFUNCTION(BlueprintCallable)
+	void RemoveSelfFromGame();
+
 	// Static names for axis bindings
 	static const FName MoveForwardBinding;
 	static const FName MoveRightBinding;
@@ -121,6 +124,8 @@ private:
 	bool bCanMove = true;
 
 	bool bPlayingMovingSound = false;
+
+	bool bDestroyInNextGame = false;
 
 	/** Handle for efficient management of ShotTimerExpired timer */
 	FTimerHandle TimerHandle_ShotTimerExpired;
@@ -148,5 +153,6 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE void DisableMovement() { bCanMove = false; }
+	FORCEINLINE void SetDestroyInNextGame() { bDestroyInNextGame = true; }
 };
 
