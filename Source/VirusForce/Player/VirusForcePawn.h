@@ -153,6 +153,7 @@ public:
 	/** Returns CameraBoom subobject **/
 	FORCEINLINE class USpringArmComponent* GetCameraBoom() const { return CameraBoom; }
 	FORCEINLINE void DisableMovement() { bCanMove = false; }
-	FORCEINLINE void SetDestroyInNextGame() { bDestroyInNextGame = true; }
+	UFUNCTION(BlueprintCallable)
+	FORCEINLINE bool SetDestroyInNextGame() { bDestroyInNextGame = true; return bDestroyInNextGame; }
 };
 
