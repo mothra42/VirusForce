@@ -5,6 +5,7 @@
 #include "../../SaveGame/VirusForceSaveGame.h"
 #include "Components/EditableTextBox.h"
 #include "Components/TextBlock.h"
+#include "ArcadeStyleTextInputBox.h"
 
 void UNameInputWidget::SetupWidget(FText InRank, FText InScore)
 {

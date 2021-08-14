@@ -6,6 +6,8 @@
 #include "Components/EditableTextBox.h"
 #include "ArcadeStyleTextInputBox.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnNameEntryCompletedDelegate, const FText&, Text, ETextCommit::Type, CommitMethod);
+
 /**
  * 
  */
@@ -15,6 +17,9 @@ class VIRUSFORCE_API UArcadeStyleTextInputBox : public UEditableTextBox
 	GENERATED_BODY()
 
 public:
+	UPROPERTY(Category = NameEntry, BlueprintCallable)
+	FOnNameEntryCompletedDelegate OnNameEntryCompleted;
+
 	UArcadeStyleTextInputBox();
 
 	UFUNCTION(BlueprintCallable)

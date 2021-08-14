@@ -2,12 +2,12 @@
 
 
 #include "ArcadeStyleTextInputBox.h"
+#include "HighScoreWidget.h"
 
 UArcadeStyleTextInputBox::UArcadeStyleTextInputBox()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Constructor called"));
-	Text = FText::FromString(PlayerName);
-	ScrollRate = 0.3f;
+	SetText(FText::FromString(AlphabetArray[AlphabetIndex]));
+	ScrollRate = 0.4f;
 	ClearKeyboardFocusOnCommit = true;
 }
 
@@ -39,7 +39,6 @@ FString UArcadeStyleTextInputBox::ScrollThroughLetters(bool IsUpInput)
 		}
 		bCanScroll = false;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_ScrollTimerExpired, this, &UArcadeStyleTextInputBox::ScrollTimerExpired, ScrollRate);
-		UE_LOG(LogTemp, Warning, TEXT("Current letter is %s"), *AlphabetArray[AlphabetIndex]);
 		SetText(FText::FromString(PlayerName + AlphabetArray[AlphabetIndex]));
 	}
 	return AlphabetArray[AlphabetIndex];
@@ -47,9 +46,9 @@ FString UArcadeStyleTextInputBox::ScrollThroughLetters(bool IsUpInput)
 
 void UArcadeStyleTextInputBox::ConfirmLetter()
 {
-	if (AlphabetArray[AlphabetIndex] == "END")
+	if (AlphabetArray[AlphabetIndex] == " END")
 	{
-		HandleOnTextCommitted(FText::FromString(PlayerName), ETextCommit::OnEnter);
+		OnNameEntryCompleted.Broadcast(FText::FromString(PlayerName), ETextCommit::OnEnter);
 		return;
 	}
 	if (PlayerName.Len() < NameCharLimit)
@@ -57,12 +56,17 @@ void UArcadeStyleTextInputBox::ConfirmLetter()
 		PlayerName += AlphabetArray[AlphabetIndex];
 		SetText(FText::FromString(PlayerName));
 	}
+	AlphabetIndex;
 }
 
 void UArcadeStyleTextInputBox::DeleteLetter()
 {
-	PlayerName.RemoveAt(PlayerName.Len() - 1);
-	SetText(FText::FromString(PlayerName));
+	if (PlayerName.Len() > 0)
+	{
+		PlayerName.RemoveAt(PlayerName.Len() - 1);
+		SetText(FText::FromString(PlayerName));
+		AlphabetIndex = 0;
+	}
 }
 
 void UArcadeStyleTextInputBox::ScrollTimerExpired()

@@ -19,7 +19,7 @@ class VIRUSFORCE_API UNameInputWidget : public UUserWidget
 
 public:
     UPROPERTY(meta = (BindWidget), BlueprintReadWrite)
-    class UEditableTextBox* NameInput;
+    class UArcadeStyleTextInputBox* ArcadeNameInput;
 
     UPROPERTY(meta = (BindWidget))
     class UTextBlock* Rank;
