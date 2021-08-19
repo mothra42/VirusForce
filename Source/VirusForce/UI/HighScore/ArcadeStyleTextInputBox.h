@@ -26,6 +26,9 @@ public:
 	FString ScrollThroughLetters(bool IsUpInput);
 
 	UFUNCTION(BlueprintCallable)
+	void HandleKeyboardInput(bool IsValidKey, FText KeyName);
+
+	UFUNCTION(BlueprintCallable)
 	void ConfirmLetter();
 
 	UFUNCTION(BlueprintCallable)

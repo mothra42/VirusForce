@@ -7,6 +7,8 @@
 #include "../../SaveGame/VirusForceSaveGame.h"
 #include "HighScoreWidget.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FChangeFocusDelegate);
+
 
 struct FHighScoreStruct;
 
@@ -33,9 +35,14 @@ public:
 	UFUNCTION()
 	void SaveOnPlayerNameCommitted(const FText& Text, ETextCommit::Type CommitMethod);
 
+	UPROPERTY(Category = NameEntry, BlueprintCallable, BlueprintAssignable)
+	FChangeFocusDelegate OnChangeFocus;
+
 private:
 	TSubclassOf<class UScoreElement> ScoreElementWidgetClass;
 	TSubclassOf<class UNameInputWidget> NameInputWidgetClass;
+	TSubclassOf<UUserWidget> TextButtonClass;
+
 
 	void PopulateHighScores(TArray<FHighScoreStruct> HighScores, int32 NewScore);
 	void SortScores(TArray<FHighScoreStruct>& HighScores);

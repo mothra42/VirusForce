@@ -8,7 +8,6 @@ UArcadeStyleTextInputBox::UArcadeStyleTextInputBox()
 {
 	SetText(FText::FromString(AlphabetArray[AlphabetIndex]));
 	ScrollRate = 0.4f;
-	ClearKeyboardFocusOnCommit = true;
 }
 
 FString UArcadeStyleTextInputBox::ScrollThroughLetters(bool IsUpInput)
@@ -44,10 +43,24 @@ FString UArcadeStyleTextInputBox::ScrollThroughLetters(bool IsUpInput)
 	return AlphabetArray[AlphabetIndex];
 }
 
+void UArcadeStyleTextInputBox::HandleKeyboardInput(bool IsValidKey, FText KeyName)
+{
+	SetText(FText::FromString(PlayerName));
+	if (IsValidKey)
+	{
+		if (IsValidKey)
+		{
+			ScrollThroughLetters(KeyName.EqualTo(FText::FromString("W")));
+		}
+	}
+	
+}
+
 void UArcadeStyleTextInputBox::ConfirmLetter()
 {
 	if (AlphabetArray[AlphabetIndex] == " END")
 	{
+		SetText(FText::FromString(PlayerName));
 		OnNameEntryCompleted.Broadcast(FText::FromString(PlayerName), ETextCommit::OnEnter);
 		return;
 	}

@@ -65,8 +65,6 @@ void UHighScoreWidget::PopulateHighScores(TArray<FHighScoreStruct> HighScores, i
                 UNameInputWidget* NameInputWidget = CreateWidget<UNameInputWidget>(this, NameInputWidgetClass);
                 NameInputWidget->SetupWidget(Rank, FText::FromString(FString::FromInt(NewScore)));
                 NameInputWidget->ArcadeNameInput->OnNameEntryCompleted.AddDynamic(this, &UHighScoreWidget::SaveOnPlayerNameCommitted);
-                NameInputWidget->ArcadeNameInput->SetUserFocus(GetWorld()->GetFirstPlayerController());
-                NameInputWidget->ArcadeNameInput->SetKeyboardFocus();
                 HighScoreList->AddChildToVerticalBox(NameInputWidget);
             }
             else
@@ -90,6 +88,7 @@ void UHighScoreWidget::SaveOnPlayerNameCommitted(const FText& Text, ETextCommit:
         if (GameInstance != nullptr)
         {
             GameInstance->SaveHighScore(Text);
+            OnChangeFocus.Broadcast();
         }
     }
 }
