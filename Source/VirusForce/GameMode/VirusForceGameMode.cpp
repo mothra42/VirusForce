@@ -134,6 +134,7 @@ void AVirusForceGameMode::DisplayHighScoreScreen()
 	if (Player != nullptr)
 	{
 		Player->SetDestroyInNextGame();
+		Player->SetActorEnableCollision(false);
 	}
 }
 
