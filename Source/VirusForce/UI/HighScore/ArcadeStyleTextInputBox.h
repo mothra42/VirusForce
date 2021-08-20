@@ -20,6 +20,9 @@ public:
 	UPROPERTY(Category = NameEntry, BlueprintCallable)
 	FOnNameEntryCompletedDelegate OnNameEntryCompleted;
 
+	UPROPERTY(Category = NameEntry, BlueprintReadWrite)
+	FString PlayerName;
+
 	UArcadeStyleTextInputBox();
 
 	UFUNCTION(BlueprintCallable)
@@ -51,7 +54,7 @@ private:
 
 	FTimerHandle TimerHandle_ScrollTimerExpired;
 
-	FString PlayerName;
+	FString AppendNonConfirmedChar(FString CharToAppend);
 
 	UPROPERTY(Category = NameLimits, EditAnywhere)
 	int32 NameCharLimit = 10;
