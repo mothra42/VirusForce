@@ -6,7 +6,6 @@
 
 UArcadeStyleTextInputBox::UArcadeStyleTextInputBox()
 {
-	//SetText(FText::FromString(AlphabetArray[AlphabetIndex]));
 	PlayerName = AlphabetArray[AlphabetIndex];
 	ScrollRate = 0.4f;
 }
@@ -45,24 +44,30 @@ FString UArcadeStyleTextInputBox::ScrollThroughLetters(bool IsUpInput)
 	return AlphabetArray[AlphabetIndex];
 }
 
-void UArcadeStyleTextInputBox::HandleKeyboardInput(bool IsValidKey, FText KeyName)
+void UArcadeStyleTextInputBox::HandleKeyboardInput(bool IsValidKey, FKey KeyType)
 {
-	UE_LOG(LogTemp, Warning, TEXT("HandleKeyboardInputFiring"));
-	//Ignore
+	//Ignore if not a valid key press
 	if (IsValidKey)
 	{
-		if (IsValidKey)
+		if (KeyType == EKeys::W || KeyType == EKeys::S)
 		{
-			ScrollThroughLetters(KeyName.EqualTo(FText::FromString("W")));
+			ScrollThroughLetters(KeyType == EKeys::W);
+		}
+		else if (KeyType == EKeys::Enter || KeyType == EKeys::SpaceBar)
+		{
+			ConfirmLetter();
+		}
+		else if (KeyType == EKeys::Delete || KeyType == EKeys::BackSpace)
+		{
+			DeleteLetter();
 		}
 	}
 }
 
 void UArcadeStyleTextInputBox::ConfirmLetter()
 {
-	if (AlphabetArray[AlphabetIndex] == " END")
+	if (AlphabetArray[AlphabetIndex] == " END" && PlayerName != " END" && PlayerName.Len() >= 3)
 	{
-		//SetText(FText::FromString(PlayerName));
 		PlayerName.RemoveFromEnd(" END");
 		OnNameEntryCompleted.Broadcast(FText::FromString(PlayerName), ETextCommit::OnEnter);
 		return;
@@ -70,7 +75,6 @@ void UArcadeStyleTextInputBox::ConfirmLetter()
 	if (PlayerName.Len() < NameCharLimit)
 	{
 		PlayerName += AlphabetArray[AlphabetIndex];
-		//SetText(FText::FromString(PlayerName));
 	}
 	AlphabetIndex;
 }
@@ -80,7 +84,6 @@ void UArcadeStyleTextInputBox::DeleteLetter()
 	if (PlayerName.Len() > 0)
 	{
 		PlayerName.RemoveAt(PlayerName.Len() - 1);
-		//SetText(FText::FromString(PlayerName));
 		AlphabetIndex = 0;
 	}
 }
