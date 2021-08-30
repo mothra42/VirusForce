@@ -36,6 +36,9 @@ public:
 	UPROPERTY(Category = InfectionState, BlueprintReadOnly)
 	bool InfectedStatus = false;
 
+	UPROPERTY(Category = CellType, EditDefaultsOnly)
+	bool bIsBackgroundCell = false;
+
 	UPROPERTY(Category = Infection, BlueprintAssignable)
 	FInfectableCellDelegate OnVirusInfection;
 

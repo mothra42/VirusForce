@@ -95,6 +95,7 @@ void AVirusForceGameMode::PurgePlayfield(bool bSkipPlayer)
 	for (int32 i = 0; i < ActorArray.Num(); i++)
 	{
 		APawn* PawnToDestroy = Cast<APawn>(ActorArray[i]);
+		AInfectableCell* InfectableCellToDestroy = Cast<AInfectableCell>(ActorArray[i]);
 		AVirusForceProjectile* ProjectileToDestroy = Cast<AVirusForceProjectile>(ActorArray[i]);
 		if (bSkipPlayer && Cast<AVirusForcePawn>(PawnToDestroy) != nullptr)
 		{
@@ -107,6 +108,10 @@ void AVirusForceGameMode::PurgePlayfield(bool bSkipPlayer)
 		else if (ProjectileToDestroy != nullptr)
 		{
 			ProjectileToDestroy->Destroy();
+		}
+		else if (InfectableCellToDestroy != nullptr && !InfectableCellToDestroy->bIsBackgroundCell)
+		{
+			InfectableCellToDestroy->Destroy();
 		}
 	}
 }
