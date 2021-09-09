@@ -69,10 +69,6 @@ void AVirus::Tick(float DeltaSeconds)
 	{
 		SpawnInAnimation();
 	}
-	if (KillerTCellLocationPointer != nullptr && bIsHunted)
-	{
-		//UE_LOG(LogTemp, Warning, TEXT("I am Virus %s, I'll be sucked into location %s"), *GetName(), *KillerTCellLocationPointer->ToString());
-	}
 }
 
 void AVirus::OnHit(UPrimitiveComponent* HitComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)
@@ -103,7 +99,6 @@ int32 AVirus::NumOfAttachedAntibodies()
 {
 	TArray<AActor*> AttachedAntibodies;
 	GetAttachedActors(AttachedAntibodies);
-	//UE_LOG(LogTemp, Warning, TEXT("Num of antibodies is %i"), AttachedAntibodies.Num());
 	return AttachedAntibodies.Num();
 }
 

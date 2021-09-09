@@ -23,11 +23,8 @@ void UArteryJunctionComponent::BeginPlay()
 {
 	Super::BeginPlay();
 
-	// ...
 	TArray<UPrimitiveComponent*> OverlappingComponents;
-	CollisionMesh->GetOverlappingComponents(OverlappingComponents);
-	//UE_LOG(LogTemp, Warning, TEXT("%s component has %i overlapping components"), *this->GetName(), OverlappingComponents.Num());
-	
+	CollisionMesh->GetOverlappingComponents(OverlappingComponents);	
 }
 
 

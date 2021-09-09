@@ -31,8 +31,6 @@ class VIRUSFORCE_API UVirusForceSaveGame : public USaveGame
 	UVirusForceSaveGame();
 	
 public:
-	//UPROPERTY(VisibleAnywhere, Category = Basic)
-	//FHighScoreStruct HighScoreElement;
 
 	UPROPERTY(BlueprintReadOnly, VisibleAnywhere, Category = Basic)
 	TArray<FHighScoreStruct> HighScoreList;
@@ -46,9 +44,6 @@ public:
 	TArray<FHighScoreStruct> SaveHighScore(FString PlayerName, int32 Score);
 
 	TArray<FHighScoreStruct> LoadSavedGame();
-
-	//DEV ONLY
-	void PrintOutInfo();
 
 private:
 	void DelegateAsyncSave();

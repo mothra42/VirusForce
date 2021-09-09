@@ -7,7 +7,6 @@
 #include "Types/SlateEnums.h"
 #include "NameInputWidget.generated.h"
 
-
 struct FHighScoreStruct;
 /**
  * 

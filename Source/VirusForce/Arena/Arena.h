@@ -17,7 +17,6 @@ struct FSpawnInstructions
 	TSubclassOf<class AVirus> VirusClassToSpawn;
 	FRotator Rotation;
 
-	//This might be bad
 	FSpawnInstructions() 
 		: Location(FVector()), VirusClassToSpawn(nullptr), Rotation(FRotator()) {}
 

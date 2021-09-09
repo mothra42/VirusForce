@@ -6,7 +6,6 @@
 #include "../UI/HighScore/HighScoreWidget.h"
 #include "Blueprint/UserWidget.h"
 #include "Kismet/GameplayStatics.h"
-//TODO move a lot of logic with tracking lives and such from game mode to game instance.
 
 UVirusForceGameInstance::UVirusForceGameInstance()
 {
@@ -51,8 +50,6 @@ void UVirusForceGameInstance::SaveHighScore(FText Name)
 	if (LoadedGame != nullptr)
 	{
 		LoadedGame->SaveHighScore(Name.ToString(), FinalScore);
-		//update HighScoreList with latest high score;
-		//HighScoreList = LoadedGame->HighScoreList;
 	}
 	else
 	{

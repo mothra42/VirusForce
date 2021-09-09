@@ -39,7 +39,6 @@ FString UArcadeStyleTextInputBox::ScrollThroughLetters(bool IsUpInput)
 		bCanScroll = false;
 		GetWorld()->GetTimerManager().SetTimer(TimerHandle_ScrollTimerExpired, this, &UArcadeStyleTextInputBox::ScrollTimerExpired, ScrollRate);
 		AppendNonConfirmedChar(AlphabetArray[AlphabetIndex]);
-		//SetText(FText::FromString(PlayerName + AlphabetArray[AlphabetIndex]));
 	}
 	return AlphabetArray[AlphabetIndex];
 }
@@ -72,7 +71,7 @@ void UArcadeStyleTextInputBox::ConfirmLetter()
 		OnNameEntryCompleted.Broadcast(FText::FromString(PlayerName), ETextCommit::OnEnter);
 		return;
 	}
-	if (PlayerName.Len() < NameCharLimit)
+	if (PlayerName.Len() < NameCharLimit && AlphabetArray[AlphabetIndex] != " END")
 	{
 		PlayerName += AlphabetArray[AlphabetIndex];
 	}

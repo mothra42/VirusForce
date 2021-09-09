@@ -37,12 +37,9 @@ void UInfectableCellMovementComponent::BeginPlay()
 void UInfectableCellMovementComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-	//VerticalCycle = CalculateVerticalCycle(DeltaTime);
 	CurrentSwivelX = CalculateSwivel(DeltaTime, SwivelPeriodX, CurrentSwivelX);
 	CurrentSwivelY = CalculateSwivel(DeltaTime, SwivelPeriodY, CurrentSwivelY);
-	//FVector NewLocation = CalculateActorPosition();
 	FRotator NewRotation = CalculateActorRotation();
-	//GetOwner()->SetActorRelativeLocation(NewLocation);
 	GetOwner()->SetActorRelativeRotation(NewRotation);
 }
 

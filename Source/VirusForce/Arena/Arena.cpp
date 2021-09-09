@@ -1,4 +1,5 @@
-// Copyright Adam Farmer 2020
+
+//Copyright Adam Farmer 2020
 
 
 #include "Arena.h"

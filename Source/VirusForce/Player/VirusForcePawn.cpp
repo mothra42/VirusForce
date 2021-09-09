@@ -115,7 +115,6 @@ void AVirusForcePawn::Tick(float DeltaSeconds)
 			if (!PlayerAudioComponent->IsPlaying() && (ForwardValue != 0.f || RightValue != 0.f))
 			{
 				bPlayingMovingSound = true;
-				//UGameplayStatics::PlaySoundAtLocation(this, MovingSound, GetActorLocation());
 				PlayerAudioComponent->Play();
 			}
 		}

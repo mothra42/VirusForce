@@ -25,20 +25,8 @@ TArray<FHighScoreStruct> UVirusForceSaveGame::SaveHighScore(FString PlayerName, 
 {
 	FHighScoreStruct HighScoreElement = FHighScoreStruct(PlayerName, Score);
 	HighScoreList.Add(HighScoreElement);
-	PrintOutInfo();
 	DelegateAsyncSave();
 	return HighScoreList;
-}
-
-void UVirusForceSaveGame::PrintOutInfo()
-{
-	if (HighScoreList.Num() >= 0)
-	{
-		for (int32 i = 0; i < HighScoreList.Num(); i++)
-		{
-			UE_LOG(LogTemp, Warning, TEXT("Player Name is %s, Score is %i"), *HighScoreList[i].PlayerName, HighScoreList[i].Score);
-		}
-	}
 }
 
 void UVirusForceSaveGame::DelegateAsyncSave()

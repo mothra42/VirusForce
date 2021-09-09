@@ -69,7 +69,6 @@ void AVirusForceGameMode::ResetGameOnLifeLost(UWorld* World)
 	if (Lives == 0)
 	{
 		// reset playfield and transition to high score screen
-		//UGameplayStatics::SetGamePaused(World, true);
 		PurgePlayfield();
 		World->GetTimerManager().SetTimer(TimerHandle_LastDeathPause, this, &AVirusForceGameMode::DisplayHighScoreScreen, 1.3); //1.3 previous length
 	}
